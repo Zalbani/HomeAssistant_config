@@ -1,0 +1,514 @@
+- id: '1765721688168'
+  alias: Shutters and BSO - Close - Global
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: 00:30:00
+  conditions: []
+  actions:
+  - action: cover.stop_cover
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - bureau
+      - salon
+      - kitchen
+      - bedroom
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 0
+    target:
+      area_id:
+      - bureau
+      - salon
+      - bedroom
+      - kitchen
+  mode: single
+- id: '1765722279017'
+  alias: 'Wake UP : Time - Bedroom'
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: +00:30:00
+    id: semaine
+  - trigger: time
+    at: '11:00:00'
+    id: weekend
+  conditions:
+  - alias: If next phone alarm is in more than 5 hours
+    condition: template
+    value_template: "{{ \n  states('sensor.pixel_9_pro_next_alarm') not in ['unknown','unavailable']
+      \n  and \n  now() <= (states('sensor.pixel_9_pro_next_alarm') | as_datetime
+      - timedelta(hours=5))\n}}\n"
+  - condition: or
+    conditions:
+    - condition: time
+      weekday:
+      - fri
+      - thu
+      - wed
+      - tue
+      - mon
+    - condition: time
+      weekday:
+      - sat
+      - sun
+      after: '11:00:00'
+  actions:
+  - action: cover.stop_cover
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - bedroom
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 100
+    target:
+      area_id:
+      - bedroom
+  mode: single
+- id: '1765723709414'
+  alias: 'Wake UP : Sun - Office / Living room / Kitchen'
+  description: ''
+  triggers:
+  - event: sunrise
+    offset: +00:30:00
+    trigger: sun
+  conditions: []
+  actions:
+  - action: cover.stop_cover
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - bureau
+      - salon
+      - kitchen
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 100
+    target:
+      area_id:
+      - bureau
+      - salon
+      - kitchen
+  mode: single
+- id: '1765745986629'
+  alias: 'Wake UP : Phone - Global'
+  description: ''
+  triggers:
+  - minutes: /1
+    trigger: time_pattern
+  conditions:
+  - condition: template
+    value_template: "{{ \n  states('sensor.pixel_9_pro_next_alarm') not in ['unknown','unavailable']
+      \n  and \n  now() >= (states('sensor.pixel_9_pro_next_alarm') | as_datetime
+      - timedelta(minutes=2))\n}}\n"
+    alias: If next phone alarm is in 2 mintutes
+  - condition: state
+    entity_id: input_boolean.wakeup_done
+    state: 'off'
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.wakeup_done
+  - action: cover.stop_cover
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - bureau
+      - salon
+      - kitchen
+      - bedroom
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 100
+    target:
+      area_id:
+      - salon
+      - bureau
+      - kitchen
+      - bedroom
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 0
+      milliseconds: 0
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.wakeup_done
+  mode: single
+- id: '1768830600294'
+  alias: Light sync - Bedroom - ON
+  description: ''
+  triggers:
+  - type: turned_on
+    device_id: c1b5b8079b602770fe2c4da6caecc9ce
+    entity_id: 40940d55aea16ba4822270025a1dfcbc
+    domain: switch
+    trigger: device
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.bedroom_bed_led_strip
+    data: {}
+  mode: single
+- id: '1768830672935'
+  alias: Light sync - Bedroom - OFF
+  description: ''
+  triggers:
+  - type: turned_off
+    device_id: c1b5b8079b602770fe2c4da6caecc9ce
+    entity_id: 40940d55aea16ba4822270025a1dfcbc
+    domain: switch
+    trigger: device
+  - type: turned_off
+    device_id: e128f91471363f0f9a65ecc723489ddd
+    entity_id: 5c7b9fba9a483bef3cfdece763b06a13
+    domain: light
+    trigger: device
+  conditions:
+  - condition: or
+    conditions:
+    - condition: device
+      type: is_on
+      device_id: c1b5b8079b602770fe2c4da6caecc9ce
+      entity_id: 40940d55aea16ba4822270025a1dfcbc
+      domain: switch
+    - condition: device
+      type: is_on
+      device_id: e128f91471363f0f9a65ecc723489ddd
+      entity_id: 5c7b9fba9a483bef3cfdece763b06a13
+      domain: light
+  actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.bedroom_ceiling_lamp_switch
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - action: light.turn_off
+    target:
+      entity_id: light.bedroom_bed_led_strip
+  mode: single
+- id: '1770910836792'
+  alias: Toggle computer
+  triggers:
+  - entity_id: event.office_remote_button_3
+    trigger: state
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.to_state.attributes.event_type == "multi_press_2"
+      }}
+
+      '
+  actions:
+  - action: script.toggle_on_off_pc_fix
+  mode: single
+- id: '1771106977470'
+  alias: Heat sync - Global
+  description: Manages synchronization and offline security for all valves
+  triggers:
+  - alias: Temperature sensor update
+    trigger: state
+    entity_id:
+    - sensor.bathroom_thermometer_temperature
+    - sensor.bedroom_thermometer_temperature
+    - sensor.office_thermometer_temperature
+    - sensor.living_room_thermometer_temperature
+  - alias: Valve switch turned ON
+    trigger: state
+    entity_id:
+    - switch.bathroom_thermostatic_valve_switch
+    - switch.bedroom_thermostatic_valve_switch
+    - switch.office_thermostatic_valve_switch
+    - switch.living_room_thermostatic_valve_switch
+    from: 'off'
+    to: 'on'
+  actions:
+  - condition: template
+    alias: Is the valve on?
+    value_template: '{{ is_state(target_switch, ''on'') }}'
+  - choose:
+    - alias: 'Safety check: Sensor is offline'
+      conditions:
+      - condition: template
+        value_template: '{{ current_temp_sensor in [''unavailable'', ''unknown'']
+          }}'
+      sequence:
+      - alias: Disable external temperature on valve
+        action: switch.turn_off
+        target:
+          entity_id: '{{ target_external_sensor_switch }}'
+    - alias: 'Normal operation: Sync temperature'
+      conditions:
+      - condition: template
+        value_template: '{{ is_number(current_temp_sensor) }}'
+      sequence:
+      - alias: Ensure external sensor mode is ON
+        action: switch.turn_on
+        target:
+          entity_id: '{{ target_external_sensor_switch }}'
+      - delay: 00:00:01
+      - alias: Update valve with temperature
+        action: number.set_value
+        target:
+          entity_id: '{{ target_external_sensor_number }}'
+        data:
+          value: '{{ current_temp_sensor | float }}'
+  mode: parallel
+  variables:
+    mapping:
+      sensor.bathroom_thermometer_temperature:
+        switch: switch.bathroom_thermostatic_valve_switch
+        external_sensor:
+          switch: switch.bathroom_thermostatic_valve_external_temperature_sensor
+          number: number.bathroom_thermostatic_valve_external_temperature_sensor_value
+      sensor.bedroom_thermometer_temperature:
+        switch: switch.bedroom_thermostatic_valve_switch
+        external_sensor:
+          switch: switch.bedroom_thermostatic_valve_external_temperature_sensor
+          number: number.bedroom_thermostatic_valve_external_temperature_sensor_value
+      sensor.office_thermometer_temperature:
+        switch: switch.office_thermostatic_valve_switch
+        external_sensor:
+          switch: switch.office_thermostatic_valve_external_temperature_sensor
+          number: number.office_thermostatic_valve_external_temperature_sensor_value
+      sensor.living_room_thermometer_temperature:
+        switch: switch.living_room_thermostatic_valve_switch
+        external_sensor:
+          switch: switch.living_room_thermostatic_valve_external_temperature_sensor
+          number: number.living_room_thermostatic_valve_external_temperature_sensor_value
+      switch.bathroom_thermostatic_valve_switch:
+        switch: switch.bathroom_thermostatic_valve_switch
+        external_sensor:
+          switch: switch.bathroom_thermostatic_valve_external_temperature_sensor
+          number: number.bathroom_thermostatic_valve_external_temperature_sensor_value
+      switch.bedroom_thermostatic_valve_switch:
+        switch: switch.bedroom_thermostatic_valve_switch
+        external_sensor:
+          switch: switch.bedroom_thermostatic_valve_external_temperature_sensor
+          number: number.bedroom_thermostatic_valve_external_temperature_sensor_value
+      switch.office_thermostatic_valve_switch:
+        switch: switch.office_thermostatic_valve_switch
+        external_sensor:
+          switch: switch.office_thermostatic_valve_external_temperature_sensor
+          number: number.office_thermostatic_valve_external_temperature_sensor_value
+      switch.living_room_thermostatic_valve_switch:
+        switch: switch.living_room_thermostatic_valve_switch
+        external_sensor:
+          switch: switch.living_room_thermostatic_valve_external_temperature_sensor
+          number: number.living_room_thermostatic_valve_external_temperature_sensor_value
+    target_switch: '{{ mapping[trigger.entity_id].switch }}'
+    target_external_sensor_switch: '{{ mapping[trigger.entity_id].external_sensor.switch
+      }}'
+    target_external_sensor_number: '{{ mapping[trigger.entity_id].external_sensor.number
+      }}'
+    current_temp_sensor: "{% if trigger.entity_id.startswith('sensor.') %}\n  {{ trigger.to_state.state
+      }}\n{% else %}\n  {% if trigger.entity_id == 'switch.bedroom_thermostatic_valve_switch'
+      %} {{ states('sensor.bedroom_thermometer_temperature') }}\n  {% elif trigger.entity_id
+      == 'switch.office_thermostatic_valve_switch' %} {{ states('sensor.office_thermometer_temperature')
+      }}\n  {% elif trigger.entity_id == 'switch.living_room_thermostatic_valve_switch'
+      %} {{ states('sensor.living_room_thermometer_temperature') }}\n  {% endif %}\n{%
+      endif %}\n"
+- id: '1771152060816'
+  alias: Logic - Collective Heating Master Switch Manager
+  description: Controls the collective heating master switch and forces valve states
+  triggers:
+  - alias: Daily midnight check
+    trigger: time
+    at: 00:00:01
+  - alias: Date helper change
+    trigger: state
+    entity_id:
+    - input_datetime.collective_heating_start_date
+    - input_datetime.collective_heating_end_date
+  actions:
+  - alias: Determine if today is within heating period
+    if:
+    - alias: Check date range
+      condition: template
+      value_template: "{% set start = states(start_date_entity) %} {% set end = states(end_date_entity)
+        %} {% set today = now().strftime('%Y-%m-%d') %} {% if start < end %}\n  {{
+        start <= today <= end }}\n{% else %}\n  {{ today >= start or today <= end
+        }}\n{% endif %}\n"
+    then:
+    - alias: Turn ON heating master switch
+      action: input_boolean.turn_on
+      target:
+        entity_id: '{{ master_switch }}'
+    - alias: Turn ON all valves
+      action: switch.turn_on
+      target:
+        entity_id: '{{ all_valve_switches }}'
+    else:
+    - alias: Turn OFF heating master switch
+      action: input_boolean.turn_off
+      target:
+        entity_id: '{{ master_switch }}'
+    - alias: Force all valve external sensors to OFF
+      action: switch.turn_off
+      target:
+        entity_id: '{{ all_valves }}'
+  variables:
+    start_date_entity: input_datetime.collective_heating_start_date
+    end_date_entity: input_datetime.collective_heating_end_date
+    master_switch: input_boolean.collective_heating
+    all_valves:
+    - switch.bathroom_thermostatic_valve_switch
+    - switch.bedroom_thermostatic_valve_switch
+    - switch.office_thermostatic_valve_switch
+    - switch.living_room_thermostatic_valve_switch
+  mode: restart
+- id: '1771167624313'
+  alias: Climate - Range limiter - Global
+  description: Enforces global Min/Max limits for all radiator valves
+  triggers:
+  - trigger: state
+    entity_id:
+    - climate.general_thermostat
+    - climate.bathroom_thermostatic_valve_thermostat
+    - climate.bedroom_thermostatic_valve_thermostat
+    - climate.office_thermostatic_valve_thermostat
+    - climate.living_room_thermostatic_valve_thermostat
+    attribute: temperature
+  actions:
+  - choose:
+    - alias: 'Too cold: bring back to min'
+      conditions:
+      - condition: template
+        value_template: '{{ requested_temp < min_limit }}'
+      sequence:
+      - action: climate.set_temperature
+        target:
+          entity_id: '{{ trigger.entity_id }}'
+        data:
+          temperature: '{{ min_limit }}'
+    - alias: 'Too hot: bring back to max'
+      conditions:
+      - condition: template
+        value_template: '{{ requested_temp > max_limit }}'
+      sequence:
+      - action: climate.set_temperature
+        target:
+          entity_id: '{{ trigger.entity_id }}'
+        data:
+          temperature: '{{ max_limit }}'
+  mode: parallel
+  variables:
+    min_limit: '{{ states(''input_number.heating_global_min'') | float(16) }}'
+    max_limit: '{{ states(''input_number.heating_global_max'') | float(23) }}'
+    requested_temp: '{{ state_attr(trigger.entity_id, ''temperature'') | float }}'
+- id: '1771168472148'
+  alias: Climate - Hardware range limiter Sync - Global
+  description: Synchronizes Helper limits with physical valve settings
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_number.heating_global_min
+    - input_number.heating_global_max
+  - trigger: state
+    entity_id: input_boolean.collective_heating
+    to: 'on'
+  actions:
+  - alias: Update Min Limits
+    action: number.set_value
+    target:
+      entity_id: '{{ min_entities }}'
+    data:
+      value: '{{ states(''input_number.heating_global_min'') | float }}'
+  - alias: Update Max Limits
+    action: number.set_value
+    target:
+      entity_id: '{{ max_entities }}'
+    data:
+      value: '{{ states(''input_number.heating_global_max'') | float }}'
+  mode: restart
+  variables:
+    min_entities:
+    - number.general_thermostat_min_heat_setpoint_limit
+    - number.bathroom_thermostatic_valve_min_heat_setpoint_limit
+    - number.bedroom_thermostatic_valve_min_heat_setpoint_limit
+    - number.office_thermostatic_valve_min_heat_setpoint_limit
+    - number.living_room_thermostatic_valve_min_heat_setpoint_limit
+    max_entities:
+    - number.general_thermostat_max_heat_setpoint_limit
+    - number.bathroom_thermostatic_valve_max_heat_setpoint_limit
+    - number.bedroom_thermostatic_valve_max_heat_setpoint_limit
+    - number.office_thermostatic_valve_max_heat_setpoint_limit
+    - number.living_room_thermostatic_valve_max_heat_setpoint_limit
+- id: '1771521471495'
+  alias: Heat - Sync Living room & general thermostat
+  description: Aligns the salon valve temperature and the general thermostat
+  triggers:
+  - entity_id: climate.general_thermostat
+    attribute: temperature
+    trigger: state
+  - entity_id: climate.living_room_thermostatic_valve_thermostat
+    attribute: temperature
+    trigger: state
+  actions:
+  - variables:
+      living_room_setpoint: '{{ state_attr(''climate.living_room_thermostatic_valve_thermostat'',
+        ''temperature'') | float(0) }}'
+      general_setpoint: '{{ state_attr(''climate.general_thermostat'', ''temperature'')
+        | float(0) }}'
+    alias: Variable definition
+  - alias: Who change ?
+    choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.entity_id == ''climate.living_room_thermostatic_valve_thermostat''
+          and living_room_setpoint != general_setpoint }}'
+      sequence:
+      - target:
+          entity_id: climate.general_thermostat
+        data:
+          temperature: '{{ living_room_setpoint }}'
+        action: climate.set_temperature
+      alias: Living room valve -> Updating general thermostat
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.entity_id == ''climate.general_thermostat'' and
+          general_setpoint != living_room_setpoint }}'
+      sequence:
+      - target:
+          entity_id: climate.living_room_thermostatic_valve_thermostat
+        data:
+          temperature: '{{ general_setpoint }}'
+        action: climate.set_temperature
+      alias: General thermostat -> Updating living room valve
+  mode: restart
