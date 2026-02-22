@@ -1,4 +1,4 @@
-# 🏠 _HomeAssistant_Config
+# 🏠 HomeAssistant_Config
 
 Custom **Home Assistant** config: heating, shutters, lights, wake-up and PC control.  
 This folder is meant to be loaded from `configuration.yaml` (automations, scripts, scenes).

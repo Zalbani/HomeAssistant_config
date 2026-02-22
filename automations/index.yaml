@@ -10,4 +10,5 @@
 - !include Shutters/wake_up_phone_global.yaml
 - !include Lights/bedroom_on.yaml
 - !include Lights/bedroom_off.yaml
+- !include Remotes/bedroom_button_toggle.yaml
 - !include Remotes/toggle_computer.yaml

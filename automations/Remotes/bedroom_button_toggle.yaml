@@ -1,0 +1,52 @@
+id: '1770910900001'
+alias: Bedroom - Button toggle lights
+description: Single press = toggle all lights on/off. Double press = turn off all lights.
+triggers:
+  - entity_id: event.bedroom_remote_button_3
+    trigger: state
+conditions: []
+actions:
+  - choose:
+      - alias: Double press
+        conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_2' }}"
+        sequence:
+          - alias: Turn off all bedroom lights
+            action: light.turn_off
+            target:
+              entity_id:
+                - light.bedroom_bed_led_strip
+                - light.bedroom_ceiling_lamp_bulb
+      - alias: Single press
+        conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.attributes.event_type in ['single', 'single_click', 'multi_press_1'] }}"
+        sequence:
+          - choose:
+              - alias: All lights on
+                conditions:
+                  - condition: and
+                    conditions:
+                      - condition: state
+                        entity_id:
+                          - light.bedroom_bed_led_strip
+                          - light.bedroom_ceiling_lamp_bulb
+                        state: 'on'
+                sequence:
+                  - alias: Turn off all bedroom lights
+                    action: light.turn_off
+                    target:
+                      entity_id:
+                        - light.bedroom_bed_led_strip
+                        - light.bedroom_ceiling_lamp_bulb
+              - alias: Any light off
+                conditions: []
+                sequence:
+                  - alias: Turn on all bedroom lights
+                    action: light.turn_on
+                    target:
+                      entity_id:
+                        - light.bedroom_bed_led_strip
+                        - light.bedroom_ceiling_lamp_bulb
+mode: single
