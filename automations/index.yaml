@@ -11,4 +11,6 @@
 - !include Lights/bedroom_on.yaml
 - !include Lights/bedroom_off.yaml
 - !include Remotes/bedroom_button_toggle.yaml
+- !include Remotes/bedroom_remote_light_buttons.yaml
 - !include Remotes/toggle_computer.yaml
+- !include Remotes/office_remote_shutter_buttons.yaml
