@@ -1,0 +1,39 @@
+# Mapping temperature sensor / valve → switch + external sensor
+# Used by automations/Heaters/heat_sync_global.yaml
+# Anchors (&) and aliases (*) to avoid per-room duplication
+#
+bathroom: &bathroom
+  sensor: sensor.bathroom_thermometer_temperature
+  switch: switch.bathroom_thermostatic_valve_switch
+  external_sensor:
+    switch: switch.bathroom_thermostatic_valve_external_temperature_sensor
+    number: number.bathroom_thermostatic_valve_external_temperature_sensor_value
+bedroom: &bedroom
+  sensor: sensor.bedroom_thermometer_temperature
+  switch: switch.bedroom_thermostatic_valve_switch
+  external_sensor:
+    switch: switch.bedroom_thermostatic_valve_external_temperature_sensor
+    number: number.bedroom_thermostatic_valve_external_temperature_sensor_value
+office: &office
+  sensor: sensor.office_thermometer_temperature
+  switch: switch.office_thermostatic_valve_switch
+  external_sensor:
+    switch: switch.office_thermostatic_valve_external_temperature_sensor
+    number: number.office_thermostatic_valve_external_temperature_sensor_value
+living_room: &living_room
+  sensor: sensor.living_room_thermometer_temperature
+  switch: switch.living_room_thermostatic_valve_switch
+  external_sensor:
+    switch: switch.living_room_thermostatic_valve_external_temperature_sensor
+    number: number.living_room_thermostatic_valve_external_temperature_sensor_value
+#
+# Keys used by the automation (trigger.entity_id)
+#
+sensor.bathroom_thermometer_temperature: *bathroom
+sensor.bedroom_thermometer_temperature: *bedroom
+sensor.office_thermometer_temperature: *office
+sensor.living_room_thermometer_temperature: *living_room
+switch.bathroom_thermostatic_valve_switch: *bathroom
+switch.bedroom_thermostatic_valve_switch: *bedroom
+switch.office_thermostatic_valve_switch: *office
+switch.living_room_thermostatic_valve_switch: *living_room

@@ -1,0 +1,34 @@
+id: '1765721688168'
+alias: Shutters and BSO - Close - Global
+description: ''
+triggers:
+  - trigger: sun
+    event: sunset
+    offset: 00:30:00
+conditions: []
+actions:
+  - action: cover.stop_cover
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - office
+      - living_room
+      - kitchen
+      - bedroom
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 0
+    target:
+      area_id:
+      - office
+      - living_room
+      - bedroom
+      - kitchen
+mode: single

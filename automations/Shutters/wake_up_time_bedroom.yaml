@@ -1,0 +1,51 @@
+id: '1765722279017'
+alias: 'Wake UP : Time - Bedroom'
+description: ''
+triggers:
+  - trigger: sun
+    event: sunrise
+    offset: +00:30:00
+    id: semaine
+  - trigger: time
+    at: '11:00:00'
+    id: weekend
+conditions:
+  - alias: If next phone alarm is in more than 5 hours
+    condition: template
+    value_template: "{{ \n  states('sensor.pixel_9_pro_next_alarm') not in ['unknown','unavailable']
+      \n  and \n  now() <= (states('sensor.pixel_9_pro_next_alarm') | as_datetime
+      - timedelta(hours=5))\n}}\n"
+  - condition: or
+    conditions:
+    - condition: time
+      weekday:
+      - fri
+      - thu
+      - wed
+      - tue
+      - mon
+    - condition: time
+      weekday:
+      - sat
+      - sun
+      after: '11:00:00'
+actions:
+  - action: cover.stop_cover
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - bedroom
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 100
+    target:
+      area_id:
+      - bedroom
+mode: single

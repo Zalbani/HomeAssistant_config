@@ -1,0 +1,53 @@
+id: '1771106977470'
+alias: Heat sync - Global
+description: Manages synchronization and offline security for all valves
+triggers:
+  - alias: Temperature sensor update
+    trigger: state
+    entity_id:
+    - sensor.bathroom_thermometer_temperature
+    - sensor.bedroom_thermometer_temperature
+    - sensor.office_thermometer_temperature
+    - sensor.living_room_thermometer_temperature
+  - alias: Valve switch turned ON
+    trigger: state
+    entity_id: !include ../../mappings/heaters_valves.yaml
+    from: 'off'
+    to: 'on'
+actions:
+  - condition: template
+    alias: Is the valve on?
+    value_template: '{{ is_state(target_switch, ''on'') }}'
+  - choose:
+    - alias: 'Safety check: Sensor is offline or invalid'
+      conditions:
+      - condition: template
+        value_template: '{{ target_temp_sensor in [''unavailable'', ''unknown'', ''''] or not target_temp_sensor }}'
+      sequence:
+      - alias: Disable external temperature on valve
+        action: switch.turn_off
+        target:
+          entity_id: '{{ target_external_sensor_switch }}'
+    - alias: 'Normal operation: Sync temperature'
+      conditions:
+      - condition: template
+        value_template: '{{ is_number(target_temp_sensor) }}'
+      sequence:
+      - alias: Ensure external sensor mode is ON
+        action: switch.turn_on
+        target:
+          entity_id: '{{ target_external_sensor_switch }}'
+      - delay: 00:00:01
+      - alias: Update valve with temperature
+        action: number.set_value
+        target:
+          entity_id: '{{ target_external_sensor_number }}'
+        data:
+          value: '{{ target_temp_sensor | float }}'
+mode: parallel
+variables:
+  mapping: !include ../../mappings/heaters_mapping.yaml
+  target_switch: '{{ mapping[trigger.entity_id].switch }}'
+  target_external_sensor_switch: '{{ mapping[trigger.entity_id].external_sensor.switch }}'
+  target_external_sensor_number: '{{ mapping[trigger.entity_id].external_sensor.number }}'
+  target_temp_sensor: '{{ states(mapping[trigger.entity_id].sensor) }}'

@@ -1,0 +1,13 @@
+# Flat list (HA does not flatten nested lists). Paths relative to this file (automations/).
+- !include Heaters/heat_sync_global.yaml
+- !include Heaters/collective_heating_master_switch_manager.yaml
+- !include Heaters/climate_range_limiter_global.yaml
+- !include Heaters/climate_hardware_range_limiter_sync_global.yaml
+- !include Heaters/heat_sync_living_room_general_thermostat.yaml
+- !include Shutters/close_global.yaml
+- !include Shutters/wake_up_time_bedroom.yaml
+- !include Shutters/wake_up_sun_office_living_kitchen.yaml
+- !include Shutters/wake_up_phone_global.yaml
+- !include Lights/bedroom_on.yaml
+- !include Lights/bedroom_off.yaml
+- !include Remotes/toggle_computer.yaml

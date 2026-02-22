@@ -1,0 +1,32 @@
+id: '1765723709414'
+alias: 'Wake UP : Sun - Office / Living room / Kitchen'
+description: ''
+triggers:
+  - event: sunrise
+    offset: +00:30:00
+    trigger: sun
+conditions: []
+actions:
+  - action: cover.stop_cover
+    metadata: {}
+    data: {}
+    target:
+      area_id:
+      - office
+      - living_room
+      - kitchen
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 100
+    target:
+      area_id:
+      - office
+      - living_room
+      - kitchen
+mode: single

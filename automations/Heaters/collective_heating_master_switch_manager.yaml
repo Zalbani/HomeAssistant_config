@@ -1,0 +1,51 @@
+id: '1771152060816'
+alias: Logic - Collective Heating Master Switch Manager
+description: Controls the collective heating master switch and forces valve states
+triggers:
+  - alias: Daily midnight check
+    trigger: time
+    at: 00:00:01
+  - alias: Date helper change
+    trigger: state
+    entity_id:
+    - input_datetime.collective_heating_start_date
+    - input_datetime.collective_heating_end_date
+actions:
+  - alias: Determine if today is within heating period
+    if:
+    - alias: Check date range
+      condition: template
+      value_template: |
+        {% set start = states(start_date_entity) %}
+        {% set end = states(end_date_entity) %}
+        {% set today = now().strftime('%Y-%m-%d') %}
+        {% if start < end %}
+          {{ start <= today <= end }}
+        {% else %}
+          {{ today >= start or today <= end }}
+        {% endif %}
+    then:
+    - alias: Turn ON heating master switch
+      action: input_boolean.turn_on
+      target:
+        entity_id: '{{ master_switch }}'
+    - alias: Turn ON all valves
+      action: switch.turn_on
+      target:
+        entity_id: '{{ all_valve_switches }}'
+    else:
+    - alias: Turn OFF heating master switch
+      action: input_boolean.turn_off
+      target:
+        entity_id: '{{ master_switch }}'
+    - alias: Force all valve external sensors to OFF
+      action: switch.turn_off
+      target:
+        entity_id: '{{ all_valves }}'
+variables:
+  start_date_entity: input_datetime.collective_heating_start_date
+  end_date_entity: input_datetime.collective_heating_end_date
+  master_switch: input_boolean.collective_heating
+  all_valve_switches: !include ../../mappings/heaters_valves.yaml
+  all_valves: !include ../../mappings/heaters_valves.yaml
+mode: restart

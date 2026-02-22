@@ -1,0 +1,7 @@
+# List of thermostatic valve switches
+# Used by automations/Heaters/collective_heating_master_switch_manager.yaml (all_valve_switches, all_valves)
+# Include with: !include mappings/heaters_valves.yaml
+- switch.bathroom_thermostatic_valve_switch
+- switch.bedroom_thermostatic_valve_switch
+- switch.office_thermostatic_valve_switch
+- switch.living_room_thermostatic_valve_switch
