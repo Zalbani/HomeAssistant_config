@@ -1,0 +1,33 @@
+id: '1770911000000'
+alias: Remotes - Scroll wheel - Shutter incremental control (global)
+description: Scroll wheel down = lower shutters, Scroll wheel up = raise shutters. 8 presses = 100%, 1 press = 12.5%. Mapping in mappings/shutters/mapping.yaml
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/shutters/scroll_wheel_triggers.yaml
+conditions: []
+actions:
+  - alias: Calculate shutter position from press count
+    variables:
+      count: "{{ [8, trigger.to_state.attributes.totalNumberOfPressesCounted | default(1)] | min }}"
+      step: "{{ 100 / 8 }}"
+      delta: "{{ (step * count) | round(1) }}"
+  - repeat:
+      for_each: "{{ mapping[trigger.entity_id].covers }}"
+      sequence:
+        - alias: Calculate and set position for each cover
+          variables:
+            current: "{{ state_attr(repeat.item, 'current_position') | default(50) }}"
+            new_position: >-
+              {% if 'button_4' in trigger.entity_id %}
+                {{ [0, current - delta] | max }}
+              {% else %}
+                {{ [100, current + delta] | min }}
+              {% endif %}
+        - action: cover.set_cover_position
+          target:
+            entity_id: "{{ repeat.item }}"
+          data:
+            position: "{{ new_position }}"
+mode: single
+variables:
+  mapping: !include ../../mappings/shutters/mapping.yaml

@@ -1,0 +1,29 @@
+# Remote shutter buttons - mapping by room
+# Used by automations/Remotes/remote_shutter_scroll_wheel_global.yaml
+# Used by automations/Remotes/remote_shutter_button_toggle_global.yaml
+# Used by automations/Remotes/remote_shutter_hold_global.yaml (button 6)
+# Add a room here to enable shutter control on that remote
+#
+office: &office
+  covers:
+    - cover.office_sunshade
+living_room: &living_room
+  covers:
+    - cover.living_room_shutter
+    - cover.living_room_sunshade
+    - cover.kitchen_shutter
+bedroom: &bedroom
+  covers:
+    - cover.bedroom_sunshade
+#
+# Keys used by the automation (trigger.entity_id)
+#
+event.office_remote_button_4: *office
+event.office_remote_button_5: *office
+event.living_room_remote_button_4: *living_room
+event.living_room_remote_button_5: *living_room
+event.bedroom_remote_button_4: *bedroom
+event.bedroom_remote_button_5: *bedroom
+event.office_remote_button_6: *office
+event.living_room_remote_button_6: *living_room
+event.bedroom_remote_button_6: *bedroom

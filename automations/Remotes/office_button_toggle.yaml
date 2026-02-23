@@ -1,0 +1,12 @@
+id: '1770910836792'
+alias: Office - Remote button 9 - Computer toggle
+description: Double press = toggle computer on/off.
+triggers:
+  - entity_id: event.office_remote_button_9
+    trigger: state
+conditions:
+  - condition: template
+    value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_2' }}"
+actions:
+  - action: script.toggle_on_off_pc_fix
+mode: single

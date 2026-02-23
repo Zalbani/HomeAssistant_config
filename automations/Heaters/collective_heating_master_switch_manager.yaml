@@ -46,6 +46,6 @@ variables:
   start_date_entity: input_datetime.collective_heating_start_date
   end_date_entity: input_datetime.collective_heating_end_date
   master_switch: input_boolean.collective_heating
-  all_valve_switches: !include ../../mappings/heaters_valves.yaml
-  all_valves: !include ../../mappings/heaters_valves.yaml
+  all_valve_switches: !include ../../mappings/heaters/valves.yaml
+  all_valves: !include ../../mappings/heaters/valves.yaml
 mode: restart

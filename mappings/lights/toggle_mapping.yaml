@@ -1,0 +1,24 @@
+# Remote button 3 - Light/switch toggle mapping by room
+# Used by automations/Remotes/remote_light_toggle_global.yaml
+# Single press = toggle on/off, Double press = turn off
+# Supports both light.* and switch.* entities (uses homeassistant.turn_on/off)
+#
+office: &office
+  entities:
+    - switch.office_ceiling_lamp_switch
+living_room: &living_room
+  entities:
+    - switch.living_room_ceiling_lamp_switch
+    - switch.living_room_outlet_switch
+    - switch.kitchen_ceiling_lamp_switch
+    - switch.kitchen_under_cabinet_lighting_switch
+bedroom: &bedroom
+  entities:
+    - light.bedroom_bed_led_strip
+    - light.bedroom_ceiling_lamp_bulb
+#
+# Keys used by the automation (trigger.entity_id)
+#
+event.office_remote_button_3: *office
+event.living_room_remote_button_3: *living_room
+event.bedroom_remote_button_3: *bedroom

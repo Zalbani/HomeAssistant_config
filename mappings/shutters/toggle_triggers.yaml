@@ -1,0 +1,6 @@
+# Trigger entities for remote button 6 (close all / open all toggle)
+# Used by automations/Remotes/remote_shutter_button_toggle_global.yaml
+# Keep in sync with mapping.yaml
+- event.office_remote_button_6
+- event.living_room_remote_button_6
+- event.bedroom_remote_button_6

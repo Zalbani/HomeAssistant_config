@@ -1,0 +1,43 @@
+id: '1770911000004'
+alias: Remotes - Button 6 - Shutter hold (global)
+description: Hold = move shutters (up if all closed, down otherwise). Release = stop. Same logic as toggle for direction. Mapping in mappings/shutters/mapping.yaml
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/shutters/hold_triggers.yaml
+conditions: []
+actions:
+  - choose:
+      - alias: Release - stop all
+        conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.attributes.event_type == 'release' }}"
+        sequence:
+          - action: cover.stop_cover
+            target:
+              entity_id: "{{ mapping[trigger.entity_id].covers }}"
+      - alias: Hold - start movement (same direction as toggle)
+        conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.attributes.event_type in ['hold', 'long_press'] }}"
+        sequence:
+          - variables:
+              positions: "{{ mapping[trigger.entity_id].covers | map('state_attr', 'current_position') | list }}"
+              any_open: "{{ (positions | map('default', 0) | select('gt', 0) | list | length) > 0 }}"
+          - choose:
+              - alias: At least one not closed - close (down)
+                conditions:
+                  - condition: template
+                    value_template: "{{ any_open }}"
+                sequence:
+                  - action: cover.close_cover
+                    target:
+                      entity_id: "{{ mapping[trigger.entity_id].covers }}"
+              - alias: All closed - open (up)
+                conditions: []
+                sequence:
+                  - action: cover.open_cover
+                    target:
+                      entity_id: "{{ mapping[trigger.entity_id].covers }}"
+mode: single
+variables:
+  mapping: !include ../../mappings/shutters/mapping.yaml

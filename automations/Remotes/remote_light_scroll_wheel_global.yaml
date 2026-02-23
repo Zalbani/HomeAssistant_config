@@ -1,0 +1,30 @@
+id: '1770911000002'
+alias: Remotes - Scroll wheel - Light brightness (global)
+description: Button 1 = decrease (min 10%), Button 2 = increase. 8 presses = 90% range (10-100%), 1 press = 11.25%. Mapping in mappings/lights/scroll_wheel_mapping.yaml
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/lights/scroll_wheel_triggers.yaml
+conditions: []
+actions:
+  - alias: Calculate brightness from press count
+    variables:
+      count: "{{ [8, trigger.to_state.attributes.totalNumberOfPressesCounted | default(1)] | min }}"
+      step: "{{ 90 / 8 }}"
+      delta: "{{ (step * count) | round(1) }}"
+      ref_light: "{{ (mapping[trigger.entity_id].lights | first) }}"
+      current_pct: "{{ ((state_attr(ref_light, 'brightness') | default(0)) / 255 * 100) | round(1) }}"
+      new_pct: >-
+        {% if 'button_1' in trigger.entity_id %}
+          {{ [10, current_pct - delta] | max }}
+        {% else %}
+          {{ [100, current_pct + delta] | min }}
+        {% endif %}
+  - action: light.turn_on
+    target:
+      entity_id: "{{ mapping[trigger.entity_id].lights }}"
+    data:
+      brightness_pct: "{{ new_pct }}"
+      transition: 1
+mode: single
+variables:
+  mapping: !include ../../mappings/lights/scroll_wheel_mapping.yaml

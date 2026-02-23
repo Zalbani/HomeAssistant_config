@@ -1,0 +1,43 @@
+id: '1770911000003'
+alias: Remotes - Button toggle - Close all / Open all shutters (global)
+description: Button toggle - If any shutter moving → stop. If at least one not fully closed → close all. If all closed → open all. Mapping in mappings/shutters/mapping.yaml
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/shutters/toggle_triggers.yaml
+conditions: []
+actions:
+  - alias: Check if all shutters are closed
+    variables:
+      positions: "{{ mapping[trigger.entity_id].covers | map('state_attr', 'current_position') | list }}"
+      any_open: "{{ (positions | map('default', 0) | select('gt', 0) | list | length) > 0 }}"
+      any_moving: "{{ (expand(mapping[trigger.entity_id].covers) | selectattr('state', 'in', ['opening', 'closing']) | list | length) > 0 }}"
+  - choose:
+      - alias: Any shutter moving - stop all
+        conditions:
+          - condition: template
+            value_template: "{{ any_moving }}"
+        sequence:
+          - action: cover.stop_cover
+            target:
+              entity_id: "{{ mapping[trigger.entity_id].covers }}"
+      - alias: At least one not closed - close all
+        conditions:
+          - condition: template
+            value_template: "{{ any_open }}"
+        sequence:
+          - action: cover.set_cover_position
+            target:
+              entity_id: "{{ mapping[trigger.entity_id].covers }}"
+            data:
+              position: 0
+      - alias: All closed - open all
+        conditions: []
+        sequence:
+          - action: cover.set_cover_position
+            target:
+              entity_id: "{{ mapping[trigger.entity_id].covers }}"
+            data:
+              position: 100
+mode: single
+variables:
+  mapping: !include ../../mappings/shutters/mapping.yaml

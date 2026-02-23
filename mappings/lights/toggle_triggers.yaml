@@ -1,0 +1,6 @@
+# Trigger entities for remote button 3 (light/switch toggle)
+# Used by automations/Remotes/remote_light_toggle_global.yaml
+# Keep in sync with toggle_mapping.yaml
+- event.office_remote_button_3
+- event.living_room_remote_button_3
+- event.bedroom_remote_button_3

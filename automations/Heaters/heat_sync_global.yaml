@@ -11,7 +11,7 @@ triggers:
     - sensor.living_room_thermometer_temperature
   - alias: Valve switch turned ON
     trigger: state
-    entity_id: !include ../../mappings/heaters_valves.yaml
+    entity_id: !include ../../mappings/heaters/valves.yaml
     from: 'off'
     to: 'on'
 actions:
@@ -46,7 +46,7 @@ actions:
           value: '{{ target_temp_sensor | float }}'
 mode: parallel
 variables:
-  mapping: !include ../../mappings/heaters_mapping.yaml
+  mapping: !include ../../mappings/heaters/mapping.yaml
   target_switch: '{{ mapping[trigger.entity_id].switch }}'
   target_external_sensor_switch: '{{ mapping[trigger.entity_id].external_sensor.switch }}'
   target_external_sensor_number: '{{ mapping[trigger.entity_id].external_sensor.number }}'

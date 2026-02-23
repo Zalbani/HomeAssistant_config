@@ -1,0 +1,40 @@
+id: '1770910900000'
+alias: Remotes - Button 3 - Light/switch toggle (global)
+description: Single press = toggle all on/off. Double press = turn off all. Mapping in mappings/lights/toggle_mapping.yaml
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/lights/toggle_triggers.yaml
+conditions: []
+actions:
+  - choose:
+      - alias: Double press
+        conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_2' }}"
+        sequence:
+          - action: homeassistant.turn_off
+            target:
+              entity_id: "{{ mapping[trigger.entity_id].entities }}"
+      - alias: Single press
+        conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.attributes.event_type in ['single', 'single_click', 'multi_press_1'] }}"
+        sequence:
+          - choose:
+              - alias: All on
+                conditions:
+                  - condition: template
+                    value_template: "{{ (mapping[trigger.entity_id].entities | select('is_state', 'on') | list | length) == (mapping[trigger.entity_id].entities | length) }}"
+                sequence:
+                  - action: homeassistant.turn_off
+                    target:
+                      entity_id: "{{ mapping[trigger.entity_id].entities }}"
+              - alias: Any off
+                conditions: []
+                sequence:
+                  - action: homeassistant.turn_on
+                    target:
+                      entity_id: "{{ mapping[trigger.entity_id].entities }}"
+mode: single
+variables:
+  mapping: !include ../../mappings/lights/toggle_mapping.yaml

@@ -1,0 +1,6 @@
+# Trigger entities for remote button 6 (shutter hold - move while pressed, stop on release)
+# Used by automations/Remotes/remote_shutter_hold_global.yaml
+# Keep in sync with mapping.yaml
+- event.office_remote_button_6
+- event.living_room_remote_button_6
+- event.bedroom_remote_button_6

@@ -15,7 +15,10 @@ HomeAssistant_Config/
 │   ├── Shutters/           # Shutters & BSO
 │   ├── Lights/             # Lights
 │   └── Remotes/            # Remotes / PC
-├── mappings/               # Mappings (valves, sensors…)
+├── mappings/               # Mappings by domain
+│   ├── heaters/           # Heating (valves, sensors)
+│   ├── shutters/          # Remote shutter control
+│   └── lights/            # Remote light control
 ├── scripts.yaml
 ├── scenes.yaml
 └── README.md

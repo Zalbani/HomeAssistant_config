@@ -10,7 +10,9 @@
 - !include Shutters/wake_up_phone_global.yaml
 - !include Lights/bedroom_on.yaml
 - !include Lights/bedroom_off.yaml
-- !include Remotes/bedroom_button_toggle.yaml
-- !include Remotes/bedroom_remote_light_buttons.yaml
-- !include Remotes/toggle_computer.yaml
-- !include Remotes/office_remote_shutter_buttons.yaml
+- !include Remotes/remote_light_toggle_global.yaml
+- !include Remotes/remote_shutter_scroll_wheel_global.yaml
+- !include Remotes/remote_shutter_button_toggle_global.yaml
+- !include Remotes/remote_shutter_hold_global.yaml
+- !include Remotes/remote_light_scroll_wheel_global.yaml
+- !include Remotes/office_button_toggle.yaml
