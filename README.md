@@ -12,7 +12,7 @@ HomeAssistant_Config/
 ├── automations/
 │   ├── index.yaml          # Automation list
 │   ├── Heaters/            # Heating & valves
-│   ├── Shutters/           # Shutters & BSO
+│   ├── Shutters/           # Shutters & Sunshade
 │   ├── Lights/             # Lights
 │   └── Remotes/            # Remotes / PC
 ├── mappings/               # Mappings by domain
@@ -42,7 +42,7 @@ HomeAssistant_Config/
 
 | Automation | Role |
 |------------|------|
-| **Close - Global** | Global close for shutters and BSO. |
+| **Close - Global** | Global close for shutters and Sunshade. |
 | **Wake UP - Time (Bedroom)** | Opens bedroom shutters at wake-up time (alarm > 5 h). |
 | **Wake UP - Sun (Office / Living / Kitchen)** | Opens office, living room and kitchen shutters based on sun. |
 | **Wake UP - Phone (Global)** | Opens based on phone alarm (within 2 minutes). |
@@ -59,6 +59,8 @@ HomeAssistant_Config/
 | Automation | Role |
 |------------|------|
 | **Toggle computer** | Wakes desktop PC (Wake-on-LAN) or triggers shutdown. |
+| **Scroll wheel - Light brightness (global)** | Bilresa remote buttons 1 & 2: decrease/increase light brightness (8 presses = 90% range, min 10%). |
+| **Scroll wheel - Shutter incremental control (global)** | Bilresa remote scroll wheel: down = lower shutters, up = raise (8 presses = 100%). |
 
 ---
 

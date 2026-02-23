@@ -1,5 +1,5 @@
 id: '1765721688168'
-alias: Shutters and BSO - Close - Global
+alias: Shutters and Sunshade - Close - Global
 description: ''
 triggers:
   - trigger: sun
