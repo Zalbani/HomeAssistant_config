@@ -1,13 +1,9 @@
 id: '1770911000004'
-alias: Remotes - Button 6 - Shutter hold (global)
+alias: Remotes - Global - Button 6 - Shutter hold
 description: Hold = move shutters (up if all closed, down otherwise). Release = stop. Same logic as toggle for direction. Mapping in mappings/shutters/mapping.yaml
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/shutters/hold_triggers.yaml
-conditions:
-  # Ignore reconnection events (power restore) - only react to hold/release
-  - condition: template
-    value_template: "{{ trigger.to_state.attributes.event_type in ['hold', 'long_press', 'release'] }}"
 actions:
   - choose:
       - alias: Release - stop all

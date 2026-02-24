@@ -14,13 +14,13 @@ actions:
           - action: light.turn_off
             target:
               entity_id: light.bedroom_ceiling_lamp_bulb
-          - wait_template: "{{ is_state('switch.bedroom_ceiling_lamp_switch', 'on') }}"
+          - wait_template: "{{ is_state('light.bedroom_ceiling_lamp_bulb', 'on') }}"
             timeout: "00:01:00"
             continue_on_timeout: true
           - choose:
               - conditions:
                   - condition: template
-                    value_template: "{{ is_state('switch.bedroom_ceiling_lamp_switch', 'off') }}"
+                    value_template: "{{ is_state('light.bedroom_ceiling_lamp_bulb', 'off') }}"
                 sequence:
                   - action: light.turn_off
                     target:

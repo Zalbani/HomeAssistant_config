@@ -1,0 +1,4 @@
+# List of window sensors. Must match keys in window_valve_mapping.yaml.
+# Add new sensors here and in window_valve_mapping when adding a window.
+#
+- binary_sensor.living_room_french_window

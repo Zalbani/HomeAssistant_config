@@ -1,5 +1,5 @@
 id: '1770910836792'
-alias: Office - Remote button 9 - Computer toggle
+alias: Remotes - Office - Button 9 - Computer toggle
 description: Double press = toggle computer on/off.
 triggers:
   - entity_id: event.office_remote_button_9

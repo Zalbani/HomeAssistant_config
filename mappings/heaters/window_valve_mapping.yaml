@@ -1,0 +1,5 @@
+# Window sensor -> valve switch. When window opens (on), turn off valve. When closed (off), turn on valve.
+# Add entries for each window that should cut its associated radiator.
+# When adding a new window, also add its sensor to mappings/heaters/window_sensors.yaml.
+#
+"binary_sensor.living_room_french_window": switch.living_room_thermostatic_valve_switch

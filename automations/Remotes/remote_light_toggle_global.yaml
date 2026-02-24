@@ -1,13 +1,9 @@
 id: '1770910900000'
-alias: Remotes - Button 3 - Light/switch toggle (global)
+alias: Remotes - Global - Button 3 - Light toggle
 description: Single press = toggle all on/off. Double press = turn off all. Mapping in mappings/lights/toggle_mapping.yaml
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/lights/toggle_triggers.yaml
-conditions:
-  # Ignore reconnection events (power restore) - only react to real button presses
-  - condition: template
-    value_template: "{{ trigger.to_state.attributes.event_type in ['single', 'single_click', 'multi_press_1', 'multi_press_2'] }}"
 actions:
   - choose:
       - alias: Double press

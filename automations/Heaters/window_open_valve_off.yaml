@@ -1,0 +1,33 @@
+id: '1771400000001'
+alias: Heaters - Window open cuts valve
+description: >-
+  When a window opens, turn off the associated radiator valve. When it closes, turn it back on.
+  Mapping in mappings/heaters/window_valve_mapping.yaml.
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/heaters/window_sensors.yaml
+    to: 'on'
+    id: opening
+  - trigger: state
+    entity_id: !include ../../mappings/heaters/window_sensors.yaml
+    to: 'off'
+    id: closing
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: opening
+        sequence:
+          - action: switch.turn_off
+            target:
+              entity_id: '{{ window_valve_mapping[trigger.entity_id] }}'
+      - conditions:
+          - condition: trigger
+            id: closing
+        sequence:
+          - action: switch.turn_on
+            target:
+              entity_id: '{{ window_valve_mapping[trigger.entity_id] }}'
+mode: single
+variables:
+  window_valve_mapping: !include ../../mappings/heaters/window_valve_mapping.yaml

@@ -3,12 +3,14 @@
 - !include Heaters/collective_heating_master_switch_manager.yaml
 - !include Heaters/climate_range_limiter_global.yaml
 - !include Heaters/climate_hardware_range_limiter_sync_global.yaml
+- !include Heaters/window_open_valve_off.yaml
 - !include Heaters/heat_sync_living_room_general_thermostat.yaml
 - !include Shutters/close_global.yaml
 - !include Shutters/wake_up_time_bedroom.yaml
 - !include Shutters/wake_up_sun_office_living_kitchen.yaml
 - !include Shutters/wake_up_phone_global.yaml
 - !include Lights/bedroom_switch_light_toggle.yaml
+- !include Lights/balcony_light_french_window.yaml
 - !include Remotes/remote_light_toggle_global.yaml
 - !include Remotes/remote_shutter_scroll_wheel_global.yaml
 - !include Remotes/remote_shutter_button_toggle_global.yaml

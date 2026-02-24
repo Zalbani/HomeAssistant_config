@@ -20,6 +20,8 @@ HomeAssistant_Config/
 │   ├── heaters/           # Heating (valves, sensors)
 │   ├── shutters/          # Remote shutter control
 │   └── lights/            # Remote light control
+├── dashboard/
+│   └── overview.yaml      # Lovelace dashboard (YAML)
 ├── scripts.yaml
 ├── scenes.yaml
 └── README.md
@@ -38,6 +40,7 @@ HomeAssistant_Config/
 | **Climate - Range limiter** | Limits setpoint (min/max) to avoid extremes. |
 | **Climate - Hardware range limiter Sync** | Updates min/max limits on thermostat hardware. |
 | **Heat - Sync Living room & general thermostat** | Two-way sync between living room valve and general thermostat. |
+| **Window open cuts valve** | When a window opens, turns off the associated valve. When closed, turns it back on. Mapping in `mappings/heaters/window_valve_mapping.yaml`. |
 
 ### 🪟 Shutters
 
@@ -52,22 +55,25 @@ HomeAssistant_Config/
 
 | Automation | Role |
 |------------|------|
-| **Bedroom - ON** | Turns on bed LED strip when bedroom ceiling light turns on. |
-| **Bedroom - OFF** | Turns off bed LED strip when bedroom ceiling light turns off. |
+| **Light sync - Bedroom - Switch toggle** | Switch toggles bulb + LED strip. Bulb off immediately, LED strip after 1 min (cancelled if switch pressed again). |
+| **Balcony outside lamp (french window)** | Turns on when french window opens (or is already open) 30 min after sunset in winter. Turns off when window closes. |
 
 ### 📡 Sensors
 
 | Automation | Role |
 |------------|------|
-| **French Window Living Room** | When french window opens: turn off heating, raise sunshade to 70% if closed, turn on balcony light if night. When closing: revert all. |
+| **Living Room Sunshade - Window control** | Manages sunshade position based on french window open/close. Heating and balcony light in separate automations. |
 
 ### 🖥️ Remotes / PC
 
 | Automation | Role |
 |------------|------|
-| **Toggle computer** | Wakes desktop PC (Wake-on-LAN) or triggers shutdown. |
-| **Scroll wheel - Light brightness (global)** | Bilresa remote buttons 1 & 2: decrease/increase light brightness (8 presses = 90% range, min 10%). |
-| **Scroll wheel - Shutter incremental control (global)** | Bilresa remote scroll wheel: down = lower shutters, up = raise (8 presses = 100%). |
+| **Remotes - Office - Button 9 - Computer toggle** | Double press = toggle PC on/off (Wake-on-LAN or shutdown). |
+| **Remotes - Global - Button 3 - Light toggle** | Single press = toggle lights on/off. Double press = turn off all. |
+| **Remotes - Global - Buttons 1 & 2 - Light scroll wheel brightness** | Decrease/increase brightness (8 presses = 90% range, min 10%). |
+| **Remotes - Global - Button 6 - Shutter toggle** | Toggle: stop → close all → open all. |
+| **Remotes - Global - Button 6 - Shutter hold** | Hold = move, release = stop. |
+| **Remotes - Global - Buttons 4 & 5 - Shutter scroll wheel** | Down = lower, up = raise (8 presses = 100%). |
 
 ---
 

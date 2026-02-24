@@ -1,13 +1,9 @@
 id: '1770911000000'
-alias: Remotes - Scroll wheel - Shutter incremental control (global)
+alias: Remotes - Global - Buttons 4 & 5 - Shutter scroll wheel
 description: Scroll wheel down = lower shutters, Scroll wheel up = raise shutters. 8 presses = 100%, 1 press = 12.5%. Mapping in mappings/shutters/mapping.yaml
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/shutters/scroll_wheel_triggers.yaml
-conditions:
-  # Ignore reconnection events (power restore) - require real scroll wheel press
-  - condition: template
-    value_template: "{{ (trigger.to_state.attributes.totalNumberOfPressesCounted | default(0)) >= 1 }}"
 actions:
   - alias: Calculate shutter position from press count
     variables:

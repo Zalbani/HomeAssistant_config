@@ -1,0 +1,47 @@
+id: '1771400000002'
+alias: Light - Balcony outside lamp (french window)
+description: >-
+  Turns on balcony light when french window opens (or is already open) 30 min after sunset in winter.
+  Turns off when french window closes.
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.living_room_french_window
+    to: 'on'
+    id: opening
+  - trigger: sun
+    event: sunset
+    offset: '00:30:00'
+    id: sunset_30min
+  - trigger: state
+    entity_id: binary_sensor.living_room_french_window
+    to: 'off'
+    id: closing
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: closing
+        sequence:
+          - action: switch.turn_off
+            target:
+              entity_id: switch.balcony_outside_lamp
+      - conditions:
+          - condition: or
+            conditions:
+              - condition: trigger
+                id: opening
+              - condition: trigger
+                id: sunset_30min
+          - condition: state
+            entity_id: binary_sensor.living_room_french_window
+            state: 'on'
+          - condition: sun
+            after: sunset
+            after_offset: '00:30:00'
+          - condition: template
+            value_template: "{{ now().month in [11, 12, 1, 2, 3] }}"
+        sequence:
+          - action: switch.turn_on
+            target:
+              entity_id: switch.balcony_outside_lamp
+mode: single

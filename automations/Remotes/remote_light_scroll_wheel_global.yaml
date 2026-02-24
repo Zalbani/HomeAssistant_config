@@ -1,13 +1,9 @@
 id: '1770911000002'
-alias: Remotes - Scroll wheel - Light brightness (global)
+alias: Remotes - Global - Buttons 1 & 2 - Light scroll wheel brightness
 description: Button 1 = decrease (min 10%), Button 2 = increase. 8 presses = 90% range (10-100%), 1 press = 11.25%. Mapping in mappings/lights/scroll_wheel_mapping.yaml
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/lights/scroll_wheel_triggers.yaml
-conditions:
-  # Ignore reconnection events (power restore) - require real scroll wheel press
-  - condition: template
-    value_template: "{{ (trigger.to_state.attributes.totalNumberOfPressesCounted | default(0)) >= 1 }}"
 actions:
   - alias: Calculate brightness from press count
     variables:

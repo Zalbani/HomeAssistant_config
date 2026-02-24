@@ -1,13 +1,9 @@
 id: '1770911000003'
-alias: Remotes - Button toggle - Close all / Open all shutters (global)
+alias: Remotes - Global - Button 6 - Shutter toggle
 description: Button toggle - If any shutter moving → stop. If at least one not fully closed → close all. If all closed → open all. Mapping in mappings/shutters/mapping.yaml
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/shutters/toggle_triggers.yaml
-conditions:
-  # Ignore reconnection events (power restore) - only react to real button presses
-  - condition: template
-    value_template: "{{ trigger.to_state.attributes.event_type in ['single', 'single_click', 'multi_press_1', 'multi_press_2'] }}"
 actions:
   - alias: Check if all shutters are closed
     variables:
