@@ -1,0 +1,8 @@
+# Cover -> window sensor (or null). When the window is open (on), this cover is excluded from close_global.
+# List all covers here. Use null for covers without a window sensor.
+#
+"cover.office_sunshade": null
+"cover.living_room_shutter": null
+"cover.living_room_sunshade": binary_sensor.living_room_french_window
+"cover.kitchen_shutter": null
+"cover.bedroom_sunshade": null

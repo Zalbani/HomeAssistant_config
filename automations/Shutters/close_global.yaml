@@ -1,6 +1,7 @@
 id: '1765721688168'
 alias: Shutters and Sunshade - Close - Global
-description: ''
+description: >-
+  Close all shutters at sunset. Excludes covers whose window sensor is open (mapping in mappings/shutters/cover_window_sensors.yaml).
 triggers:
   - trigger: sun
     event: sunset
@@ -12,23 +13,30 @@ actions:
     data: {}
     target:
       area_id:
-      - office
-      - living_room
-      - kitchen
-      - bedroom
+        - office
+        - living_room
+        - kitchen
+        - bedroom
   - delay:
       hours: 0
       minutes: 0
       seconds: 1
       milliseconds: 0
+  - variables:
+      covers_to_close: >-
+        {% set ns = namespace(entities=[]) %}
+        {% for cover, sensor in cover_window_sensors.items() %}
+          {% if not sensor or not is_state(sensor, 'on') %}
+            {% set ns.entities = ns.entities + [cover] %}
+          {% endif %}
+        {% endfor %}
+        {{ ns.entities }}
   - action: cover.set_cover_position
     metadata: {}
     data:
       position: 0
     target:
-      area_id:
-      - office
-      - living_room
-      - bedroom
-      - kitchen
+      entity_id: "{{ covers_to_close }}"
 mode: single
+variables:
+  cover_window_sensors: !include ../../mappings/shutters/cover_window_sensors.yaml
