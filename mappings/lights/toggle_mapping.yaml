@@ -14,9 +14,8 @@ living_room: &living_room
     - switch.kitchen_under_cabinet_lighting_switch
 bedroom: &bedroom
   entities:
-    - switch.bedroom_ceiling_lamp_switch
-    - light.bedroom_bed_led_strip
     - light.bedroom_ceiling_lamp_bulb
+    - light.bedroom_bed_led_strip
 #
 # Keys used by the automation (trigger.entity_id)
 #
