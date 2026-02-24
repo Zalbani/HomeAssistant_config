@@ -4,7 +4,10 @@ description: Single press = toggle all on/off. Double press = turn off all. Mapp
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/lights/toggle_triggers.yaml
-conditions: []
+conditions:
+  # Ignore reconnection events (power restore) - only react to real button presses
+  - condition: template
+    value_template: "{{ trigger.to_state.attributes.event_type in ['single', 'single_click', 'multi_press_1', 'multi_press_2'] }}"
 actions:
   - choose:
       - alias: Double press

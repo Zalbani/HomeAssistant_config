@@ -4,7 +4,10 @@ description: Button 1 = decrease (min 10%), Button 2 = increase. 8 presses = 90%
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/lights/scroll_wheel_triggers.yaml
-conditions: []
+conditions:
+  # Ignore reconnection events (power restore) - require real scroll wheel press
+  - condition: template
+    value_template: "{{ (trigger.to_state.attributes.totalNumberOfPressesCounted | default(0)) >= 1 }}"
 actions:
   - alias: Calculate brightness from press count
     variables:
