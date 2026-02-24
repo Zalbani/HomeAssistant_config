@@ -1,0 +1,70 @@
+id: '1771400000000'
+alias: French Window Living Room - Open/Close actions
+description: >-
+  When the living room french window opens: turn off heating, raise sunshade to 70% if closed,
+  turn on outside light if night. When closing: revert all (heating on, sunshade down, light off).
+triggers:
+  - alias: French window opened
+    trigger: state
+    entity_id: binary_sensor.living_room_french_window
+    to: 'on'
+  - alias: French window closed
+    trigger: state
+    entity_id: binary_sensor.living_room_french_window
+    to: 'off'
+actions:
+  - choose:
+      - alias: Window opened - turn off heating, raise sunshade, light if night
+        conditions:
+          - condition: state
+            entity_id: binary_sensor.living_room_french_window
+            state: 'on'
+        sequence:
+          - alias: Turn off living room thermostat valve
+            action: switch.turn_off
+            target:
+              entity_id: switch.living_room_thermostatic_valve_switch
+          - choose:
+              - alias: Sunshade closed - raise to 70%
+                conditions:
+                  - condition: template
+                    value_template: "{{ state_attr('cover.living_room_sunshade', 'current_position') | int(100) <= 5 }}"
+                sequence:
+                  - alias: Set sunshade position to 70%
+                    action: cover.set_cover_position
+                    target:
+                      entity_id: cover.living_room_sunshade
+                    data:
+                      position: 70
+          - choose:
+              - alias: Night time - turn on balcony light
+                conditions:
+                  - condition: state
+                    entity_id: sun.sun
+                    state: below_horizon
+                sequence:
+                  - alias: Turn on balcony outside lamp
+                    action: switch.turn_on
+                    target:
+                      entity_id: switch.balcony_outside_lamp
+      - alias: Window closed - revert heating, sunshade, light
+        conditions:
+          - condition: state
+            entity_id: binary_sensor.living_room_french_window
+            state: 'off'
+        sequence:
+          - alias: Turn on living room thermostat valve
+            action: switch.turn_on
+            target:
+              entity_id: switch.living_room_thermostatic_valve_switch
+          - alias: Lower sunshade to closed
+            action: cover.set_cover_position
+            target:
+              entity_id: cover.living_room_sunshade
+            data:
+              position: 0
+          - alias: Turn off balcony outside lamp
+            action: switch.turn_off
+            target:
+              entity_id: switch.balcony_outside_lamp
+mode: single

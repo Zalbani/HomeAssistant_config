@@ -14,7 +14,8 @@ HomeAssistant_Config/
 │   ├── Heaters/            # Heating & valves
 │   ├── Shutters/           # Shutters & Sunshade
 │   ├── Lights/             # Lights
-│   └── Remotes/            # Remotes / PC
+│   ├── Remotes/            # Remotes / PC
+│   └── Sensors/            # Sensor-triggered automations
 ├── mappings/               # Mappings by domain
 │   ├── heaters/           # Heating (valves, sensors)
 │   ├── shutters/          # Remote shutter control
@@ -53,6 +54,12 @@ HomeAssistant_Config/
 |------------|------|
 | **Bedroom - ON** | Turns on bed LED strip when bedroom ceiling light turns on. |
 | **Bedroom - OFF** | Turns off bed LED strip when bedroom ceiling light turns off. |
+
+### 📡 Sensors
+
+| Automation | Role |
+|------------|------|
+| **French Window Living Room** | When french window opens: turn off heating, raise sunshade to 70% if closed, turn on balcony light if night. When closing: revert all. |
 
 ### 🖥️ Remotes / PC
 

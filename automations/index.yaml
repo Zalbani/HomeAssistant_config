@@ -8,11 +8,11 @@
 - !include Shutters/wake_up_time_bedroom.yaml
 - !include Shutters/wake_up_sun_office_living_kitchen.yaml
 - !include Shutters/wake_up_phone_global.yaml
-- !include Lights/bedroom_on.yaml
-- !include Lights/bedroom_off.yaml
+- !include Lights/bedroom_sync_bidirectional.yaml
 - !include Remotes/remote_light_toggle_global.yaml
 - !include Remotes/remote_shutter_scroll_wheel_global.yaml
 - !include Remotes/remote_shutter_button_toggle_global.yaml
 - !include Remotes/remote_shutter_hold_global.yaml
 - !include Remotes/remote_light_scroll_wheel_global.yaml
 - !include Remotes/office_button_toggle.yaml
+- !include Sensors/french_window_sensor.yaml
