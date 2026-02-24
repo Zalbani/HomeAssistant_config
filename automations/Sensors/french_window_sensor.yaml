@@ -16,7 +16,7 @@ actions:
           - condition: trigger
             id: opening
         sequence:
-          - alias: Vérifie si le store est fermé avant de lever
+          - alias: Check if sunshade is closed before raising
             if:
               - condition: numeric_state
                 entity_id: cover.living_room_sunshade

@@ -1,9 +1,9 @@
-# Dashboard Overview - Configuration Lovelace en YAML
-# Éditable facilement et versionnable (git)
-# Recharger : Paramètres > Tableaux de bord > ⋮ > Recharger les tableaux de bord
+# Dashboard Overview - Lovelace configuration in YAML
+# Easily editable and versionable (git)
+# Reload: Settings > Dashboards > ⋮ > Reload dashboards
 
 views:
-  # Vue principale Home
+  # Main Home view
   - path: default_view
     title: Home
     badges:
@@ -428,7 +428,7 @@ views:
           numeric: true
           reverse: false
 
-      # Alban PC Fixe
+      # Alban Desktop PC
       - type: custom:mushroom-template-card
         primary: Alban PC Fixe
         entity: switch.alban_pc_fixe
@@ -441,12 +441,12 @@ views:
         hold_action:
           action: more-info
 
-      # Calendrier
+      # Calendar
       - type: calendar
         entities:
           - calendar.pro_pierson_alban_gmail_com
 
-  # Vue Living room (sections - Apple Home Dashboard)
+  # Living room view (sections - Apple Home Dashboard)
   - type: sections
     path: living-room
     icon: mdi:sofa-outline

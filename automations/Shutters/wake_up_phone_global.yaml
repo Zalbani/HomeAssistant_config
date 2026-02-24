@@ -9,7 +9,7 @@ conditions:
     value_template: "{{ \n  states('sensor.pixel_9_pro_next_alarm') not in ['unknown','unavailable']
       \n  and \n  now() >= (states('sensor.pixel_9_pro_next_alarm') | as_datetime
       - timedelta(minutes=2))\n}}\n"
-    alias: If next phone alarm is in 2 mintutes
+    alias: If next phone alarm is in 2 minutes
   - condition: state
     entity_id: input_boolean.wakeup_done
     state: 'off'

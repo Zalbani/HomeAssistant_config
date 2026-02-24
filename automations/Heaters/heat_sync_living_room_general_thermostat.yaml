@@ -15,7 +15,7 @@ actions:
       general_setpoint: '{{ state_attr(''climate.general_thermostat'', ''temperature'')
         | float(0) }}'
     alias: Variable definition
-  - alias: Who change ?
+  - alias: Determine which entity changed
     choose:
     - conditions:
       - condition: template
