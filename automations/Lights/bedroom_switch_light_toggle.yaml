@@ -1,42 +1,51 @@
-id: '1768830600295'
 alias: Light sync - Bedroom - Switch toggle
-description: Switch toggles bulb + LED strip. Bulb off immediately, LED strip after 1 min (cancelled if switch pressed again).
+description: >-
+  Turns off the bulb immediately, waits 30s for the LED strip. 
+  If the bulb is turned back on (via switch, app, or voice) during that time, 
+  the LED strip remains on.
 triggers:
   - trigger: state
     entity_id: switch.bedroom_ceiling_lamp_switch
 conditions: []
 actions:
   - choose:
+      # Case 1: Turning OFF (if the bulb is currently on)
       - conditions:
-          - condition: template
-            value_template: "{{ is_state('light.bedroom_ceiling_lamp_bulb', 'on') or is_state('light.bedroom_bed_led_strip', 'on') }}"
+          - condition: state
+            entity_id: light.bedroom_ceiling_lamp_bulb
+            state: "on"
         sequence:
           - action: light.turn_off
             target:
               entity_id: light.bedroom_ceiling_lamp_bulb
-          - wait_template: "{{ is_state('light.bedroom_ceiling_lamp_bulb', 'on') }}"
+          
+          # Wait 30 seconds OR until the bulb is turned back on
+          - wait_for_trigger:
+              - trigger: state
+                entity_id: light.bedroom_ceiling_lamp_bulb
+                to: "on"
             timeout: "00:01:00"
             continue_on_timeout: true
-          - choose:
-              - conditions:
-                  - condition: template
-                    value_template: "{{ is_state('light.bedroom_ceiling_lamp_bulb', 'off') }}"
-                sequence:
-                  - action: light.turn_off
-                    target:
-                      entity_id: light.bedroom_bed_led_strip
-              - conditions: []
-                sequence:
-                  - action: light.turn_on
-                    target:
-                      entity_id:
-                        - light.bedroom_ceiling_lamp_bulb
-                        - light.bedroom_bed_led_strip
-      - conditions: []
+
+          # Only turn off the LED strip if the bulb is STILL off after the wait
+          - if:
+              - condition: state
+                entity_id: light.bedroom_ceiling_lamp_bulb
+                state: "off"
+            then:
+              - action: light.turn_off
+                target:
+                  entity_id: light.bedroom_bed_led_strip
+
+      # Case 2: Everything is off, turn everything ON
+      - conditions:
+          - condition: state
+            entity_id: light.bedroom_ceiling_lamp_bulb
+            state: "off"
         sequence:
           - action: light.turn_on
             target:
               entity_id:
                 - light.bedroom_ceiling_lamp_bulb
                 - light.bedroom_bed_led_strip
-mode: single
+mode: restart
