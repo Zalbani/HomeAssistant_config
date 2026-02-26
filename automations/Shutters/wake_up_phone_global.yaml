@@ -9,16 +9,8 @@ triggers:
     value_template: >-
       {{ states('sensor.pixel_9_pro_next_alarm') not in ['unknown', 'unavailable']
          and now() >= (states('sensor.pixel_9_pro_next_alarm') | as_datetime - timedelta(minutes=2)) }}
-conditions:
-  - alias: Wake-up not already triggered
-    condition: state
-    entity_id: input_boolean.wakeup_done
-    state: 'off'
+conditions: []
 actions:
-  - alias: Set debounce flag
-    action: input_boolean.turn_on
-    target:
-      entity_id: input_boolean.wakeup_done
   - alias: Open all shutters
     action: cover.set_cover_position
     data:
@@ -29,9 +21,4 @@ actions:
         - office
         - kitchen
         - bedroom
-  - delay: { minutes: 2 }
-  - alias: Reset debounce flag
-    action: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.wakeup_done
 mode: single
