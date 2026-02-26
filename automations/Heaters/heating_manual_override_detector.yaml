@@ -30,7 +30,7 @@ actions:
   - alias: Flag as manual only if temperature differs from profile
     if:
       - condition: template
-        value_template: "{{ actual_temp != expected_temp }}"
+        value_template: "{{ (actual_temp - expected_temp) | abs > 0.1 }}"
     then:
       - action: input_boolean.turn_on
         target:

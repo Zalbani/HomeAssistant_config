@@ -4,6 +4,7 @@ description: >-
   Applies target temperatures from the active profile to all thermostats.
   Resets per-room manual overrides on profile change.
   Periodic refresh every 30 min respects manual overrides.
+  Skips unavailable thermostats and guards against invalid profile.
 triggers:
   - alias: Profile changed
     trigger: state
@@ -22,6 +23,10 @@ conditions:
     value_template: >
       {{ is_state('input_boolean.collective_heating', 'on')
          or states('input_select.heating_profile') == 'off' }}
+  - alias: Profile must be a valid option
+    condition: template
+    value_template: >
+      {{ states('input_select.heating_profile') in ['comfort', 'eco', 'night', 'boost', 'off'] }}
 variables:
   profiles: !include ../../mappings/heaters/profiles.yaml
   profile: "{{ states('input_select.heating_profile') }}"
@@ -42,9 +47,12 @@ actions:
         - office
         - living_room
       sequence:
-        - if:
+        - alias: Skip if thermostat unavailable or manual override active
+          if:
             - condition: template
-              value_template: "{{ is_state(profiles.manual_overrides[repeat.item], 'off') }}"
+              value_template: >
+                {{ states(profiles.thermostats[repeat.item]) not in ['unavailable', 'unknown']
+                   and is_state(profiles.manual_overrides[repeat.item], 'off') }}
           then:
             - action: climate.set_temperature
               target:
