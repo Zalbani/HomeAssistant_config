@@ -1,0 +1,15 @@
+title: Balcony
+icon: mdi:balcony
+path: balcony
+type: sections
+max_columns: 1
+subview: true
+header:
+  card:
+    type: heading
+    heading: Balcony
+    heading_style: title
+    icon: mdi:balcony
+
+sections:
+  - !include ../rooms/balcony/controls.yaml

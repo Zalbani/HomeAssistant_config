@@ -1,0 +1,39 @@
+title: Controls
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Lights
+    icon: mdi:lightbulb
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: switch.bedroom_ceiling_lamp_switch
+    name: Ceiling light
+    icon: mdi:lightbulb
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: light.bedroom_ceiling_lamp_bulb
+    name: Ceiling bulb
+    icon: mdi:lightbulb-variant
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: light.bedroom_bed_led_strip
+    name: Bed LED strip
+    icon: mdi:led-strip-variant
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Sunshade
+    icon: mdi:blinds
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: cover.bedroom_sunshade
+    name: Sunshade
+    icon: mdi:blinds

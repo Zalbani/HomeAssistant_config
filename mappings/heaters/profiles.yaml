@@ -25,23 +25,23 @@ thermostat_to_room:
 # Target temperatures (°C) per profile per room
 temperatures:
   comfort:
-    bathroom: 22
-    bedroom: 19
+    bathroom: 20
+    bedroom: 18
     living_room: 21
     office: 21
   eco:
-    bathroom: 17
-    bedroom: 17
-    living_room: 17
+    bathroom: 18
+    bedroom: 16
+    living_room: 19
     office: 17
   night:
-    bathroom: 17
-    bedroom: 17
-    living_room: 17
-    office: 16
+    bathroom: 16
+    bedroom: 16
+    living_room: 19
+    office: 17
   boost:
-    bathroom: 25
-    bedroom: 23
+    bathroom: 21
+    bedroom: 22
     living_room: 24
     office: 24
   off:

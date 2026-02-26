@@ -1,0 +1,7 @@
+title: Climate
+cards:
+  - type: custom:button-card
+    template: climate_card
+    name: "🌡️ Climate"
+    variables:
+      temp_entity: sensor.bedroom_thermometer_temperature

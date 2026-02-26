@@ -1,30 +1,59 @@
 id: '1740500000004'
 alias: Heating - Boost Manager
 description: >-
-  Waits for the configured boost duration, then restores the previous profile.
-  The previous profile is captured from trigger.from_state at activation time.
-  The resolver re-evaluates after restore via its "from: boost" trigger.
+  Uses timer.heating_boost (UI helper) for a real-time countdown.
+  When boost ends, sets profile to "comfort" as a placeholder — the resolver
+  immediately re-evaluates the correct profile via its "from: boost" trigger.
 triggers:
   - alias: Boost activated
     trigger: state
     entity_id: input_select.heating_profile
     to: "boost"
-variables:
-  duration: "{{ states('input_number.heating_boost_duration') | int(30) }}"
-  previous: "{{ trigger.from_state.state if trigger.from_state.state != 'boost' else 'comfort' }}"
+    id: boost_start
+  - alias: Boost timer finished
+    trigger: state
+    entity_id: timer.heating_boost
+    from: "active"
+    to: "idle"
+    id: boost_end
+  - alias: Boost deactivated manually
+    trigger: state
+    entity_id: input_select.heating_profile
+    from: "boost"
+    id: boost_cancelled
 actions:
-  - alias: Wait for boost duration
-    delay:
-      minutes: "{{ duration }}"
-  - alias: Restore previous profile (only if still in boost)
-    if:
-      - condition: state
-        entity_id: input_select.heating_profile
-        state: "boost"
-    then:
-      - action: input_select.select_option
-        target:
-          entity_id: input_select.heating_profile
-        data:
-          option: "{{ previous }}"
-mode: restart
+  - choose:
+      - alias: Boost activated — start timer
+        conditions:
+          - condition: trigger
+            id: boost_start
+        sequence:
+          - action: timer.start
+            target:
+              entity_id: timer.heating_boost
+            data:
+              duration: "{{ states('input_number.heating_boost_duration') | int(30) * 60 }}"
+      - alias: Timer finished — exit boost (resolver re-evaluates)
+        conditions:
+          - condition: trigger
+            id: boost_end
+        sequence:
+          - if:
+              - condition: state
+                entity_id: input_select.heating_profile
+                state: "boost"
+            then:
+              - action: input_select.select_option
+                target:
+                  entity_id: input_select.heating_profile
+                data:
+                  option: "comfort"
+      - alias: Boost cancelled manually — stop timer
+        conditions:
+          - condition: trigger
+            id: boost_cancelled
+        sequence:
+          - action: timer.cancel
+            target:
+              entity_id: timer.heating_boost
+mode: single

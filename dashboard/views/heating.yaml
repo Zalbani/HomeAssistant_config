@@ -1,0 +1,199 @@
+title: Heating
+icon: mdi:radiator
+path: heating
+type: sections
+max_columns: 2
+subview: true
+header:
+  card:
+    type: heading
+    heading: Heating
+    heading_style: title
+    icon: mdi:radiator
+    badges:
+      - type: entity
+        entity: input_select.heating_profile
+      - type: entity
+        entity: weather.forecast_home
+
+sections:
+  - title: Control
+    cards:
+      - type: custom:mushroom-template-card
+        entity: input_select.heating_profile
+        icon: mdi:thermostat-auto
+        primary: Heating profile
+        secondary: "{{ states('input_select.heating_profile') }}"
+        icon_color: >-
+          {% set p = states('input_select.heating_profile') %}
+          {% if p == 'comfort' %}orange{% elif p == 'eco' %}green{% elif p == 'night' %}blue{% elif p == 'off' %}grey{% else %}purple{% endif %}
+
+      - type: custom:mushroom-template-card
+        entity: timer.heating_boost
+        icon: mdi:clock-fast
+        primary: Boost
+        secondary: >-
+          {% if is_state('timer.heating_boost', 'active') %}
+            {% set fin = state_attr('timer.heating_boost', 'finishes_at') | as_datetime %}
+            {% set reste = (fin - now()).total_seconds() | int %}
+            {% set m = (reste // 60) %}
+            {% set s = reste % 60 %}
+            Active · {{ m }}:{{ '%02d' % s }} remaining
+          {% else %}
+            Tap to activate · {{ states('input_number.heating_boost_duration') | int }} min
+          {% endif %}
+        icon_color: >-
+          {% if is_state('timer.heating_boost', 'active') %}red{% else %}grey{% endif %}
+        badge_icon: >-
+          {% if is_state('timer.heating_boost', 'active') %}mdi:fire{% endif %}
+        badge_color: >-
+          {% if is_state('timer.heating_boost', 'active') %}deep-orange{% endif %}
+        tap_action:
+          action: perform-action
+          perform_action: script.toggle_heating_boost
+
+      - type: custom:mushroom-template-card
+        entity: weather.forecast_home
+        icon: mdi:home-thermometer-outline
+        primary: Outdoor temperature
+        secondary: "{{ state_attr('weather.forecast_home', 'temperature') }}°C"
+        icon_color: blue
+
+      - type: custom:mushroom-template-card
+        entity: input_boolean.collective_heating
+        icon: >-
+          {% if is_state('input_boolean.collective_heating', 'on') %}mdi:radiator{% else %}mdi:radiator-off{% endif %}
+        primary: Collective heating
+        secondary: "{{ 'Active' if is_state('input_boolean.collective_heating', 'on') else 'Inactive' }}"
+        icon_color: >-
+          {% if is_state('input_boolean.collective_heating', 'on') %}orange{% else %}grey{% endif %}
+
+      - type: custom:bubble-card
+        card_type: separator
+        name: Global settings
+        icon: mdi:cog
+
+      - type: custom:mushroom-template-card
+        entity: input_datetime.collective_heating_start_date
+        icon: mdi:calendar-start
+        primary: Collective start date
+        secondary: "{{ states('input_datetime.collective_heating_start_date') }}"
+        icon_color: green
+
+      - type: custom:mushroom-template-card
+        entity: input_datetime.collective_heating_end_date
+        icon: mdi:calendar-end
+        primary: Collective end date
+        secondary: "{{ states('input_datetime.collective_heating_end_date') }}"
+        icon_color: red
+
+      - type: custom:mushroom-template-card
+        entity: input_number.heating_global_min
+        icon: mdi:thermometer-low
+        primary: Valve min temperature
+        secondary: "{{ states('input_number.heating_global_min') }}°C"
+        icon_color: cyan
+
+      - type: custom:mushroom-template-card
+        entity: input_number.heating_global_max
+        icon: mdi:thermometer-high
+        primary: Valve max temperature
+        secondary: "{{ states('input_number.heating_global_max') }}°C"
+        icon_color: deep-orange
+
+      - type: custom:mushroom-template-card
+        entity: input_number.heating_outdoor_threshold
+        icon: mdi:thermometer-alert
+        primary: Outdoor threshold
+        secondary: "{{ states('input_number.heating_outdoor_threshold') }}°C"
+        icon_color: blue
+
+      - type: custom:mushroom-template-card
+        entity: input_number.heating_boost_duration
+        icon: mdi:clock-edit
+        primary: Boost duration
+        secondary: "{{ states('input_number.heating_boost_duration') }} min"
+        icon_color: amber
+
+  - title: Temperatures
+    cards:
+      - type: custom:mushroom-template-card
+        entity: climate.living_room_thermostatic_valve_thermostat
+        icon: >-
+          {% if is_state('sensor.living_room_thermostatic_valve_hvac_action', 'heating') %}mdi:fire{% else %}mdi:sofa-outline{% endif %}
+        primary: Living Room
+        secondary: >-
+          {{ states('sensor.living_room_thermometer_temperature') }}°C · Target {{ state_attr('climate.living_room_thermostatic_valve_thermostat', 'temperature') }}°C{%- if is_state('input_boolean.heating_manual_living_room', 'on') %} · Manual{% endif %}
+        icon_color: >-
+          {% if is_state('sensor.living_room_thermostatic_valve_hvac_action', 'heating') %}red{% elif is_state('input_boolean.heating_manual_living_room', 'on') %}orange{% else %}grey{% endif %}
+        badge_icon: >-
+          {% if is_state('input_boolean.heating_manual_living_room', 'on') %}mdi:hand-back-right{% endif %}
+        badge_color: >-
+          {% if is_state('input_boolean.heating_manual_living_room', 'on') %}orange{% endif %}
+        tap_action:
+          action: more-info
+
+      - type: custom:mushroom-template-card
+        entity: climate.office_thermostatic_valve_thermostat
+        icon: >-
+          {% if is_state('sensor.office_thermostatic_valve_hvac_action', 'heating') %}mdi:fire{% else %}mdi:microsoft-office{% endif %}
+        primary: Office
+        secondary: >-
+          {{ states('sensor.office_thermometer_temperature') }}°C · Target {{ state_attr('climate.office_thermostatic_valve_thermostat', 'temperature') }}°C{%- if is_state('input_boolean.heating_manual_office', 'on') %} · Manual{% endif %}
+        icon_color: >-
+          {% if is_state('sensor.office_thermostatic_valve_hvac_action', 'heating') %}red{% elif is_state('input_boolean.heating_manual_office', 'on') %}orange{% else %}grey{% endif %}
+        badge_icon: >-
+          {% if is_state('input_boolean.heating_manual_office', 'on') %}mdi:hand-back-right{% endif %}
+        badge_color: >-
+          {% if is_state('input_boolean.heating_manual_office', 'on') %}orange{% endif %}
+        tap_action:
+          action: more-info
+
+      - type: custom:mushroom-template-card
+        entity: climate.bedroom_thermostatic_valve_thermostat
+        icon: >-
+          {% if is_state('sensor.bedroom_thermostatic_valve_hvac_action', 'heating') %}mdi:fire{% else %}mdi:bed-outline{% endif %}
+        primary: Bedroom
+        secondary: >-
+          {{ states('sensor.bedroom_thermometer_temperature') }}°C · Target {{ state_attr('climate.bedroom_thermostatic_valve_thermostat', 'temperature') }}°C{%- if is_state('input_boolean.heating_manual_bedroom', 'on') %} · Manual{% endif %}
+        icon_color: >-
+          {% if is_state('sensor.bedroom_thermostatic_valve_hvac_action', 'heating') %}red{% elif is_state('input_boolean.heating_manual_bedroom', 'on') %}orange{% else %}grey{% endif %}
+        badge_icon: >-
+          {% if is_state('input_boolean.heating_manual_bedroom', 'on') %}mdi:hand-back-right{% endif %}
+        badge_color: >-
+          {% if is_state('input_boolean.heating_manual_bedroom', 'on') %}orange{% endif %}
+        tap_action:
+          action: more-info
+
+      - type: custom:mushroom-template-card
+        entity: climate.bathroom_thermostatic_valve_thermostat
+        icon: >-
+          {% if is_state('sensor.bathroom_thermostatic_valve_hvac_action', 'heating') %}mdi:fire{% else %}mdi:bathtub-outline{% endif %}
+        primary: Bathroom
+        secondary: >-
+          {{ states('sensor.bathroom_thermometer_temperature') }}°C · Target {{ state_attr('climate.bathroom_thermostatic_valve_thermostat', 'temperature') }}°C{%- if is_state('input_boolean.heating_manual_bathroom', 'on') %} · Manual{% endif %}
+        icon_color: >-
+          {% if is_state('sensor.bathroom_thermostatic_valve_hvac_action', 'heating') %}red{% elif is_state('input_boolean.heating_manual_bathroom', 'on') %}orange{% else %}grey{% endif %}
+        badge_icon: >-
+          {% if is_state('input_boolean.heating_manual_bathroom', 'on') %}mdi:hand-back-right{% endif %}
+        badge_color: >-
+          {% if is_state('input_boolean.heating_manual_bathroom', 'on') %}orange{% endif %}
+        tap_action:
+          action: more-info
+
+      - type: custom:bubble-card
+        card_type: separator
+        name: Thermostats
+        icon: mdi:thermostat
+
+      - type: thermostat
+        entity: climate.living_room_thermostatic_valve_thermostat
+
+      - type: thermostat
+        entity: climate.office_thermostatic_valve_thermostat
+
+      - type: thermostat
+        entity: climate.bedroom_thermostatic_valve_thermostat
+
+      - type: thermostat
+        entity: climate.bathroom_thermostatic_valve_thermostat

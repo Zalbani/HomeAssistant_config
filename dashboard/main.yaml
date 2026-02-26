@@ -1,0 +1,13 @@
+button_card_templates: !include_dir_merge_named templates/
+
+views:
+  - !include views/home.yaml
+  - !include views/living_room.yaml
+  - !include views/office.yaml
+  - !include views/bedroom.yaml
+  - !include views/kitchen.yaml
+  - !include views/bathroom.yaml
+  - !include views/restroom.yaml
+  - !include views/balcony.yaml
+  - !include views/heating.yaml
+  - !include views/maintenance.yaml

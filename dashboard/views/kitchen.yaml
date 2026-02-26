@@ -1,0 +1,15 @@
+title: Kitchen
+icon: mdi:silverware-fork-knife
+path: kitchen
+type: sections
+max_columns: 2
+subview: true
+header:
+  card:
+    type: heading
+    heading: Kitchen
+    heading_style: title
+    icon: mdi:silverware-fork-knife
+
+sections:
+  - !include ../rooms/kitchen/controls.yaml

@@ -1,0 +1,171 @@
+title: Maintenance
+icon: mdi:wrench
+path: maintenance
+type: sections
+max_columns: 2
+subview: true
+header:
+  card:
+    type: heading
+    heading: Maintenance
+    heading_style: title
+    icon: mdi:wrench
+
+sections:
+  - title: Batteries
+    cards:
+      - type: custom:auto-entities
+        card:
+          type: custom:bar-card
+          title_position: inside
+          height: 38
+          positions:
+            icon: inside
+            indicator: inside
+            name: inside
+            value: inside
+          show_icon: true
+          align: split
+          columns: "1"
+          max: 100
+          unit_of_measurement: "%"
+          severity:
+            - color: "#d11e1e"
+              icon: mdi:battery-10
+              from: 0
+              to: 5
+            - color: "#cf2d11"
+              icon: mdi:battery-10
+              from: 6
+              to: 10
+            - color: "#cc3900"
+              icon: mdi:battery-20
+              from: 11
+              to: 15
+            - color: "#c84400"
+              icon: mdi:battery-20
+              from: 16
+              to: 20
+            - color: "#c44d00"
+              icon: mdi:battery-30
+              from: 21
+              to: 25
+            - color: "#bf5600"
+              icon: mdi:battery-30
+              from: 26
+              to: 30
+            - color: "#b95f00"
+              icon: mdi:battery-40
+              from: 31
+              to: 35
+            - color: "#b36600"
+              icon: mdi:battery-40
+              from: 36
+              to: 40
+            - color: "#ac6e00"
+              icon: mdi:battery-50
+              from: 41
+              to: 45
+            - color: "#a57500"
+              icon: mdi:battery-50
+              from: 46
+              to: 50
+            - color: "#9d7b00"
+              icon: mdi:battery-60
+              from: 51
+              to: 55
+            - color: "#948100"
+              icon: mdi:battery-60
+              from: 56
+              to: 60
+            - color: "#8b8700"
+              icon: mdi:battery-70
+              from: 61
+              to: 65
+            - color: "#818d00"
+              icon: mdi:battery-70
+              from: 66
+              to: 70
+            - color: "#769200"
+              icon: mdi:battery-80
+              from: 71
+              to: 75
+            - color: "#6a9700"
+              icon: mdi:battery-80
+              from: 76
+              to: 80
+            - color: "#5d9c00"
+              icon: mdi:battery-90
+              from: 81
+              to: 85
+            - color: "#4da100"
+              icon: mdi:battery-90
+              from: 86
+              to: 90
+            - color: "#39a500"
+              icon: mdi:battery-check
+              from: 91
+              to: 95
+            - color: "#15a911"
+              icon: mdi:battery-check
+              from: 96
+              to: 100
+          card_mod:
+            style: |
+              bar-card-currentbar, bar-card-current, bar-card-backgroundbar {
+                height: 5px !important;
+                margin-top: 35px;
+                border-radius: 10px !important;
+              }
+              bar-card-iconbar {
+                margin-bottom: 5px;
+              }
+        filter:
+          include:
+            - entity_id: "^sensor.*_battery$"
+              state: "<100"
+        sort:
+          method: state
+          numeric: true
+          reverse: false
+
+  - title: System
+    cards:
+      - type: custom:mushroom-template-card
+        primary: Desktop PC
+        entity: switch.alban_pc_fixe
+        secondary: "{% if is_state(entity, 'on') %} Online ({{ states('sensor.hass_pc_fixe_cpuload') | round(0) }}% CPU){% else %} Offline{% endif %}"
+        icon: mdi:desktop-tower
+        icon_color: "{% if is_state(entity, 'on') %} blue{% else %} grey{% endif %}"
+        tap_action:
+          action: toggle
+        hold_action:
+          action: more-info
+
+      - type: custom:mushroom-entity-card
+        entity: button.hass_pc_fixe_shutdown
+        name: Shutdown PC
+        icon: mdi:power
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.hass_pc_fixe_shutdown
+
+      - type: custom:bubble-card
+        card_type: separator
+        name: Calendar
+        icon: mdi:calendar
+
+      - type: calendar
+        entities:
+          - calendar.pro_pierson_alban_gmail_com
+
+      - type: custom:bubble-card
+        card_type: separator
+        name: Person
+        icon: mdi:account
+
+      - type: custom:mushroom-entity-card
+        entity: person.alban_pierson
+        fill_container: true

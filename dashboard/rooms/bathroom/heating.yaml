@@ -1,0 +1,11 @@
+title: Heating
+cards:
+  - type: custom:button-card
+    template: thermostat_card
+    name: Bathroom Heating
+    variables:
+      climate_entity: climate.bathroom_thermostatic_valve_thermostat
+      hvac_action_sensor: sensor.bathroom_thermostatic_valve_hvac_action
+
+  - type: thermostat
+    entity: climate.bathroom_thermostatic_valve_thermostat

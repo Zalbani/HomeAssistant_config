@@ -1,0 +1,26 @@
+type: custom:button-card
+template: room_card
+name: Bedroom
+variables:
+  name: Bedroom
+  room_id: bedroom
+  light_entity:
+    - switch.bedroom_ceiling_lamp_switch
+    - light.bedroom_bed_led_strip
+  sub_state: >
+    [[[
+      const temp = states['sensor.bedroom_thermometer_temperature']?.state;
+      if (temp && temp !== 'unknown') return `${parseFloat(temp).toFixed(1)}°`;
+      return '';
+    ]]]
+  actions_columns:
+    - - entity: switch.bedroom_ceiling_lamp_switch
+        icon: mdi:lightbulb
+      - entity: light.bedroom_bed_led_strip
+        icon: mdi:led-strip-variant
+      - entity: cover.bedroom_sunshade
+        icon: mdi:blinds
+    - - entity: climate.bedroom_thermostatic_valve_thermostat
+        icon: mdi:fire
+        tap_action:
+          action: more-info

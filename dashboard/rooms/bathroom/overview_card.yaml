@@ -1,0 +1,20 @@
+type: custom:button-card
+template: room_card
+name: Bathroom
+variables:
+  name: Bathroom
+  room_id: bathroom
+  light_entity: switch.bath_ceiling_lamp_switch
+  sub_state: >
+    [[[
+      const temp = states['sensor.bathroom_thermometer_temperature']?.state;
+      if (temp && temp !== 'unknown') return `${parseFloat(temp).toFixed(1)}°`;
+      return '';
+    ]]]
+  actions_columns:
+    - - entity: switch.bath_ceiling_lamp_switch
+        icon: mdi:lightbulb
+      - entity: climate.bathroom_thermostatic_valve_thermostat
+        icon: mdi:fire
+        tap_action:
+          action: more-info

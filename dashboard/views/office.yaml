@@ -1,0 +1,20 @@
+title: Office
+icon: mdi:desk
+path: office
+type: sections
+max_columns: 3
+subview: true
+header:
+  card:
+    type: heading
+    heading: Office
+    heading_style: title
+    icon: mdi:desk
+    badges:
+      - type: entity
+        entity: sensor.office_thermometer_temperature
+
+sections:
+  - !include ../rooms/office/climate.yaml
+  - !include ../rooms/office/controls.yaml
+  - !include ../rooms/office/heating.yaml

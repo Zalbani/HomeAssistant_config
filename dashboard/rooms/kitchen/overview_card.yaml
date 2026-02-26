@@ -1,0 +1,17 @@
+type: custom:button-card
+template: room_card
+name: Kitchen
+variables:
+  name: Kitchen
+  room_id: kitchen
+  light_entity:
+    - switch.kitchen_ceiling_lamp_switch
+    - switch.kitchen_led_strip_switch
+  sub_state: ""
+  actions_columns:
+    - - entity: switch.kitchen_ceiling_lamp_switch
+        icon: mdi:lightbulb
+      - entity: switch.kitchen_led_strip_switch
+        icon: mdi:led-strip-variant
+      - entity: cover.kitchen_shutter
+        icon: mdi:window-shutter

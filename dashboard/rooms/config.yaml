@@ -1,0 +1,34 @@
+living_room:
+  name: Living Room
+  icon: mdi:sofa-outline
+  color: "#4CAF50"
+
+office:
+  name: Office
+  icon: mdi:microsoft-office
+  color: "#C9A96E"
+
+bedroom:
+  name: Bedroom
+  icon: mdi:bed-outline
+  color: "#B55233"
+
+kitchen:
+  name: Kitchen
+  icon: mdi:coffee-maker-outline
+  color: "#E6B800"
+
+bathroom:
+  name: Bathroom
+  icon: mdi:bathtub-outline
+  color: "#45B5C4"
+
+restroom:
+  name: Restroom
+  icon: mdi:paper-roll-outline
+  color: "#D4759E"
+
+balcony:
+  name: Balcony
+  icon: mdi:balcony
+  color: "#8BC34A"

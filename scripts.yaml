@@ -14,3 +14,24 @@ toggle_on_off_pc_fix:
       target:
         entity_id: button.hass_pc_fixe_shutdown
   description: ''
+
+toggle_heating_boost:
+  alias: Toggle Heating Boost
+  description: Toggles boost mode on/off. If boost is active, exits to comfort (resolver re-evaluates).
+  sequence:
+    - if:
+        - condition: state
+          entity_id: input_select.heating_profile
+          state: "boost"
+      then:
+        - action: input_select.select_option
+          target:
+            entity_id: input_select.heating_profile
+          data:
+            option: "comfort"
+      else:
+        - action: input_select.select_option
+          target:
+            entity_id: input_select.heating_profile
+          data:
+            option: "boost"

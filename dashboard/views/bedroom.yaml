@@ -1,0 +1,20 @@
+title: Bedroom
+icon: mdi:bed-outline
+path: bedroom
+type: sections
+max_columns: 3
+subview: true
+header:
+  card:
+    type: heading
+    heading: Bedroom
+    heading_style: title
+    icon: mdi:bed-outline
+    badges:
+      - type: entity
+        entity: sensor.bedroom_thermometer_temperature
+
+sections:
+  - !include ../rooms/bedroom/climate.yaml
+  - !include ../rooms/bedroom/controls.yaml
+  - !include ../rooms/bedroom/heating.yaml

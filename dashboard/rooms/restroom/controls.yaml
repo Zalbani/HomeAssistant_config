@@ -1,0 +1,13 @@
+title: Controls
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Light
+    icon: mdi:lightbulb
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: switch.restroom_ceiling_lamp_switch
+    name: Ceiling light
+    icon: mdi:lightbulb

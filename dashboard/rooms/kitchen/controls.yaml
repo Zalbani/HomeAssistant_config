@@ -1,0 +1,37 @@
+title: Controls
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Lights
+    icon: mdi:lightbulb
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: switch.kitchen_ceiling_lamp_switch
+    name: Ceiling light
+    icon: mdi:lightbulb
+
+  - type: custom:bubble-card
+    card_type: button
+    entity: switch.kitchen_led_strip_switch
+    name: LED strip
+    icon: mdi:led-strip-variant
+
+  - type: custom:bubble-card
+    card_type: button
+    entity: switch.kitchen_under_cabinet_lighting_switch
+    name: Under cabinet
+    icon: mdi:lightbulb-outline
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Shutter
+    icon: mdi:window-shutter
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: cover.kitchen_shutter
+    name: Kitchen shutter
+    icon: mdi:window-shutter

@@ -1,0 +1,33 @@
+type: custom:button-card
+template: room_card
+name: Living Room
+variables:
+  name: Living Room
+  room_id: living_room
+  light_entity:
+    - switch.living_room_ceiling_lamp_switch
+    - switch.living_room_outlet_switch
+  sub_state: >
+    [[[
+      const temp = states['sensor.living_room_thermometer_temperature']?.state;
+      const door = states['binary_sensor.living_room_french_window']?.state;
+      let parts = [];
+      if (temp && temp !== 'unknown') parts.push(`${parseFloat(temp).toFixed(1)}°`);
+      if (door === 'on') parts.push('🚪 Window open');
+      return parts.join('  ');
+    ]]]
+  door: binary_sensor.living_room_french_window
+  hvac_action: sensor.living_room_thermostatic_valve_hvac_action
+  actions_columns:
+    - - entity: switch.living_room_ceiling_lamp_switch
+        icon: mdi:lightbulb
+      - entity: switch.living_room_outlet_switch
+        icon: mdi:floor-lamp
+      - entity: cover.living_room_shutter
+        icon: mdi:window-shutter
+    - - entity: cover.living_room_sunshade
+        icon: mdi:blinds
+      - entity: climate.living_room_thermostatic_valve_thermostat
+        icon: mdi:fire
+        tap_action:
+          action: more-info

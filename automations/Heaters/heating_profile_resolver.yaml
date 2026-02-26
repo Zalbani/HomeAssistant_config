@@ -18,7 +18,7 @@ triggers:
     entity_id: person.alban_pierson
   - alias: Outdoor temperature changed
     trigger: state
-    entity_id: weather.home
+    entity_id: weather.forecast_home
     attribute: temperature
   - alias: Outdoor threshold changed
     trigger: state
@@ -41,7 +41,7 @@ conditions:
       {{ states('input_select.heating_profile') != 'boost'
          or trigger.id == 'startup' }}
 variables:
-  outdoor_temp: "{{ state_attr('weather.home', 'temperature') | float(0) }}"
+  outdoor_temp: "{{ state_attr('weather.forecast_home', 'temperature') | float(0) }}"
   outdoor_threshold: "{{ states('input_number.heating_outdoor_threshold') | float(22) }}"
   is_night: >
     {{ now().hour >= 23

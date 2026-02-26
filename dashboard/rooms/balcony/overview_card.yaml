@@ -1,0 +1,11 @@
+type: custom:button-card
+template: room_card
+name: Balcony
+variables:
+  name: Balcony
+  room_id: balcony
+  light_entity: switch.balcony_outside_lamp
+  sub_state: ""
+  actions_columns:
+    - - entity: switch.balcony_outside_lamp
+        icon: mdi:lightbulb

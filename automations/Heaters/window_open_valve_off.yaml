@@ -2,7 +2,7 @@ id: '1771400000001'
 alias: Heaters - Window open cuts valve
 description: >-
   When a window opens, turn off the associated radiator valve.
-  When it closes, turn it back on.
+  When it closes, turn it back on and re-apply the active profile temperature.
   Mapping in mappings/heaters/window_valve_mapping.yaml.
 triggers:
   - alias: Window opened
@@ -22,7 +22,18 @@ triggers:
     to: 'off'
     id: closing
 variables:
+  profiles: !include ../../mappings/heaters/profiles.yaml
   window_valve_mapping: !include ../../mappings/heaters/window_valve_mapping.yaml
+  valve_entity: >-
+    {% set m = window_valve_mapping[trigger.entity_id] %}
+    {{ m.valve if m is mapping else m }}
+  open_window_entity: >-
+    {% set m = window_valve_mapping[trigger.entity_id] %}
+    {{ m.get('open_window') if m is mapping else none }}
+  room: >-
+    {% set m = window_valve_mapping[trigger.entity_id] %}
+    {{ m.get('room') if m is mapping else none }}
+  profile: "{{ states('input_select.heating_profile') }}"
 actions:
   - choose:
       - alias: "Window opened: disable valve"
@@ -32,13 +43,33 @@ actions:
         sequence:
           - action: switch.turn_off
             target:
-              entity_id: "{{ window_valve_mapping[trigger.entity_id] }}"
-      - alias: "Window closed: re-enable valve"
+              entity_id: "{{ valve_entity }}"
+      - alias: "Window closed: re-enable valve and restore temperature"
         conditions:
           - condition: trigger
             id: closing
         sequence:
           - action: switch.turn_on
             target:
-              entity_id: "{{ window_valve_mapping[trigger.entity_id] }}"
-mode: single
+              entity_id: "{{ valve_entity }}"
+          - if:
+              - condition: template
+                value_template: "{{ open_window_entity is not none }}"
+            then:
+              - action: switch.turn_off
+                target:
+                  entity_id: "{{ open_window_entity }}"
+          - if:
+              - condition: template
+                value_template: "{{ room is not none }}"
+            then:
+              - delay: { seconds: 5 }
+              - action: climate.set_temperature
+                target:
+                  entity_id: "{{ profiles.thermostats[room] }}"
+                data:
+                  temperature: "{{ profiles.temperatures[profile][room] }}"
+              - action: input_boolean.turn_off
+                target:
+                  entity_id: "{{ profiles.manual_overrides[room] }}"
+mode: restart

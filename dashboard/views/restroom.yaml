@@ -1,0 +1,15 @@
+title: Restroom
+icon: mdi:toilet
+path: restroom
+type: sections
+max_columns: 1
+subview: true
+header:
+  card:
+    type: heading
+    heading: Restroom
+    heading_style: title
+    icon: mdi:toilet
+
+sections:
+  - !include ../rooms/restroom/controls.yaml

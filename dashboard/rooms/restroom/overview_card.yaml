@@ -1,0 +1,11 @@
+type: custom:button-card
+template: room_card
+name: Restroom
+variables:
+  name: Restroom
+  room_id: restroom
+  light_entity: switch.restroom_ceiling_lamp_switch
+  sub_state: ""
+  actions_columns:
+    - - entity: switch.restroom_ceiling_lamp_switch
+        icon: mdi:lightbulb

@@ -1,0 +1,203 @@
+room_card_action:
+  show_name: false
+  tap_action:
+    haptic: light
+  hold_action:
+    haptic: medium
+  icon: '[[[
+    const eid = variables.btn_entity || (entity && entity.entity_id) || "";
+    if (eid.startsWith("climate.")) {
+      const e = states[eid];
+      const isHeating = e && e.attributes && e.attributes.hvac_action === "heating";
+      return isHeating ? "mdi:fire" : "mdi:radiator";
+    }
+    return variables.default_icon || "mdi:circle";
+  ]]]'
+  styles:
+    card:
+      - width: 38px
+      - height: 38px
+      - border-radius: 50%
+      - background: rgba(255,255,255,0.08)
+      - border: none
+    icon:
+      - width: 18px
+      - color: |
+          [[[
+            const eid = variables.btn_entity || (entity && entity.entity_id) || '';
+            if (eid.startsWith('climate.')) {
+              const e = states[eid];
+              const isHeating = e && e.attributes && e.attributes.hvac_action === 'heating';
+              return isHeating ? '#F44336' : 'rgba(255,255,255,0.4)';
+            }
+            return entity && entity.state === 'on' ? '#f1c40f' : 'rgba(255,255,255,0.4)';
+          ]]]
+  extra_styles: |
+    @keyframes pulse-orange {
+      0%   { transform: scale(1);    filter: drop-shadow(0 0 0px rgba(255, 152, 0, 0)); }
+      50%  { transform: scale(1.2);  filter: drop-shadow(0 0 6px rgba(255, 152, 0, 0.8)); }
+      100% { transform: scale(1);    filter: drop-shadow(0 0 0px rgba(255, 152, 0, 0)); }
+    }
+    .heating-active {
+      animation: pulse-orange 1.8s infinite ease-in-out !important;
+    }
+
+room_card:
+  variables:
+    room_configs: !include ../rooms/config.yaml
+  show_state: false
+  show_icon: false
+  entity: "[[[ const le = variables.light_entity; const arr = Array.isArray(le) ? le : (le ? [le] : []); return arr[0] || 'sensor.time'; ]]]"
+  update_timer: 2
+  tap_action:
+    action: navigate
+    haptic: light
+    navigation_path: >
+      [[[
+        const path = variables.name.toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '-');
+        return `/overview-dashboard/${path}`;
+      ]]]
+  extra_styles: |
+    @keyframes pulse-orange {
+      0%   { transform: scale(1);    filter: drop-shadow(0 0 0px rgba(255, 152, 0, 0)); }
+      50%  { transform: scale(1.2);  filter: drop-shadow(0 0 6px rgba(255, 152, 0, 0.8)); }
+      100% { transform: scale(1);    filter: drop-shadow(0 0 0px rgba(255, 152, 0, 0)); }
+    }
+    @keyframes alert-blink {
+      0%, 100% { opacity: 1;   color: #e74c3c; }
+      50%       { opacity: 0.2; color: #e74c3c; }
+    }
+    .heating-active { animation: pulse-orange 1.8s infinite ease-in-out !important; }
+    .alert-critical  { animation: alert-blink  1s   infinite ease-in-out !important; color: #e74c3c !important; }
+  styles:
+    card:
+      - height: 154px
+      - border-radius: 28px
+      - padding: 12px
+      - border: 1px solid rgba(255, 255, 255, 0.08)
+      - overflow: hidden
+      - position: relative
+      - background: |
+          [[[
+            const entities = variables.light_entity
+              ? (Array.isArray(variables.light_entity) ? variables.light_entity : [variables.light_entity])
+              : [];
+            const isAnyOn = entities.some(e => states[e] && states[e].state === 'on');
+            return isAnyOn
+              ? 'linear-gradient(145deg, rgba(255, 193, 7, 0.25) 0%, rgba(255, 152, 0, 0.05) 100%)'
+              : 'rgba(var(--rgb-card-background-color), 0.4)';
+          ]]]
+      - box-shadow: none
+    grid:
+      - grid-template-areas: >
+          "n actions_container"
+          "status actions_container"
+          "metrics actions_container"
+          "i actions_container"
+      - grid-template-columns: 1fr min-content
+      - grid-template-rows: min-content min-content auto 1fr
+    name:
+      - justify-self: start
+      - font-size: 18px
+      - font-weight: 700
+    custom_fields:
+      actions_container:
+        - background: rgba(255, 255, 255, 0.03)
+        - border-radius: 18px
+        - padding: 4px
+        - align-self: center
+        - z-index: 1
+      i:
+        - position: absolute
+        - width: 100px
+        - height: 100px
+        - left: '-15px'
+        - bottom: '-15px'
+        - border-radius: 100%
+        - background: '[[[ return variables.img_bg || "rgba(255,255,255,0.05)" ]]]'
+        - display: flex
+        - align-items: center
+        - justify-content: center
+        - pointer-events: none
+      status:
+        - justify-self: start
+        - font-size: 13px
+        - opacity: 0.6
+        - margin-top: 2px
+      alert:
+        - position: absolute
+        - top: 10px
+        - right: 10px
+        - z-index: 2
+        - pointer-events: none
+  custom_fields:
+    i: >
+      [[[ const cfg = variables.room_configs?.[variables.room_id] || {};
+      const icon = variables.room_icon || cfg.icon || 'mdi:home';
+      const color = variables.icon_color || cfg.color || 'white';
+      return `<ha-icon icon="${icon}" style="width: 45px; color: ${color}; opacity: 0.8;"></ha-icon>`;
+      ]]]
+    status: >
+      [[[
+        const sub = variables.sub_state || '';
+        if (!sub) return '';
+        const match = sub.match(/([\d.]+)°/);
+        if (match) {
+          const t = parseFloat(match[1]);
+          let color = 'inherit';
+          if (t < 19) color = '#3498db';
+          else if (t > 23) color = '#e74c3c';
+          return `<span style="color: ${color}">${sub}</span>`;
+        }
+        return sub;
+      ]]]
+    alert: >
+      [[[
+        if (!variables.door) return '';
+        const doorOpen = states[variables.door]?.state === 'on';
+        if (!doorOpen) return '';
+        let isHeating = false;
+        if (variables.hvac_action) {
+          isHeating = states[variables.hvac_action]?.state === 'heating';
+        } else if (variables.thermostat) {
+          isHeating = states[variables.thermostat]?.attributes?.hvac_action === 'heating';
+        }
+        const cls = isHeating ? 'alert-critical' : '';
+        const color = isHeating ? '#e74c3c' : 'rgba(255,255,255,0.7)';
+        return `<ha-icon icon="mdi:door-open" class="${cls}" style="width:22px; color:${color};"></ha-icon>`;
+      ]]]
+    actions_container:
+      card:
+        type: horizontal-stack
+        cards: |
+          [[[
+            const columns = variables.actions_columns ?? [];
+            const all = columns.flat();
+            const pri = (b) => {
+              const d = (b.entity || '').split('.')[0];
+              const ic = b.icon || '';
+              if (d === 'light' || (d === 'switch' && /bulb|lamp|led/.test(ic))) return 0;
+              if (d === 'cover') return 1;
+              if (d === 'climate') return 2;
+              return 3;
+            };
+            all.sort((a, b) => pri(a) - pri(b));
+            const cols = [];
+            for (let i = 0; i < all.length; i += 3) cols.push(all.slice(i, i + 3));
+            return cols.map(col => ({
+              type: 'vertical-stack',
+              cards: col.map(btn => {
+                const { icon, ...rest } = btn;
+                return {
+                  ...rest,
+                  type: 'custom:button-card',
+                  template: 'room_card_action',
+                  variables: { default_icon: icon, btn_entity: rest.entity || '' },
+                  tap_action: { ...(btn.tap_action || ((btn.entity || '').startsWith('cover.') ? { action: 'more-info' } : { action: 'toggle' })), haptic: 'light' },
+                  hold_action: btn.hold_action || { action: 'none' }
+                };
+              })
+            }));
+          ]]]

@@ -1,0 +1,38 @@
+title: Controls
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Lights
+    icon: mdi:lightbulb
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: switch.living_room_ceiling_lamp_switch
+    name: Ceiling light
+    icon: mdi:lightbulb
+
+  - type: custom:bubble-card
+    card_type: button
+    entity: switch.living_room_outlet_switch
+    name: Floor lamp
+    icon: mdi:floor-lamp
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Covers
+    icon: mdi:window-shutter
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: cover.living_room_shutter
+    name: Shutter
+    icon: mdi:window-shutter
+
+  - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: cover.living_room_sunshade
+    name: Sunshade
+    icon: mdi:blinds

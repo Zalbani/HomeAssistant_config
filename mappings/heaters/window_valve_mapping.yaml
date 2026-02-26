@@ -2,4 +2,10 @@
 # Add entries for each window that should cut its associated radiator.
 # When adding a new window, also add its sensor to mappings/heaters/window_sensors.yaml.
 #
-"binary_sensor.living_room_french_window": switch.living_room_thermostatic_valve_switch
+# For valves with "open window" detection (e.g. SONOFF TRVZB), add open_window to reset it when window closes.
+
+"binary_sensor.living_room_french_window":
+  valve: switch.living_room_thermostatic_valve_switch
+  open_window: switch.thermostatic_valve_open_window
+  room: living_room
+
