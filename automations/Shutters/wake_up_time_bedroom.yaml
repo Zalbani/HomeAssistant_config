@@ -1,51 +1,44 @@
 id: '1765722279017'
-alias: 'Wake UP : Time - Bedroom'
-description: ''
+alias: Wake Up - Time - Bedroom
+description: >-
+  Opens bedroom shutter at sunrise +30 min on weekdays or 11:00 on weekends,
+  only if the phone alarm is more than 5 hours away (avoids conflict with phone wake-up).
 triggers:
-  - trigger: sun
+  - alias: Weekday - sunrise +30 min
+    trigger: sun
     event: sunrise
-    offset: +00:30:00
-    id: semaine
-  - trigger: time
+    offset: "+00:30:00"
+    id: weekday
+  - alias: Weekend - 11:00
+    trigger: time
     at: '11:00:00'
     id: weekend
 conditions:
-  - alias: If next phone alarm is in more than 5 hours
+  - alias: Phone alarm is more than 5 hours away
     condition: template
-    value_template: "{{ \n  states('sensor.pixel_9_pro_next_alarm') not in ['unknown','unavailable']
-      \n  and \n  now() <= (states('sensor.pixel_9_pro_next_alarm') | as_datetime
-      - timedelta(hours=5))\n}}\n"
-  - condition: or
+    value_template: >-
+      {{ states('sensor.pixel_9_pro_next_alarm') not in ['unknown', 'unavailable']
+         and now() <= (states('sensor.pixel_9_pro_next_alarm') | as_datetime - timedelta(hours=5)) }}
+  - alias: Match trigger to day type
+    condition: or
     conditions:
-    - condition: time
-      weekday:
-      - fri
-      - thu
-      - wed
-      - tue
-      - mon
-    - condition: time
-      weekday:
-      - sat
-      - sun
-      after: '11:00:00'
+      - condition: time
+        weekday: [mon, tue, wed, thu, fri]
+      - condition: time
+        weekday: [sat, sun]
+        after: '11:00:00'
 actions:
-  - action: cover.stop_cover
-    metadata: {}
-    data: {}
+  - alias: Stop any ongoing cover movement
+    action: cover.stop_cover
     target:
       area_id:
-      - bedroom
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - action: cover.set_cover_position
-    metadata: {}
+        - bedroom
+  - delay: { seconds: 1 }
+  - alias: Open bedroom shutter
+    action: cover.set_cover_position
     data:
       position: 100
     target:
       area_id:
-      - bedroom
+        - bedroom
 mode: single

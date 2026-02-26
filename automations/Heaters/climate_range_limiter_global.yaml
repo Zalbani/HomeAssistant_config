@@ -1,39 +1,43 @@
 id: '1771167624313'
 alias: Climate - Range limiter - Global
-description: Enforces global Min/Max limits for all radiator valves
+description: Enforces global min/max limits for all radiator valves.
 triggers:
-  - trigger: state
+  - alias: Any thermostat setpoint changed
+    trigger: state
     entity_id:
-    - climate.general_thermostat
-    - climate.bathroom_thermostatic_valve_thermostat
-    - climate.bedroom_thermostatic_valve_thermostat
-    - climate.office_thermostatic_valve_thermostat
-    - climate.living_room_thermostatic_valve_thermostat
+      - climate.general_thermostat
+      - climate.bathroom_thermostatic_valve_thermostat
+      - climate.bedroom_thermostatic_valve_thermostat
+      - climate.office_thermostatic_valve_thermostat
+      - climate.living_room_thermostatic_valve_thermostat
     attribute: temperature
+    not_from:
+      - unavailable
+      - unknown
+variables:
+  min_limit: "{{ states('input_number.heating_global_min') | float(16) }}"
+  max_limit: "{{ states('input_number.heating_global_max') | float(23) }}"
+  requested_temp: "{{ state_attr(trigger.entity_id, 'temperature') | float }}"
 actions:
   - choose:
-    - alias: 'Too cold: bring back to min'
-      conditions:
-      - condition: template
-        value_template: '{{ requested_temp < min_limit }}'
-      sequence:
-      - action: climate.set_temperature
-        target:
-          entity_id: '{{ trigger.entity_id }}'
-        data:
-          temperature: '{{ min_limit }}'
-    - alias: 'Too hot: bring back to max'
-      conditions:
-      - condition: template
-        value_template: '{{ requested_temp > max_limit }}'
-      sequence:
-      - action: climate.set_temperature
-        target:
-          entity_id: '{{ trigger.entity_id }}'
-        data:
-          temperature: '{{ max_limit }}'
+      - alias: "Too cold: clamp to min"
+        conditions:
+          - condition: template
+            value_template: "{{ requested_temp < min_limit }}"
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: "{{ trigger.entity_id }}"
+            data:
+              temperature: "{{ min_limit }}"
+      - alias: "Too hot: clamp to max"
+        conditions:
+          - condition: template
+            value_template: "{{ requested_temp > max_limit }}"
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: "{{ trigger.entity_id }}"
+            data:
+              temperature: "{{ max_limit }}"
 mode: parallel
-variables:
-  min_limit: '{{ states(''input_number.heating_global_min'') | float(16) }}'
-  max_limit: '{{ states(''input_number.heating_global_max'') | float(23) }}'
-  requested_temp: '{{ state_attr(trigger.entity_id, ''temperature'') | float }}'

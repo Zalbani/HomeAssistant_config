@@ -4,6 +4,9 @@ description: Scroll wheel down = lower shutters, Scroll wheel up = raise shutter
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/shutters/scroll_wheel_triggers.yaml
+    not_from:
+      - unavailable
+      - unknown
 actions:
   - alias: Calculate shutter position from press count
     variables:

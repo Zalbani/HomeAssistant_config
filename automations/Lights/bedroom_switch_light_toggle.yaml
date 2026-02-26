@@ -1,16 +1,19 @@
-alias: Light sync - Bedroom - Switch toggle
+id: '1771400000003'
+alias: Light Sync - Bedroom switch toggle
 description: >-
-  Turns off the bulb immediately, waits 30s for the LED strip. 
-  If the bulb is turned back on (via switch, app, or voice) during that time, 
-  the LED strip remains on.
+  Turns off the bulb immediately, waits 60s for the LED strip.
+  If the bulb is turned back on during that time, the LED strip stays on.
 triggers:
-  - trigger: state
+  - alias: Bedroom ceiling lamp switch toggled
+    trigger: state
     entity_id: switch.bedroom_ceiling_lamp_switch
-conditions: []
+    not_from:
+      - unavailable
+      - unknown
 actions:
   - choose:
-      # Case 1: Turning OFF (if the bulb is currently on)
-      - conditions:
+      - alias: "Bulb is ON: turn off, then conditionally turn off LED strip"
+        conditions:
           - condition: state
             entity_id: light.bedroom_ceiling_lamp_bulb
             state: "on"
@@ -18,17 +21,15 @@ actions:
           - action: light.turn_off
             target:
               entity_id: light.bedroom_ceiling_lamp_bulb
-          
-          # Wait 30 seconds OR until the bulb is turned back on
-          - wait_for_trigger:
+          - alias: Wait up to 60s or until bulb turns back on
+            wait_for_trigger:
               - trigger: state
                 entity_id: light.bedroom_ceiling_lamp_bulb
                 to: "on"
             timeout: "00:01:00"
             continue_on_timeout: true
-
-          # Only turn off the LED strip if the bulb is STILL off after the wait
-          - if:
+          - alias: Turn off LED strip only if bulb is still off
+            if:
               - condition: state
                 entity_id: light.bedroom_ceiling_lamp_bulb
                 state: "off"
@@ -36,9 +37,8 @@ actions:
               - action: light.turn_off
                 target:
                   entity_id: light.bedroom_bed_led_strip
-
-      # Case 2: Everything is off, turn everything ON
-      - conditions:
+      - alias: "Bulb is OFF: turn on bulb and LED strip"
+        conditions:
           - condition: state
             entity_id: light.bedroom_ceiling_lamp_bulb
             state: "off"

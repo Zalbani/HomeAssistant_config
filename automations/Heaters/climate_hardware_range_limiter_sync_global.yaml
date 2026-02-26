@@ -1,38 +1,46 @@
 id: '1771168472148'
 alias: Climate - Hardware range limiter Sync - Global
-description: Synchronizes Helper limits with physical valve settings
+description: Synchronizes helper limits with physical valve settings.
 triggers:
-  - trigger: state
+  - alias: Global limit helper changed
+    trigger: state
     entity_id:
-    - input_number.heating_global_min
-    - input_number.heating_global_max
-  - trigger: state
+      - input_number.heating_global_min
+      - input_number.heating_global_max
+    not_from:
+      - unavailable
+      - unknown
+  - alias: Collective heating turned on
+    trigger: state
     entity_id: input_boolean.collective_heating
+    not_from:
+      - unavailable
+      - unknown
     to: 'on'
-actions:
-  - alias: Update Min Limits
-    action: number.set_value
-    target:
-      entity_id: '{{ min_entities }}'
-    data:
-      value: '{{ states(''input_number.heating_global_min'') | float }}'
-  - alias: Update Max Limits
-    action: number.set_value
-    target:
-      entity_id: '{{ max_entities }}'
-    data:
-      value: '{{ states(''input_number.heating_global_max'') | float }}'
-mode: restart
 variables:
   min_entities:
-  - number.general_thermostat_min_heat_setpoint_limit
-  - number.bathroom_thermostatic_valve_min_heat_setpoint_limit
-  - number.bedroom_thermostatic_valve_min_heat_setpoint_limit
-  - number.office_thermostatic_valve_min_heat_setpoint_limit
-  - number.living_room_thermostatic_valve_min_heat_setpoint_limit
+    - number.general_thermostat_min_heat_setpoint_limit
+    - number.bathroom_thermostatic_valve_min_heat_setpoint_limit
+    - number.bedroom_thermostatic_valve_min_heat_setpoint_limit
+    - number.office_thermostatic_valve_min_heat_setpoint_limit
+    - number.living_room_thermostatic_valve_min_heat_setpoint_limit
   max_entities:
-  - number.general_thermostat_max_heat_setpoint_limit
-  - number.bathroom_thermostatic_valve_max_heat_setpoint_limit
-  - number.bedroom_thermostatic_valve_max_heat_setpoint_limit
-  - number.office_thermostatic_valve_max_heat_setpoint_limit
-  - number.living_room_thermostatic_valve_max_heat_setpoint_limit
+    - number.general_thermostat_max_heat_setpoint_limit
+    - number.bathroom_thermostatic_valve_max_heat_setpoint_limit
+    - number.bedroom_thermostatic_valve_max_heat_setpoint_limit
+    - number.office_thermostatic_valve_max_heat_setpoint_limit
+    - number.living_room_thermostatic_valve_max_heat_setpoint_limit
+actions:
+  - alias: Update min limits
+    action: number.set_value
+    target:
+      entity_id: "{{ min_entities }}"
+    data:
+      value: "{{ states('input_number.heating_global_min') | float }}"
+  - alias: Update max limits
+    action: number.set_value
+    target:
+      entity_id: "{{ max_entities }}"
+    data:
+      value: "{{ states('input_number.heating_global_max') | float }}"
+mode: restart

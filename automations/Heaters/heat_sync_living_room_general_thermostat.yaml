@@ -1,42 +1,48 @@
 id: '1771521471495'
-alias: Heat - Sync Living room & general thermostat
-description: Aligns the living room valve temperature and the general thermostat
+alias: Heat Sync - Living room & General thermostat
+description: Keeps the living room valve and general thermostat temperatures aligned.
 triggers:
-  - entity_id: climate.general_thermostat
-    attribute: temperature
+  - alias: General thermostat setpoint changed
     trigger: state
-  - entity_id: climate.living_room_thermostatic_valve_thermostat
+    entity_id: climate.general_thermostat
     attribute: temperature
+    not_from:
+      - unavailable
+      - unknown
+  - alias: Living room valve setpoint changed
     trigger: state
+    entity_id: climate.living_room_thermostatic_valve_thermostat
+    attribute: temperature
+    not_from:
+      - unavailable
+      - unknown
+variables:
+  living_room_setpoint: "{{ state_attr('climate.living_room_thermostatic_valve_thermostat', 'temperature') | float(0) }}"
+  general_setpoint: "{{ state_attr('climate.general_thermostat', 'temperature') | float(0) }}"
 actions:
-  - variables:
-      living_room_setpoint: '{{ state_attr(''climate.living_room_thermostatic_valve_thermostat'',
-        ''temperature'') | float(0) }}'
-      general_setpoint: '{{ state_attr(''climate.general_thermostat'', ''temperature'')
-        | float(0) }}'
-    alias: Variable definition
-  - alias: Determine which entity changed
-    choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.entity_id == ''climate.living_room_thermostatic_valve_thermostat''
-          and living_room_setpoint != general_setpoint }}'
-      sequence:
-      - target:
-          entity_id: climate.general_thermostat
-        data:
-          temperature: '{{ living_room_setpoint }}'
-        action: climate.set_temperature
-      alias: Living room valve -> Updating general thermostat
-    - conditions:
-      - condition: template
-        value_template: '{{ trigger.entity_id == ''climate.general_thermostat'' and
-          general_setpoint != living_room_setpoint }}'
-      sequence:
-      - target:
-          entity_id: climate.living_room_thermostatic_valve_thermostat
-        data:
-          temperature: '{{ general_setpoint }}'
-        action: climate.set_temperature
-      alias: General thermostat -> Updating living room valve
+  - choose:
+      - alias: Living room valve changed - update general thermostat
+        conditions:
+          - condition: template
+            value_template: >-
+              {{ trigger.entity_id == 'climate.living_room_thermostatic_valve_thermostat'
+                 and living_room_setpoint != general_setpoint }}
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: climate.general_thermostat
+            data:
+              temperature: "{{ living_room_setpoint }}"
+      - alias: General thermostat changed - update living room valve
+        conditions:
+          - condition: template
+            value_template: >-
+              {{ trigger.entity_id == 'climate.general_thermostat'
+                 and general_setpoint != living_room_setpoint }}
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: climate.living_room_thermostatic_valve_thermostat
+            data:
+              temperature: "{{ general_setpoint }}"
 mode: restart

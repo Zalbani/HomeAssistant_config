@@ -4,6 +4,9 @@ description: Button 1 = decrease (min 10%), Button 2 = increase. 8 presses = 90%
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/lights/scroll_wheel_triggers.yaml
+    not_from:
+      - unavailable
+      - unknown
 actions:
   - alias: Calculate brightness from press count
     variables:

@@ -1,52 +1,37 @@
 id: '1765745986629'
-alias: 'Wake UP : Phone - Global'
-description: ''
+alias: Wake Up - Phone alarm - Global
+description: >-
+  Opens all shutters 2 minutes before the phone alarm rings.
+  Uses a debounce flag to avoid repeated triggers.
 triggers:
-  - minutes: /1
-    trigger: time_pattern
+  - alias: Phone alarm is within 2 minutes
+    trigger: template
+    value_template: >-
+      {{ states('sensor.pixel_9_pro_next_alarm') not in ['unknown', 'unavailable']
+         and now() >= (states('sensor.pixel_9_pro_next_alarm') | as_datetime - timedelta(minutes=2)) }}
 conditions:
-  - condition: template
-    value_template: "{{ \n  states('sensor.pixel_9_pro_next_alarm') not in ['unknown','unavailable']
-      \n  and \n  now() >= (states('sensor.pixel_9_pro_next_alarm') | as_datetime
-      - timedelta(minutes=2))\n}}\n"
-    alias: If next phone alarm is in 2 minutes
-  - condition: state
+  - alias: Wake-up not already triggered
+    condition: state
     entity_id: input_boolean.wakeup_done
     state: 'off'
 actions:
-  - action: input_boolean.turn_on
+  - alias: Set debounce flag
+    action: input_boolean.turn_on
     target:
       entity_id: input_boolean.wakeup_done
-  - action: cover.stop_cover
-    metadata: {}
-    data: {}
-    target:
-      area_id:
-      - office
-      - living_room
-      - kitchen
-      - bedroom
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - action: cover.set_cover_position
-    metadata: {}
+  - alias: Open all shutters
+    action: cover.set_cover_position
     data:
       position: 100
     target:
       area_id:
-      - living_room
-      - office
-      - kitchen
-      - bedroom
-  - delay:
-      hours: 0
-      minutes: 2
-      seconds: 0
-      milliseconds: 0
-  - action: input_boolean.turn_off
+        - living_room
+        - office
+        - kitchen
+        - bedroom
+  - delay: { minutes: 2 }
+  - alias: Reset debounce flag
+    action: input_boolean.turn_off
     target:
       entity_id: input_boolean.wakeup_done
 mode: single

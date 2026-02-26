@@ -1,32 +1,27 @@
 id: '1765723709414'
-alias: 'Wake UP : Sun - Office / Living room / Kitchen'
-description: ''
+alias: Wake Up - Sunrise - Office / Living room / Kitchen
+description: Opens office, living room and kitchen shutters 30 min after sunrise.
 triggers:
-  - event: sunrise
-    offset: +00:30:00
+  - alias: 30 min after sunrise
     trigger: sun
-conditions: []
+    event: sunrise
+    offset: "+00:30:00"
 actions:
-  - action: cover.stop_cover
-    metadata: {}
-    data: {}
+  - alias: Stop any ongoing cover movement
+    action: cover.stop_cover
     target:
       area_id:
-      - office
-      - living_room
-      - kitchen
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - action: cover.set_cover_position
-    metadata: {}
+        - office
+        - living_room
+        - kitchen
+  - delay: { seconds: 1 }
+  - alias: Open shutters fully
+    action: cover.set_cover_position
     data:
       position: 100
     target:
       area_id:
-      - office
-      - living_room
-      - kitchen
+        - office
+        - living_room
+        - kitchen
 mode: single

@@ -4,6 +4,9 @@ description: Single press = toggle all on/off. Double press = turn off all. Mapp
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/lights/toggle_triggers.yaml
+    not_from:
+      - unavailable
+      - unknown
 actions:
   - choose:
       - alias: Double press

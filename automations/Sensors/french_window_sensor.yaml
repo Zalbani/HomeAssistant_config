@@ -1,34 +1,44 @@
 id: '1771400000000'
-alias: Living Room Sunshade - Window control
-description: Manages sunshade position based on french window open/close state.
+alias: Living Room Sunshade - French window control
+description: >-
+  Raises the sunshade when the french window opens (if currently closed).
+  Closes it back when the window shuts during nighttime.
 triggers:
-  - trigger: state
+  - alias: French window opened
+    trigger: state
     entity_id: binary_sensor.living_room_french_window
+    not_from:
+      - unavailable
+      - unknown
     to: 'on'
     id: opening
-  - trigger: state
+  - alias: French window closed
+    trigger: state
     entity_id: binary_sensor.living_room_french_window
+    not_from:
+      - unavailable
+      - unknown
     to: 'off'
     id: closing
 actions:
   - choose:
-      - conditions:
+      - alias: "Window opened: raise sunshade if it was down"
+        conditions:
           - condition: trigger
             id: opening
+          - condition: numeric_state
+            entity_id: cover.living_room_sunshade
+            attribute: current_position
+            below: 10
         sequence:
-          - alias: Check if sunshade is closed before raising
-            if:
-              - condition: numeric_state
-                entity_id: cover.living_room_sunshade
-                attribute: current_position
-                below: 10
-            then:
-              - action: cover.set_cover_position
-                target:
-                  entity_id: cover.living_room_sunshade
-                data:
-                  position: 70
-      - conditions:
+          - alias: Raise sunshade to 70%
+            action: cover.set_cover_position
+            target:
+              entity_id: cover.living_room_sunshade
+            data:
+              position: 70
+      - alias: "Window closed at night: lower sunshade"
+        conditions:
           - condition: trigger
             id: closing
           - condition: sun
@@ -36,7 +46,8 @@ actions:
             after_offset: "+00:30:00"
             before: sunrise
         sequence:
-          - action: cover.set_cover_position
+          - alias: Close sunshade fully
+            action: cover.set_cover_position
             target:
               entity_id: cover.living_room_sunshade
             data:

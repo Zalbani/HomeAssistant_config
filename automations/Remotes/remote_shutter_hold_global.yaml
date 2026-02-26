@@ -4,6 +4,9 @@ description: Hold = move shutters (up if all closed, down otherwise). Release = 
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/shutters/hold_triggers.yaml
+    not_from:
+      - unavailable
+      - unknown
 actions:
   - choose:
       - alias: Release - stop all

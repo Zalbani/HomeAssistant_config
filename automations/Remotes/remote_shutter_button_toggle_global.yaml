@@ -4,6 +4,9 @@ description: Button toggle - If any shutter moving → stop. If at least one not
 triggers:
   - trigger: state
     entity_id: !include ../../mappings/shutters/toggle_triggers.yaml
+    not_from:
+      - unavailable
+      - unknown
 actions:
   - alias: Check if all shutters are closed
     variables:
