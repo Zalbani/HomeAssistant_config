@@ -1,0 +1,54 @@
+id: '1740500000002'
+alias: Heating - Profile Applier
+description: >-
+  Applies target temperatures from the active profile to all thermostats.
+  Resets per-room manual overrides on profile change.
+  Periodic refresh every 30 min respects manual overrides.
+triggers:
+  - alias: Profile changed
+    trigger: state
+    entity_id: input_select.heating_profile
+    not_from:
+      - unavailable
+      - unknown
+    id: profile_changed
+  - alias: Periodic refresh
+    trigger: time_pattern
+    minutes: "/30"
+    id: periodic_refresh
+conditions:
+  - alias: Collective heating on, or applying off profile
+    condition: template
+    value_template: >
+      {{ is_state('input_boolean.collective_heating', 'on')
+         or states('input_select.heating_profile') == 'off' }}
+variables:
+  profiles: !include ../../mappings/heaters/profiles.yaml
+  profile: "{{ states('input_select.heating_profile') }}"
+actions:
+  - if:
+      - condition: trigger
+        id: profile_changed
+    then:
+      - alias: Reset all manual overrides on profile change
+        action: input_boolean.turn_off
+        target:
+          entity_id: !include ../../mappings/heaters/manual_overrides.yaml
+  - alias: Apply temperatures per room
+    repeat:
+      for_each:
+        - bathroom
+        - bedroom
+        - office
+        - living_room
+      sequence:
+        - if:
+            - condition: template
+              value_template: "{{ is_state(profiles.manual_overrides[repeat.item], 'off') }}"
+          then:
+            - action: climate.set_temperature
+              target:
+                entity_id: "{{ profiles.thermostats[repeat.item] }}"
+              data:
+                temperature: "{{ profiles.temperatures[profile][repeat.item] }}"
+mode: restart

@@ -1,0 +1,30 @@
+id: '1740500000004'
+alias: Heating - Boost Manager
+description: >-
+  Waits for the configured boost duration, then restores the previous profile.
+  The previous profile is captured from trigger.from_state at activation time.
+  The resolver re-evaluates after restore via its "from: boost" trigger.
+triggers:
+  - alias: Boost activated
+    trigger: state
+    entity_id: input_select.heating_profile
+    to: "boost"
+variables:
+  duration: "{{ states('input_number.heating_boost_duration') | int(30) }}"
+  previous: "{{ trigger.from_state.state if trigger.from_state.state != 'boost' else 'comfort' }}"
+actions:
+  - alias: Wait for boost duration
+    delay:
+      minutes: "{{ duration }}"
+  - alias: Restore previous profile (only if still in boost)
+    if:
+      - condition: state
+        entity_id: input_select.heating_profile
+        state: "boost"
+    then:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.heating_profile
+        data:
+          option: "{{ previous }}"
+mode: restart

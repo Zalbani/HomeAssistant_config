@@ -1,0 +1,51 @@
+# Heating profiles configuration
+# Used by: heating_profile_applier.yaml, heating_manual_override_detector.yaml
+#
+# Room → thermostat entity mapping
+thermostats:
+  bathroom: climate.bathroom_thermostatic_valve_thermostat
+  bedroom: climate.bedroom_thermostatic_valve_thermostat
+  office: climate.office_thermostatic_valve_thermostat
+  living_room: climate.living_room_thermostatic_valve_thermostat
+
+# Room → manual override boolean mapping
+manual_overrides:
+  bathroom: input_boolean.heating_manual_bathroom
+  bedroom: input_boolean.heating_manual_bedroom
+  office: input_boolean.heating_manual_office
+  living_room: input_boolean.heating_manual_living_room
+
+# Thermostat → room reverse mapping
+thermostat_to_room:
+  climate.bathroom_thermostatic_valve_thermostat: bathroom
+  climate.bedroom_thermostatic_valve_thermostat: bedroom
+  climate.office_thermostatic_valve_thermostat: office
+  climate.living_room_thermostatic_valve_thermostat: living_room
+
+# Target temperatures (°C) per profile per room
+temperatures:
+  comfort:
+    bathroom: 22
+    bedroom: 19
+    living_room: 21
+    office: 21
+  eco:
+    bathroom: 17
+    bedroom: 17
+    living_room: 17
+    office: 17
+  night:
+    bathroom: 17
+    bedroom: 17
+    living_room: 17
+    office: 16
+  boost:
+    bathroom: 25
+    bedroom: 23
+    living_room: 24
+    office: 24
+  off:
+    bathroom: 8
+    bedroom: 8
+    living_room: 8
+    office: 8

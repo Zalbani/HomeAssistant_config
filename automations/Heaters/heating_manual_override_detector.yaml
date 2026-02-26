@@ -1,0 +1,38 @@
+id: '1740500000003'
+alias: Heating - Manual Override Detector
+description: >-
+  Detects physical temperature changes on thermostatic valves by comparing
+  the new setpoint against the expected profile temperature.
+  If they differ, the room is flagged as manually overridden.
+triggers:
+  - alias: Any thermostat setpoint changed
+    trigger: state
+    entity_id: !include ../../mappings/heaters/thermostats.yaml
+    attribute: temperature
+    not_from:
+      - unavailable
+      - unknown
+conditions:
+  - alias: Collective heating is on
+    condition: state
+    entity_id: input_boolean.collective_heating
+    state: "on"
+  - alias: Not in boost or off profile
+    condition: template
+    value_template: "{{ states('input_select.heating_profile') not in ['off', 'boost'] }}"
+variables:
+  profiles: !include ../../mappings/heaters/profiles.yaml
+  room: "{{ profiles.thermostat_to_room[trigger.entity_id] }}"
+  profile: "{{ states('input_select.heating_profile') }}"
+  expected_temp: "{{ profiles.temperatures[profile][room] | float }}"
+  actual_temp: "{{ trigger.to_state.attributes.temperature | float }}"
+actions:
+  - alias: Flag as manual only if temperature differs from profile
+    if:
+      - condition: template
+        value_template: "{{ actual_temp != expected_temp }}"
+    then:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: "{{ profiles.manual_overrides[room] }}"
+mode: parallel

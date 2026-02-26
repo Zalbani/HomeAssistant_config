@@ -1,0 +1,95 @@
+id: '1740500000001'
+alias: Heating - Profile Resolver
+description: >-
+  Resolves the active heating profile based on priority chain:
+  collective heating off → person away or warm outdoor → night → comfort.
+  Night mode: 23:00 to sunrise +30 min.
+  Does not override boost (user-triggered, managed by boost_manager).
+triggers:
+  - alias: HA restart - re-initialize
+    trigger: homeassistant
+    event: start
+    id: startup
+  - alias: Collective heating changed
+    trigger: state
+    entity_id: input_boolean.collective_heating
+  - alias: Person state changed
+    trigger: state
+    entity_id: person.alban_pierson
+  - alias: Outdoor temperature changed
+    trigger: state
+    entity_id: weather.home
+    attribute: temperature
+  - alias: Outdoor threshold changed
+    trigger: state
+    entity_id: input_number.heating_outdoor_threshold
+  - alias: Night start (23:00)
+    trigger: time
+    at: "23:00:00"
+  - alias: Day start (sunrise + 30 min)
+    trigger: sun
+    event: sunrise
+    offset: "+00:30:00"
+  - alias: Boost ended, re-evaluate
+    trigger: state
+    entity_id: input_select.heating_profile
+    from: "boost"
+conditions:
+  - alias: Don't override boost (except on HA restart where boost timer is lost)
+    condition: template
+    value_template: >
+      {{ states('input_select.heating_profile') != 'boost'
+         or trigger.id == 'startup' }}
+variables:
+  outdoor_temp: "{{ state_attr('weather.home', 'temperature') | float(0) }}"
+  outdoor_threshold: "{{ states('input_number.heating_outdoor_threshold') | float(22) }}"
+  is_night: >
+    {{ now().hour >= 23
+       or (now().hour < 12 and is_state('sun.sun', 'below_horizon')) }}
+actions:
+  - alias: Resolve profile by priority
+    choose:
+      - alias: "Priority 1: Collective heating off → off"
+        conditions:
+          - condition: state
+            entity_id: input_boolean.collective_heating
+            state: "off"
+        sequence:
+          - action: input_select.select_option
+            target:
+              entity_id: input_select.heating_profile
+            data:
+              option: "off"
+      - alias: "Priority 2: Person away or outdoor temp warm → eco"
+        conditions:
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: person.alban_pierson
+                state: "not_home"
+              - condition: template
+                value_template: "{{ outdoor_temp > outdoor_threshold }}"
+        sequence:
+          - action: input_select.select_option
+            target:
+              entity_id: input_select.heating_profile
+            data:
+              option: "eco"
+      - alias: "Priority 3: Night mode → night"
+        conditions:
+          - condition: template
+            value_template: "{{ is_night }}"
+        sequence:
+          - action: input_select.select_option
+            target:
+              entity_id: input_select.heating_profile
+            data:
+              option: "night"
+    default:
+      - alias: "Default: comfort"
+        action: input_select.select_option
+        target:
+          entity_id: input_select.heating_profile
+        data:
+          option: "comfort"
+mode: restart

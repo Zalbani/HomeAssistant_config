@@ -5,6 +5,10 @@
 - !include Heaters/climate_hardware_range_limiter_sync_global.yaml
 - !include Heaters/window_open_valve_off.yaml
 - !include Heaters/heat_sync_living_room_general_thermostat.yaml
+- !include Heaters/heating_profile_resolver.yaml
+- !include Heaters/heating_profile_applier.yaml
+- !include Heaters/heating_manual_override_detector.yaml
+- !include Heaters/heating_boost_manager.yaml
 - !include Shutters/close_global.yaml
 - !include Shutters/wake_up_time_bedroom.yaml
 - !include Shutters/wake_up_sun_office_living_kitchen.yaml

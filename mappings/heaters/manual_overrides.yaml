@@ -1,0 +1,7 @@
+# List of per-room manual override booleans
+# Used by automations/Heaters/heating_profile_applier.yaml
+# Include with: !include mappings/heaters/manual_overrides.yaml
+- input_boolean.heating_manual_bathroom
+- input_boolean.heating_manual_bedroom
+- input_boolean.heating_manual_office
+- input_boolean.heating_manual_living_room

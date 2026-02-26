@@ -1,0 +1,7 @@
+# List of thermostatic valve thermostats (climate entities)
+# Used by automations/Heaters/heating_manual_override_detector.yaml
+# Include with: !include mappings/heaters/thermostats.yaml
+- climate.bathroom_thermostatic_valve_thermostat
+- climate.bedroom_thermostatic_valve_thermostat
+- climate.office_thermostatic_valve_thermostat
+- climate.living_room_thermostatic_valve_thermostat
