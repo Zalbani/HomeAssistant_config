@@ -23,10 +23,12 @@ HomeAssistant_Config/
 ├── dashboard/
 │   ├── main.yaml               # Dashboard definition (views list)
 │   ├── views/                  # Per-room & feature views
+│   ├── cards/                  # Shared dashboard cards (weather, heating overview)
 │   ├── rooms/                  # Per-room cards (overview, controls, heating, climate)
 │   │   └── config.yaml         # Room metadata (name, icon, color)
 │   └── templates/              # Reusable button-card templates
 ├── scripts.yaml
+├── scenes.yaml
 └── README.md
 ```
 
@@ -141,9 +143,16 @@ The dashboard is defined in `dashboard/main.yaml` and uses reusable **button-car
 | View | Content |
 |------|---------|
 | **Home** | Weather overview, heating status (room temps, active profile, boost timer, collective heating), room overview cards. |
-| **Living room / Office / Bedroom / Kitchen / Bathroom / Restroom / Balcony** | Per-room view with climate, controls (lights, covers, switches) and heating sections where applicable. |
+| **Living room / Office / Bedroom / Kitchen / Bathroom / Restroom / Balcony / Entry** | Per-room view with climate, controls (lights, covers, switches) and heating sections where applicable. |
 | **Heating** | Profile selector, boost timer, outdoor threshold, collective heating status, seasonal dates, global limits, per-room temperature cards with manual override indicators. |
 | **Maintenance** | Battery levels (auto-entities < 100 %), desktop PC control, calendar, person tracking. |
+
+### Shared cards (`dashboard/cards/`)
+
+| Card | Purpose |
+|------|---------|
+| `weather_card.yaml` | Weather overview for the Home view. |
+| `heating_overview_card.yaml` | Heating status: room temps, active profile, boost timer, collective heating. |
 
 ### Templates (`dashboard/templates/`)
 
@@ -155,7 +164,7 @@ The dashboard is defined in `dashboard/main.yaml` and uses reusable **button-car
 
 ### Room config (`dashboard/rooms/config.yaml`)
 
-Defines metadata for 7 rooms: **living_room**, **office**, **bedroom**, **kitchen**, **bathroom**, **restroom**, **balcony** — each with name, icon and color.
+Defines metadata for 8 rooms: **living_room**, **office**, **bedroom**, **kitchen**, **bathroom**, **restroom**, **balcony**, **entry** — each with name, icon and color.
 
 ---
 
