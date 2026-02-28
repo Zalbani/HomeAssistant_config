@@ -13,6 +13,9 @@ triggers:
       - unavailable
       - unknown
 conditions:
+  - alias: Trigger is a room thermostat (has room mapping)
+    condition: template
+    value_template: "{{ trigger.entity_id in profiles.thermostat_to_room }}"
   - alias: Collective heating is on
     condition: state
     entity_id: input_boolean.collective_heating
@@ -31,6 +34,15 @@ actions:
     if:
       - condition: template
         value_template: "{{ (actual_temp - expected_temp) | abs > 0.1 }}"
+      - alias: No window recently changed for this room (avoid false positives during valve restore)
+        condition: template
+        value_template: >
+          {% set room_windows = {
+            'living_room': 'binary_sensor.living_room_french_window'
+          } %}
+          {% set window = room_windows.get(room) %}
+          {{ window is none or
+             (now() - states[window].last_changed).total_seconds() > 30 }}
     then:
       - action: input_boolean.turn_on
         target:

@@ -15,6 +15,36 @@ toggle_on_off_pc_fix:
         entity_id: button.hass_pc_fixe_shutdown
   description: ''
 
+reset_heating_profile:
+  alias: Reset Heating Profile
+  description: Clears all manual overrides and re-applies temperatures for the current profile.
+  variables:
+    profiles: !include mappings/heaters/profiles.yaml
+    profile: "{{ states('input_select.heating_profile') }}"
+  sequence:
+    - alias: Clear all manual overrides
+      action: input_boolean.turn_off
+      target:
+        entity_id: !include mappings/heaters/manual_overrides.yaml
+    - alias: Re-apply temperatures for current profile
+      repeat:
+        for_each:
+          - bathroom
+          - bedroom
+          - office
+          - living_room
+        sequence:
+          - if:
+              - condition: template
+                value_template: >
+                  {{ states(profiles.thermostats[repeat.item]) not in ['unavailable', 'unknown'] }}
+            then:
+              - action: climate.set_temperature
+                target:
+                  entity_id: "{{ profiles.thermostats[repeat.item] }}"
+                data:
+                  temperature: "{{ profiles.temperatures[profile][repeat.item] }}"
+
 toggle_heating_boost:
   alias: Toggle Heating Boost
   description: Toggles boost mode on/off. If boost is active, exits to comfort (resolver re-evaluates).

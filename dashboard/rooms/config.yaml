@@ -32,3 +32,8 @@ balcony:
   name: Balcony
   icon: mdi:balcony
   color: "#8BC34A"
+
+entry:
+  name: Entry
+  icon: mdi:door-open
+  color: "#78909C"

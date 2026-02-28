@@ -21,8 +21,22 @@ variables:
   actions_columns:
     - - entity: switch.living_room_ceiling_lamp_switch
         icon: mdi:lightbulb
+        hold_action:
+          action: more-info
+          entity: light.living_room_ceiling_lamp_bulb
       - entity: switch.living_room_outlet_switch
         icon: mdi:floor-lamp
+        variables:
+          rgb_entity: light.living_room_streetlight_bulb
+        hold_action:
+          action: more-info
+          entity: light.living_room_streetlight_bulb
+      - entity: light.living_room_mushroom_lamp_bulb
+        icon: mdi:mushroom-outline
+        tap_action:
+          action: toggle
+        hold_action:
+          action: more-info
       - entity: cover.living_room_shutter
         icon: mdi:window-shutter
     - - entity: cover.living_room_sunshade

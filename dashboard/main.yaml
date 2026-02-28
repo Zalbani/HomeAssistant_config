@@ -10,4 +10,5 @@ views:
   - !include views/restroom.yaml
   - !include views/balcony.yaml
   - !include views/heating.yaml
+  - !include views/entry.yaml
   - !include views/maintenance.yaml

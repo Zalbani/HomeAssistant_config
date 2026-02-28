@@ -15,6 +15,7 @@
 - !include Shutters/wake_up_phone_global.yaml
 - !include Lights/bedroom_switch_light_toggle.yaml
 - !include Lights/balcony_light_french_window.yaml
+- !include Lights/streetlight_mushroom_sync.yaml
 - !include Remotes/remote_light_toggle_global.yaml
 - !include Remotes/remote_shutter_scroll_wheel_global.yaml
 - !include Remotes/remote_shutter_button_toggle_global.yaml

@@ -52,6 +52,18 @@ actions:
           - action: switch.turn_on
             target:
               entity_id: "{{ valve_entity }}"
+          # Apply profile temperature immediately so the thermostat gets the right
+          # setpoint before the device reports a default (e.g. 16°C), which would
+          # trigger the manual override detector and overwrite our intent.
+          - if:
+              - condition: template
+                value_template: "{{ room is not none }}"
+            then:
+              - action: climate.set_temperature
+                target:
+                  entity_id: "{{ profiles.thermostats[room] }}"
+                data:
+                  temperature: "{{ profiles.temperatures[profile][room] }}"
           - if:
               - condition: template
                 value_template: "{{ open_window_entity is not none }}"

@@ -8,6 +8,7 @@ room_card_action:
     const eid = variables.btn_entity || (entity && entity.entity_id) || "";
     if (eid.startsWith("climate.")) {
       const e = states[eid];
+      if (!e || e.state === "unavailable") return "mdi:radiator-off";
       const isHeating = e && e.attributes && e.attributes.hvac_action === "heating";
       return isHeating ? "mdi:fire" : "mdi:radiator";
     }
@@ -29,6 +30,11 @@ room_card_action:
               const e = states[eid];
               const isHeating = e && e.attributes && e.attributes.hvac_action === 'heating';
               return isHeating ? '#F44336' : 'rgba(255,255,255,0.4)';
+            }
+            if (variables.rgb_entity) {
+              if (!entity || entity.state !== 'on') return 'rgba(255,255,255,0.4)';
+              const rgb = states[variables.rgb_entity]?.attributes?.rgb_color;
+              if (rgb) return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
             }
             return entity && entity.state === 'on' ? '#f1c40f' : 'rgba(255,255,255,0.4)';
           ]]]
@@ -105,9 +111,9 @@ room_card:
     custom_fields:
       actions_container:
         - background: rgba(255, 255, 255, 0.03)
-        - border-radius: 18px
+        - border-radius: 23px
         - padding: 4px
-        - align-self: center
+        - align-self: start
         - z-index: 1
       i:
         - position: absolute
@@ -194,7 +200,7 @@ room_card:
                   ...rest,
                   type: 'custom:button-card',
                   template: 'room_card_action',
-                  variables: { default_icon: icon, btn_entity: rest.entity || '' },
+                  variables: { ...(rest.variables || {}), default_icon: icon, btn_entity: rest.entity || '' },
                   tap_action: { ...(btn.tap_action || ((btn.entity || '').startsWith('cover.') ? { action: 'more-info' } : { action: 'toggle' })), haptic: 'light' },
                   hold_action: btn.hold_action || { action: 'none' }
                 };

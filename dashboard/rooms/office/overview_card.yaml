@@ -14,6 +14,9 @@ variables:
   actions_columns:
     - - entity: switch.office_ceiling_lamp_switch
         icon: mdi:lightbulb
+        hold_action:
+          action: more-info
+          entity: light.office_ceiling_lamp_bulb
       - entity: cover.office_sunshade
         icon: mdi:blinds
       - entity: climate.office_thermostatic_valve_thermostat

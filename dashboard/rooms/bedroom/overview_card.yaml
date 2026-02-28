@@ -5,7 +5,7 @@ variables:
   name: Bedroom
   room_id: bedroom
   light_entity:
-    - switch.bedroom_ceiling_lamp_switch
+    - light.bedroom_ceiling_lamp_bulb
     - light.bedroom_bed_led_strip
   sub_state: >
     [[[
@@ -14,8 +14,12 @@ variables:
       return '';
     ]]]
   actions_columns:
-    - - entity: switch.bedroom_ceiling_lamp_switch
+    - - entity: light.bedroom_ceiling_lamp_bulb
         icon: mdi:lightbulb
+        tap_action:
+          action: toggle
+        hold_action:
+          action: more-info
       - entity: light.bedroom_bed_led_strip
         icon: mdi:led-strip-variant
       - entity: cover.bedroom_sunshade

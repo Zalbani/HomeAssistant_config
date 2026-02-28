@@ -53,6 +53,18 @@ sections:
           perform_action: script.toggle_heating_boost
 
       - type: custom:mushroom-template-card
+        entity: script.reset_heating_profile
+        icon: mdi:restore
+        primary: Reset profile
+        secondary: Clear overrides & reapply current profile
+        icon_color: grey
+        tap_action:
+          action: perform-action
+          perform_action: script.turn_on
+          target:
+            entity_id: script.reset_heating_profile
+
+      - type: custom:mushroom-template-card
         entity: weather.forecast_home
         icon: mdi:home-thermometer-outline
         primary: Outdoor temperature
@@ -117,6 +129,17 @@ sections:
 
   - title: Temperatures
     cards:
+      - type: custom:mushroom-template-card
+        entity: climate.general_thermostat
+        icon: mdi:thermostat
+        primary: General Thermostat
+        secondary: >-
+          Target {{ state_attr('climate.general_thermostat', 'temperature') }}°C
+        icon_color: >-
+          {% if is_state('climate.general_thermostat', 'heat') %}red{% else %}grey{% endif %}
+        tap_action:
+          action: more-info
+
       - type: custom:mushroom-template-card
         entity: climate.living_room_thermostatic_valve_thermostat
         icon: >-
@@ -185,6 +208,9 @@ sections:
         card_type: separator
         name: Thermostats
         icon: mdi:thermostat
+
+      - type: thermostat
+        entity: climate.general_thermostat
 
       - type: thermostat
         entity: climate.living_room_thermostatic_valve_thermostat

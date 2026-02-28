@@ -1,0 +1,109 @@
+# Carte chauffage pour la vue Home : profil, température moyenne, pièces
+type: vertical-stack
+cards:
+  - type: custom:button-card
+    name: null
+    show_name: false
+    show_icon: false
+    entity: input_select.heating_profile
+    tap_action:
+      action: navigate
+      navigation_path: /overview-dashboard/heating
+    styles:
+      card:
+        - background: linear-gradient(135deg, rgba(255, 87, 34, 0.12) 0%, rgba(244, 67, 54, 0.08) 100%)
+        - border-radius: 20px
+        - padding: 16px
+        - border: 1px solid rgba(255, 255, 255, 0.1)
+      grid:
+        - grid-template-areas: '"profile" "rooms"'
+        - grid-template-columns: 1fr
+        - grid-template-rows: auto auto
+        - gap: 12px
+    custom_fields:
+      profile: |
+        [[[
+          const p = states['input_select.heating_profile']?.state || 'off';
+          const iconMap = {
+            'comfort': 'mdi:radiator', 'boost': 'mdi:fire-circle', 'eco': 'mdi:leaf',
+            'night': 'mdi:weather-night', 'off': 'mdi:radiator-off'
+          };
+          const colorMap = {
+            'comfort': '#FF9800', 'boost': '#F44336', 'eco': '#4CAF50',
+            'night': '#2196F3', 'off': '#9E9E9E'
+          };
+          const tempSensors = [
+            'sensor.living_room_thermometer_temperature',
+            'sensor.office_thermometer_temperature',
+            'sensor.bedroom_thermometer_temperature',
+            'sensor.bathroom_thermometer_temperature'
+          ];
+          let sum = 0, count = 0;
+          tempSensors.forEach(id => {
+            const t = states[id]?.state;
+            if (t && t !== 'unknown' && t !== 'unavailable') { sum += parseFloat(t); count++; }
+          });
+          const avgTemp = count > 0 ? (sum / count).toFixed(1) : '—';
+          const desc = count > 0 ? `Moyenne ${avgTemp}°` : '—';
+
+          const icon = iconMap[p] || 'mdi:radiator';
+          const color = colorMap[p] || '#9E9E9E';
+          const label = p.charAt(0).toUpperCase() + p.slice(1);
+
+          let rightHtml = '';
+          const timer = states['timer.heating_boost'];
+          if (p === 'boost' && timer?.state === 'active' && timer.attributes?.finishes_at) {
+            const fin = new Date(timer.attributes.finishes_at);
+            const now = new Date();
+            const diff = Math.max(0, Math.floor((fin - now) / 1000));
+            const m = Math.floor(diff / 60);
+            const s = diff % 60;
+            rightHtml = `<div style="text-align:right;">
+              <div style="font-size:22px;font-weight:700;color:${color};">${m}:${String(s).padStart(2,'0')}</div>
+              <div style="font-size:11px;opacity:0.6;">remaining</div>
+            </div>`;
+          } else if (states['input_boolean.collective_heating']?.state === 'off') {
+            rightHtml = `<div style="text-align:right;opacity:0.6;font-size:12px;">
+              <ha-icon icon="mdi:radiator-off" style="width:14px;color:#9E9E9E;"></ha-icon><br>Collective OFF
+            </div>`;
+          }
+
+          return `
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:16px;">
+                <ha-icon icon="${icon}" style="width:60px;height:60px;color:${color};"></ha-icon>
+                <div>
+                  <div style="font-size:32px;font-weight:700;line-height:1;color:white;">${label}</div>
+                  <div style="font-size:14px;opacity:0.7;margin-top:4px;">${desc}</div>
+                </div>
+              </div>
+              ${rightHtml}
+            </div>`;
+        ]]]
+      rooms: |
+        [[[
+          const rooms = [
+            { name: 'Living room', icon: 'mdi:sofa-outline', temp: 'sensor.living_room_thermometer_temperature', action: 'sensor.living_room_thermostatic_valve_hvac_action' },
+            { name: 'Office', icon: 'mdi:microsoft-office', temp: 'sensor.office_thermometer_temperature', action: 'sensor.office_thermostatic_valve_hvac_action' },
+            { name: 'Bedroom', icon: 'mdi:bed-outline', temp: 'sensor.bedroom_thermometer_temperature', action: 'sensor.bedroom_thermostatic_valve_hvac_action' },
+            { name: 'Bathroom', icon: 'mdi:bathtub-outline', temp: 'sensor.bathroom_thermometer_temperature', action: 'sensor.bathroom_thermostatic_valve_hvac_action' }
+          ];
+
+          const cells = rooms.map(r => {
+            const t = states[r.temp]?.state;
+            const temp = (t && t !== 'unknown' && t !== 'unavailable') ? parseFloat(t).toFixed(1) : '—';
+            const heating = states[r.action]?.state === 'heating';
+            const color = heating ? '#FF5722' : 'rgba(255,255,255,0.6)';
+            const bg = heating ? 'rgba(255,87,34,0.12)' : 'rgba(255,255,255,0.04)';
+            return `
+              <div style="display:flex;align-items:center;gap:8px;padding:8px;background:${bg};border-radius:10px;">
+                <ha-icon icon="${r.icon}" style="width:20px;color:${color};"></ha-icon>
+                <div style="flex:1;">
+                  <div style="font-size:11px;opacity:0.6;">${r.name}</div>
+                  <div style="font-size:15px;font-weight:600;color:${color};">${temp}°</div>
+                </div>
+              </div>`;
+          }).join('');
+
+          return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">${cells}</div>`;
+        ]]]

@@ -36,6 +36,10 @@ conditions:
     condition: state
     entity_id: input_boolean.collective_heating
     state: "on"
+  - alias: French window not recently changed (avoid cascade during valve restore)
+    condition: template
+    value_template: >
+      {{ (now() - states['binary_sensor.living_room_french_window'].last_changed).total_seconds() > 30 }}
 variables:
   salon_target: "{{ state_attr('climate.living_room_thermostatic_valve_thermostat', 'temperature') | float(0) }}"
   general_setpoint: "{{ state_attr('climate.general_thermostat', 'temperature') | float(0) }}"

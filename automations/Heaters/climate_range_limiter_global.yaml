@@ -4,12 +4,7 @@ description: Enforces global min/max limits for all radiator valves.
 triggers:
   - alias: Any thermostat setpoint changed
     trigger: state
-    entity_id:
-      - climate.general_thermostat
-      - climate.bathroom_thermostatic_valve_thermostat
-      - climate.bedroom_thermostatic_valve_thermostat
-      - climate.office_thermostatic_valve_thermostat
-      - climate.living_room_thermostatic_valve_thermostat
+    entity_id: !include ../../mappings/heaters/thermostats.yaml
     attribute: temperature
     not_from:
       - unavailable

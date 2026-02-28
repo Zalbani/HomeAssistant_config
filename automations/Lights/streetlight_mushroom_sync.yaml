@@ -1,0 +1,25 @@
+id: '1771400000005'
+alias: Lights - Streetlight ↔ Mushroom sync
+description: Syncs the mushroom lamp with the streetlight (on/off).
+triggers:
+  - trigger: state
+    entity_id: switch.living_room_outlet_switch
+    to: "on"
+    id: turn_on
+  - trigger: state
+    entity_id: switch.living_room_outlet_switch
+    to: "off"
+    id: turn_off
+actions:
+  - if:
+      - condition: trigger
+        id: turn_on
+    then:
+      - action: light.turn_on
+        target:
+          entity_id: light.living_room_mushroom_lamp_bulb
+    else:
+      - action: light.turn_off
+        target:
+          entity_id: light.living_room_mushroom_lamp_bulb
+mode: single

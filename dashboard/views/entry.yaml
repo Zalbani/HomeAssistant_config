@@ -1,0 +1,15 @@
+title: Entry
+icon: mdi:door-open
+path: entry
+type: sections
+max_columns: 1
+subview: true
+header:
+  card:
+    type: heading
+    heading: Entry
+    heading_style: title
+    icon: mdi:door-open
+
+sections:
+  - !include ../rooms/entry/controls.yaml

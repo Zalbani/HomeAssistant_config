@@ -1,0 +1,11 @@
+type: custom:button-card
+template: room_card
+name: Entry
+variables:
+  name: Entry
+  room_id: entry
+  light_entity: light.entry_telecontrol_switch
+  sub_state: ""
+  actions_columns:
+    - - entity: light.entry_telecontrol_switch
+        icon: mdi:lightbulb
