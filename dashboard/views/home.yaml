@@ -4,6 +4,37 @@ path: home
 type: sections
 max_columns: 4
 
+header:
+  card:
+    type: custom:mushroom-chips-card
+    chips:
+      - type: template
+        entity: person.alban_pierson
+        icon: mdi:account
+        content: Alban
+        icon_color: "{{ 'green' if is_state('person.alban_pierson', 'home') else 'grey' }}"
+        tap_action:
+          action: more-info
+
+      - type: conditional
+        conditions:
+          - condition: template
+            value_template: >
+              {{ states('binary_sensor.living_room_french_window') == 'on' }}
+        chip:
+          type: template
+          icon: mdi:window-open-variant
+          icon_color: orange
+          content: >
+            {% set open = [] %}
+            {% if is_state('binary_sensor.living_room_french_window', 'on') %}
+              {% set open = open + ['Living room'] %}
+            {% endif %}
+            {{ open | join(', ') }}
+          tap_action:
+            action: more-info
+            entity: binary_sensor.living_room_french_window
+
 sections:
   - title: Info
     cards:

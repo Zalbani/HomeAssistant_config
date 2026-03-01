@@ -1,5 +1,5 @@
 title: Kitchen
-icon: mdi:silverware-fork-knife
+icon: mdi:coffee-maker-outline
 path: kitchen
 type: sections
 max_columns: 2
@@ -9,7 +9,7 @@ header:
     type: heading
     heading: Kitchen
     heading_style: title
-    icon: mdi:silverware-fork-knife
+    icon: mdi:coffee-maker-outline
 
 sections:
   - !include ../rooms/kitchen/controls.yaml

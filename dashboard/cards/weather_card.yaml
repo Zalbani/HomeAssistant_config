@@ -60,7 +60,7 @@ custom_fields:
       const conditionText = conditionMap[condition] || condition;
       
       return `
-        <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; text-align: left;">
           <div style="display: flex; align-items: center; gap: 16px;">
             <ha-icon icon="${icon}" style="width: 60px; height: 60px; color: #42A5F5;"></ha-icon>
             <div>

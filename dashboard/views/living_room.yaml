@@ -1,5 +1,5 @@
 title: Living Room
-icon: mdi:sofa
+icon: mdi:sofa-outline
 path: living-room
 type: sections
 max_columns: 3
@@ -9,14 +9,12 @@ header:
     type: heading
     heading: Living Room
     heading_style: title
-    icon: mdi:sofa
+    icon: mdi:sofa-outline
     badges:
       - type: entity
         entity: sensor.living_room_thermometer_temperature
       - type: entity
-        entity: sensor.thermometer_desktop_humidity
+        entity: sensor.living_room_thermometer_humidity
 
 sections:
-  - !include ../rooms/living_room/climate.yaml
   - !include ../rooms/living_room/controls.yaml
-  - !include ../rooms/living_room/heating.yaml

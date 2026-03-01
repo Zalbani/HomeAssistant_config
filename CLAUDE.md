@@ -14,17 +14,13 @@ _HomeAssistant_Config/
 ├── dashboard/
 │   ├── main.yaml         # Dashboard entry point (includes templates/ + views/)
 │   ├── templates/        # Reusable button-card templates
-│   │   ├── overview_card_templates.yaml   # room_card, room_card_action
-│   │   ├── climate_card_templates.yaml    # climate_card
-│   │   └── thermostat_card_templates.yaml # thermostat_card
+│   │   └── overview_card_templates.yaml   # room_card, room_card_action
 │   ├── views/            # One file per dashboard page
 │   └── rooms/            # Per-room cards, included from views
 │       ├── config.yaml   # Centralized room metadata (name, icon, color) keyed by room_id
 │       └── <room>/
 │           ├── overview_card.yaml  # Summary card used in home.yaml
-│           ├── controls.yaml       # Bubble cards (lights, shutters)
-│           ├── climate.yaml        # Temperature/humidity (climate_card)
-│           └── heating.yaml        # Interactive thermostat (thermostat_card)
+│           └── controls.yaml       # Bubble cards (lights, shutters, PC)
 ├── mappings/
 │   ├── heaters/          # Profiles, thermostats, valves, window sensors
 │   ├── lights/           # Remote → light entities mapping
@@ -64,6 +60,8 @@ variables:
 
 ## Existing Rooms
 
+Source of truth: `dashboard/rooms/config.yaml`. The icon and color defined here must be used consistently in `overview_card.yaml`, view headers (`dashboard/views/<room>.yaml`), and any card referencing that room.
+
 | room_id      | Name        | Icon                     | Color     |
 |--------------|-------------|--------------------------|-----------|
 | living_room  | Living Room | mdi:sofa-outline         | #4CAF50   |
@@ -90,6 +88,7 @@ Priority order (automation `heating_profile_resolver`):
 ### Heating Entities per Room
 - Thermostat: `climate.<room>_thermostatic_valve_thermostat`
 - Temp sensor: `sensor.<room>_thermometer_temperature`
+- Humidity sensor: `sensor.<room>_thermometer_humidity`
 - HVAC action: `sensor.<room>_thermostatic_valve_hvac_action`
 - Manual override: `input_boolean.heating_manual_<room>`
 
@@ -132,6 +131,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `binary_sensor.living_room_french_window` | French window sensor |
 | `climate.living_room_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.living_room_thermometer_temperature` | Temperature sensor |
+| `sensor.living_room_thermometer_humidity` | Humidity sensor |
 | `sensor.living_room_thermostatic_valve_hvac_action` | HVAC action |
 | `input_boolean.heating_manual_living_room` | Manual heating override |
 | `event.living_room_remote_button_3/4/5/6` | Remote (lights / shutters) |
@@ -144,6 +144,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `cover.office_sunshade` | Sunshade / BSO |
 | `climate.office_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.office_thermometer_temperature` | Temperature sensor |
+| `sensor.office_thermometer_humidity` | Humidity sensor |
 | `sensor.office_thermostatic_valve_hvac_action` | HVAC action |
 | `input_boolean.heating_manual_office` | Manual heating override |
 | `event.office_remote_button_3/4/5/6/9` | Remote (lights / shutters / PC) |
@@ -156,6 +157,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `cover.bedroom_sunshade` | Sunshade / BSO |
 | `climate.bedroom_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.bedroom_thermometer_temperature` | Temperature sensor |
+| `sensor.bedroom_thermometer_humidity` | Humidity sensor |
 | `sensor.bedroom_thermostatic_valve_hvac_action` | HVAC action |
 | `input_boolean.heating_manual_bedroom` | Manual heating override |
 | `event.bedroom_remote_button_3/4/5/6` | Remote (lights / shutters) |
@@ -164,7 +166,6 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | Entity | Description |
 |--------|-------------|
 | `switch.kitchen_ceiling_lamp_switch` | Ceiling lamp switch |
-| `switch.kitchen_led_strip_switch` | LED strip |
 | `switch.kitchen_under_cabinet_lighting_switch` | Under cabinet lighting |
 | `cover.kitchen_shutter` | Window shutter |
 
@@ -172,8 +173,10 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | Entity | Description |
 |--------|-------------|
 | `switch.bath_ceiling_lamp_switch` | Ceiling lamp switch |
+| `switch.bathroom_mirror_switch` | Mirror light switch |
 | `climate.bathroom_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.bathroom_thermometer_temperature` | Temperature sensor |
+| `sensor.bathroom_thermometer_humidity` | Humidity sensor |
 | `sensor.bathroom_thermostatic_valve_hvac_action` | HVAC action |
 | `input_boolean.heating_manual_bathroom` | Manual heating override |
 

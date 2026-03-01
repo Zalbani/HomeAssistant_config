@@ -149,14 +149,6 @@ room_card:
       [[[
         const sub = variables.sub_state || '';
         if (!sub) return '';
-        const match = sub.match(/([\d.]+)°/);
-        if (match) {
-          const t = parseFloat(match[1]);
-          let color = 'inherit';
-          if (t < 19) color = '#3498db';
-          else if (t > 23) color = '#e74c3c';
-          return `<span style="color: ${color}">${sub}</span>`;
-        }
         return sub;
       ]]]
     alert: >
@@ -183,8 +175,7 @@ room_card:
             const all = columns.flat();
             const pri = (b) => {
               const d = (b.entity || '').split('.')[0];
-              const ic = b.icon || '';
-              if (d === 'light' || (d === 'switch' && /bulb|lamp|led/.test(ic))) return 0;
+              if (d === 'light' || d === 'switch') return 0;
               if (d === 'cover') return 1;
               if (d === 'climate') return 2;
               return 3;

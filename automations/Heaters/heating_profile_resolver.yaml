@@ -34,6 +34,9 @@ triggers:
     trigger: state
     entity_id: input_select.heating_profile
     from: "boost"
+  - alias: Periodic re-evaluation every 5 minutes
+    trigger: time_pattern
+    minutes: "/5"
 conditions:
   - alias: Don't override boost (except on HA restart where boost timer is lost)
     condition: template

@@ -44,7 +44,7 @@ cards:
             if (t && t !== 'unknown' && t !== 'unavailable') { sum += parseFloat(t); count++; }
           });
           const avgTemp = count > 0 ? (sum / count).toFixed(1) : '—';
-          const desc = count > 0 ? `Moyenne ${avgTemp}°` : '—';
+          const desc = count > 0 ? `Avg ${avgTemp}°` : '—';
 
           const icon = iconMap[p] || 'mdi:radiator';
           const color = colorMap[p] || '#9E9E9E';
@@ -69,7 +69,7 @@ cards:
           }
 
           return `
-            <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;text-align:left;">
               <div style="display:flex;align-items:center;gap:16px;">
                 <ha-icon icon="${icon}" style="width:60px;height:60px;color:${color};"></ha-icon>
                 <div>

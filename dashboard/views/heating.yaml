@@ -65,20 +65,16 @@ sections:
             entity_id: script.reset_heating_profile
 
       - type: custom:mushroom-template-card
-        entity: weather.forecast_home
-        icon: mdi:home-thermometer-outline
-        primary: Outdoor temperature
-        secondary: "{{ state_attr('weather.forecast_home', 'temperature') }}°C"
-        icon_color: blue
-
-      - type: custom:mushroom-template-card
-        entity: input_boolean.collective_heating
-        icon: >-
-          {% if is_state('input_boolean.collective_heating', 'on') %}mdi:radiator{% else %}mdi:radiator-off{% endif %}
-        primary: Collective heating
-        secondary: "{{ 'Active' if is_state('input_boolean.collective_heating', 'on') else 'Inactive' }}"
-        icon_color: >-
-          {% if is_state('input_boolean.collective_heating', 'on') %}orange{% else %}grey{% endif %}
+        entity: automation.heating_profile_resolver
+        icon: mdi:refresh-auto
+        primary: Re-evaluate profile
+        secondary: Force profile resolution now
+        icon_color: teal
+        tap_action:
+          action: perform-action
+          perform_action: automation.trigger
+          target:
+            entity_id: automation.heating_profile_resolver
 
       - type: custom:bubble-card
         card_type: separator
@@ -117,8 +113,17 @@ sections:
         entity: input_number.heating_outdoor_threshold
         icon: mdi:thermometer-alert
         primary: Outdoor threshold
-        secondary: "{{ states('input_number.heating_outdoor_threshold') }}°C"
+        secondary: "Now {{ state_attr('weather.forecast_home', 'temperature') }}°C · Eco above {{ states('input_number.heating_outdoor_threshold') }}°C"
         icon_color: blue
+
+      - type: custom:mushroom-template-card
+        entity: input_boolean.collective_heating
+        icon: >-
+          {% if is_state('input_boolean.collective_heating', 'on') %}mdi:radiator{% else %}mdi:radiator-off{% endif %}
+        primary: Collective heating
+        secondary: "{{ 'Active' if is_state('input_boolean.collective_heating', 'on') else 'Inactive' }}"
+        icon_color: >-
+          {% if is_state('input_boolean.collective_heating', 'on') %}orange{% else %}grey{% endif %}
 
       - type: custom:mushroom-template-card
         entity: input_number.heating_boost_duration

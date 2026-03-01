@@ -1,5 +1,5 @@
 title: Office
-icon: mdi:desk
+icon: mdi:microsoft-office
 path: office
 type: sections
 max_columns: 3
@@ -9,12 +9,12 @@ header:
     type: heading
     heading: Office
     heading_style: title
-    icon: mdi:desk
+    icon: mdi:microsoft-office
     badges:
       - type: entity
         entity: sensor.office_thermometer_temperature
+      - type: entity
+        entity: sensor.office_thermometer_humidity
 
 sections:
-  - !include ../rooms/office/climate.yaml
   - !include ../rooms/office/controls.yaml
-  - !include ../rooms/office/heating.yaml

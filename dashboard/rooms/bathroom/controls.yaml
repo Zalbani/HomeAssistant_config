@@ -11,3 +11,11 @@ cards:
     entity: switch.bath_ceiling_lamp_switch
     name: Ceiling light
     icon: mdi:lightbulb
+
+  - type: custom:bubble-card
+    card_type: button
+    entity: switch.bathroom_mirror_switch
+    name: Mirror
+    icon: mdi:mirror
+    tap_action:
+      action: toggle

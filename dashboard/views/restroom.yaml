@@ -1,5 +1,5 @@
 title: Restroom
-icon: mdi:toilet
+icon: mdi:paper-roll-outline
 path: restroom
 type: sections
 max_columns: 1
@@ -9,7 +9,7 @@ header:
     type: heading
     heading: Restroom
     heading_style: title
-    icon: mdi:toilet
+    icon: mdi:paper-roll-outline
 
 sections:
   - !include ../rooms/restroom/controls.yaml

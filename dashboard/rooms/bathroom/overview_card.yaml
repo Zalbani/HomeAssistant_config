@@ -4,7 +4,9 @@ name: Bathroom
 variables:
   name: Bathroom
   room_id: bathroom
-  light_entity: switch.bath_ceiling_lamp_switch
+  light_entity:
+    - switch.bath_ceiling_lamp_switch
+    - switch.bathroom_mirror_switch
   sub_state: >
     [[[
       const temp = states['sensor.bathroom_thermometer_temperature']?.state;
@@ -14,6 +16,8 @@ variables:
   actions_columns:
     - - entity: switch.bath_ceiling_lamp_switch
         icon: mdi:lightbulb
+      - entity: switch.bathroom_mirror_switch
+        icon: mdi:mirror
       - entity: climate.bathroom_thermostatic_valve_thermostat
         icon: mdi:fire
         tap_action:

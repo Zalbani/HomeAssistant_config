@@ -1,5 +1,5 @@
 title: Bathroom
-icon: mdi:bathtub
+icon: mdi:bathtub-outline
 path: bathroom
 type: sections
 max_columns: 2
@@ -9,12 +9,12 @@ header:
     type: heading
     heading: Bathroom
     heading_style: title
-    icon: mdi:bathtub
+    icon: mdi:bathtub-outline
     badges:
       - type: entity
         entity: sensor.bathroom_thermometer_temperature
+      - type: entity
+        entity: sensor.bathroom_thermometer_humidity
 
 sections:
-  - !include ../rooms/bathroom/climate.yaml
   - !include ../rooms/bathroom/controls.yaml
-  - !include ../rooms/bathroom/heating.yaml

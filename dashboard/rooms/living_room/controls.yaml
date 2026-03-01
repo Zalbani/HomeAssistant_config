@@ -5,34 +5,66 @@ cards:
     name: Lights
     icon: mdi:lightbulb
 
-  - type: custom:bubble-card
-    card_type: button
-    button_type: slider
-    entity: switch.living_room_ceiling_lamp_switch
+  - type: custom:mushroom-light-card
+    entity: light.living_room_ceiling_lamp_bulb
     name: Ceiling light
     icon: mdi:lightbulb
+    show_brightness_control: true
+    collapsible_controls: false
+    tap_action:
+      action: perform-action
+      perform_action: switch.toggle
+      target:
+        entity_id: switch.living_room_ceiling_lamp_switch
+
+  - type: custom:mushroom-light-card
+    entity: light.living_room_streetlight_bulb
+    name: Streetlight
+    icon: mdi:floor-lamp
+    show_brightness_control: true
+    show_color_control: true
+    collapsible_controls: false
+    tap_action:
+      action: perform-action
+      perform_action: switch.toggle
+      target:
+        entity_id: switch.living_room_outlet_switch
+
+  - type: custom:mushroom-light-card
+    entity: light.living_room_mushroom_lamp_bulb
+    name: Mushroom lamp
+    icon: mdi:mushroom-outline
+    show_brightness_control: true
+    collapsible_controls: false
 
   - type: custom:bubble-card
-    card_type: button
-    entity: switch.living_room_outlet_switch
-    name: Floor lamp
-    icon: mdi:floor-lamp
+    card_type: separator
+    name: Window
+    icon: mdi:door-sliding-open
+
+  - type: custom:mushroom-entity-card
+    entity: binary_sensor.living_room_french_window
+    name: French window
+    icon: mdi:door-sliding-open
+    fill_container: true
 
   - type: custom:bubble-card
     card_type: separator
     name: Covers
     icon: mdi:window-shutter
 
-  - type: custom:bubble-card
-    card_type: button
-    button_type: slider
+  - type: custom:mushroom-template-card
     entity: cover.living_room_shutter
-    name: Shutter
-    icon: mdi:window-shutter
+    primary: Shutter
+    icon: "{{ 'mdi:window-shutter-open' if not is_state('cover.living_room_shutter', 'closed') else 'mdi:window-shutter' }}"
+    icon_color: "{{ 'yellow' if not is_state('cover.living_room_shutter', 'closed') else 'blue' }}"
+    tap_action:
+      action: more-info
 
-  - type: custom:bubble-card
-    card_type: button
-    button_type: slider
+  - type: custom:mushroom-template-card
     entity: cover.living_room_sunshade
-    name: Sunshade
-    icon: mdi:blinds
+    primary: Sunshade
+    icon: "{{ 'mdi:blinds-open' if not is_state('cover.living_room_sunshade', 'closed') else 'mdi:blinds' }}"
+    icon_color: "{{ 'yellow' if not is_state('cover.living_room_sunshade', 'closed') else 'blue' }}"
+    tap_action:
+      action: more-info
