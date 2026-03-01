@@ -8,7 +8,7 @@ cards:
   - type: custom:mushroom-light-card
     entity: light.bedroom_ceiling_lamp_bulb
     name: Ceiling lamp
-    icon: mdi:lightbulb
+    icon: mdi:ceiling-light-outline
     show_brightness_control: true
     collapsible_controls: false
 
@@ -17,6 +17,7 @@ cards:
     name: Bed LED strip
     icon: mdi:led-strip-variant
     show_brightness_control: true
+    show_color_control: true
     collapsible_controls: false
 
   - type: custom:bubble-card
@@ -24,10 +25,18 @@ cards:
     name: Covers
     icon: mdi:blinds
 
-  - type: custom:mushroom-template-card
+  - type: custom:mushroom-cover-card
     entity: cover.bedroom_sunshade
-    primary: Sunshade
-    icon: "{{ 'mdi:blinds-open' if not is_state('cover.bedroom_sunshade', 'closed') else 'mdi:blinds' }}"
-    icon_color: "{{ 'yellow' if not is_state('cover.bedroom_sunshade', 'closed') else 'blue' }}"
-    tap_action:
-      action: more-info
+    name: Sunshade
+    icon: mdi:blinds
+    show_buttons_control: true
+    show_position_control: true
+    collapsible_controls: false
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Heating
+    icon: mdi:radiator
+
+  - type: thermostat
+    entity: climate.bedroom_thermostatic_valve_thermostat

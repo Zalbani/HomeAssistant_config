@@ -10,8 +10,8 @@ variables:
   sub_state: ""
   actions_columns:
     - - entity: switch.kitchen_ceiling_lamp_switch
-        icon: mdi:lightbulb
+        icon: mdi:ceiling-light-outline
       - entity: switch.kitchen_under_cabinet_lighting_switch
-        icon: mdi:led-strip-variant
+        icon: mdi:dome-light
       - entity: cover.kitchen_shutter
         icon: mdi:window-shutter

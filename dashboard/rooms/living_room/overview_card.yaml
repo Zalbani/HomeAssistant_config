@@ -20,12 +20,12 @@ variables:
   hvac_action: sensor.living_room_thermostatic_valve_hvac_action
   actions_columns:
     - - entity: switch.living_room_ceiling_lamp_switch
-        icon: mdi:lightbulb
+        icon: mdi:ceiling-light-outline
         hold_action:
           action: more-info
           entity: light.living_room_ceiling_lamp_bulb
       - entity: switch.living_room_outlet_switch
-        icon: mdi:floor-lamp
+        icon: mdi:floor-lamp-torchiere
         variables:
           rgb_entity: light.living_room_streetlight_bulb
         hold_action:

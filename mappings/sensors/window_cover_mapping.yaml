@@ -1,0 +1,11 @@
+# Window sensor → cover behavior mapping
+# Used by automations/Sensors/window_cover_control.yaml
+# Add new sensors here and in window_sensors.yaml when adding a window.
+#
+# open_position: cover position (%) to set when window opens (default: 70)
+# close_at_night: if true, close cover fully when window closes after sunset
+
+"binary_sensor.living_room_french_window":
+  cover: cover.living_room_sunshade
+  open_position: 70
+  close_at_night: true

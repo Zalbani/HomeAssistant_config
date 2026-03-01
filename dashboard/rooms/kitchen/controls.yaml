@@ -10,14 +10,14 @@ cards:
     button_type: slider
     entity: switch.kitchen_ceiling_lamp_switch
     name: Ceiling light
-    icon: mdi:lightbulb
+    icon: mdi:ceiling-light-outline
 
 
   - type: custom:bubble-card
     card_type: button
     entity: switch.kitchen_under_cabinet_lighting_switch
     name: Under cabinet
-    icon: mdi:lightbulb-outline
+    icon: mdi:dome-light
     tap_action:
       action: toggle
 
@@ -26,10 +26,10 @@ cards:
     name: Covers
     icon: mdi:window-shutter
 
-  - type: custom:mushroom-template-card
+  - type: custom:mushroom-cover-card
     entity: cover.kitchen_shutter
-    primary: Shutter
-    icon: "{{ 'mdi:window-shutter-open' if not is_state('cover.kitchen_shutter', 'closed') else 'mdi:window-shutter' }}"
-    icon_color: "{{ 'yellow' if not is_state('cover.kitchen_shutter', 'closed') else 'blue' }}"
-    tap_action:
-      action: more-info
+    name: Shutter
+    icon: mdi:window-shutter
+    show_buttons_control: true
+    show_position_control: true
+    collapsible_controls: false

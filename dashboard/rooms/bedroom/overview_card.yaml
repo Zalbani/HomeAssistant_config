@@ -15,13 +15,17 @@ variables:
     ]]]
   actions_columns:
     - - entity: light.bedroom_ceiling_lamp_bulb
-        icon: mdi:lightbulb
+        icon: mdi:ceiling-light-outline
         tap_action:
           action: toggle
         hold_action:
           action: more-info
       - entity: light.bedroom_bed_led_strip
         icon: mdi:led-strip-variant
+        variables:
+          rgb_entity: light.bedroom_bed_led_strip
+        hold_action:
+          action: more-info
       - entity: cover.bedroom_sunshade
         icon: mdi:blinds
     - - entity: climate.bedroom_thermostatic_valve_thermostat

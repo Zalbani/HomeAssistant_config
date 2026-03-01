@@ -8,9 +8,9 @@ cards:
   - type: custom:bubble-card
     card_type: button
     button_type: slider
-    entity: switch.bath_ceiling_lamp_switch
+    entity: switch.bathroom_ceiling_lamp_switch
     name: Ceiling light
-    icon: mdi:lightbulb
+    icon: mdi:ceiling-light-outline
 
   - type: custom:bubble-card
     card_type: button
@@ -19,3 +19,11 @@ cards:
     icon: mdi:mirror
     tap_action:
       action: toggle
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Heating
+    icon: mdi:radiator
+
+  - type: thermostat
+    entity: climate.bathroom_thermostatic_valve_thermostat

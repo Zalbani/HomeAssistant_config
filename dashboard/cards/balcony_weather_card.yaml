@@ -1,0 +1,141 @@
+# Carte météo détaillée pour la vue Balcony : conditions actuelles, vent, pression, lever/coucher du soleil
+type: custom:button-card
+name: null
+show_name: false
+show_icon: false
+styles:
+  card:
+    - background: linear-gradient(135deg, rgba(33, 150, 243, 0.15) 0%, rgba(63, 81, 181, 0.1) 100%)
+    - border-radius: 20px
+    - padding: 16px
+    - border: 1px solid rgba(255, 255, 255, 0.1)
+  grid:
+    - grid-template-areas: '"main" "details" "sun"'
+    - grid-template-columns: 1fr
+    - grid-template-rows: auto auto auto
+    - gap: 12px
+  custom_fields:
+    main:
+      - text-align: left
+      - justify-self: stretch
+    details:
+      - text-align: left
+      - justify-self: stretch
+    sun:
+      - text-align: left
+      - justify-self: stretch
+custom_fields:
+  main: |
+    [[[
+      const weather = states['weather.forecast_home'];
+      const temp = weather?.attributes?.temperature ?? '—';
+      const condition = weather?.state || 'unknown';
+      const humidity = weather?.attributes?.humidity ?? '—';
+
+      const iconMap = {
+        'clear-night': 'mdi:weather-night', 'cloudy': 'mdi:weather-cloudy',
+        'fog': 'mdi:weather-fog', 'hail': 'mdi:weather-hail',
+        'lightning': 'mdi:weather-lightning', 'lightning-rainy': 'mdi:weather-lightning-rainy',
+        'partlycloudy': 'mdi:weather-partly-cloudy', 'pouring': 'mdi:weather-pouring',
+        'rainy': 'mdi:weather-rainy', 'snowy': 'mdi:weather-snowy',
+        'snowy-rainy': 'mdi:weather-snowy-rainy', 'sunny': 'mdi:weather-sunny',
+        'windy': 'mdi:weather-windy', 'windy-variant': 'mdi:weather-windy-variant'
+      };
+      const conditionMap = {
+        'clear-night': 'Clear night', 'cloudy': 'Cloudy', 'fog': 'Fog', 'hail': 'Hail',
+        'lightning': 'Thunderstorm', 'lightning-rainy': 'Rainy thunderstorm',
+        'partlycloudy': 'Partly cloudy', 'pouring': 'Heavy rain', 'rainy': 'Rainy',
+        'snowy': 'Snow', 'snowy-rainy': 'Sleet', 'sunny': 'Sunny',
+        'windy': 'Windy', 'windy-variant': 'Windy'
+      };
+
+      const icon = iconMap[condition] || 'mdi:weather-cloudy';
+      const conditionText = conditionMap[condition] || condition;
+
+      return `
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; text-align: left;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <ha-icon icon="${icon}" style="width: 60px; height: 60px; color: #42A5F5;"></ha-icon>
+            <div>
+              <div style="font-size: 42px; font-weight: 700; line-height: 1; color: white;">${temp}°C</div>
+              <div style="font-size: 14px; opacity: 0.7; margin-top: 4px;">${conditionText}</div>
+            </div>
+          </div>
+          <div style="text-align: right; opacity: 0.7;">
+            <div style="font-size: 13px; margin-bottom: 4px;">
+              <ha-icon icon="mdi:water-percent" style="width: 14px; vertical-align: middle;"></ha-icon>
+              ${humidity}%
+            </div>
+          </div>
+        </div>`;
+    ]]]
+  details: |
+    [[[
+      const weather = states['weather.forecast_home'];
+      const windSpeed = weather?.attributes?.wind_speed ?? '—';
+      const windBearing = weather?.attributes?.wind_bearing;
+      const pressure = weather?.attributes?.pressure ?? '—';
+      const visibility = weather?.attributes?.visibility ?? null;
+
+      const bearingToCompass = (deg) => {
+        if (deg == null) return '';
+        const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+        return dirs[Math.round(deg / 45) % 8];
+      };
+      const windDir = bearingToCompass(windBearing);
+
+      const cell = (icon, color, label, value, bg) =>
+        `<div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 8px; background: ${bg}; border-radius: 10px;">
+          <ha-icon icon="${icon}" style="width: 20px; color: ${color};"></ha-icon>
+          <div style="flex: 1;">
+            <div style="font-size: 11px; opacity: 0.6;">${label}</div>
+            <div style="font-size: 15px; font-weight: 600;">${value}</div>
+          </div>
+        </div>`;
+
+      const cells = [
+        cell('mdi:weather-windy', '#80DEEA', 'Wind', `${windSpeed} km/h ${windDir}`, 'rgba(128,222,234,0.1)'),
+        cell('mdi:gauge', '#CE93D8', 'Pressure', `${pressure} hPa`, 'rgba(206,147,216,0.1)'),
+      ];
+      if (visibility != null)
+        cells.push(cell('mdi:eye-outline', '#A5D6A7', 'Visibility', `${visibility} km`, 'rgba(165,214,167,0.1)'));
+
+      return `<div style="display: flex; gap: 12px; margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">${cells.join('')}</div>`;
+    ]]]
+  sun: |
+    [[[
+      const sunEntity = states['sun.sun'];
+      const fmt = (raw) => raw
+        ? new Date(raw).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', hour12: false})
+        : '--:--';
+      const sunrise = fmt(sunEntity?.attributes?.next_rising);
+      const sunset  = fmt(sunEntity?.attributes?.next_setting);
+      const elevation = sunEntity?.attributes?.elevation != null
+        ? `${Math.round(sunEntity.attributes.elevation)}°`
+        : '—';
+
+      return `
+        <div style="display: flex; gap: 12px; margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+          <div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(255,152,0,0.1); border-radius: 10px;">
+            <ha-icon icon="mdi:weather-sunset-up" style="width: 20px; color: #FFA726;"></ha-icon>
+            <div style="flex: 1;">
+              <div style="font-size: 11px; opacity: 0.6;">Sunrise</div>
+              <div style="font-size: 15px; font-weight: 600;">${sunrise}</div>
+            </div>
+          </div>
+          <div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(255,152,0,0.1); border-radius: 10px;">
+            <ha-icon icon="mdi:weather-sunset-down" style="width: 20px; color: #FF7043;"></ha-icon>
+            <div style="flex: 1;">
+              <div style="font-size: 11px; opacity: 0.6;">Sunset</div>
+              <div style="font-size: 15px; font-weight: 600;">${sunset}</div>
+            </div>
+          </div>
+          <div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(255,193,7,0.1); border-radius: 10px;">
+            <ha-icon icon="mdi:angle-acute" style="width: 20px; color: #FFD54F;"></ha-icon>
+            <div style="flex: 1;">
+              <div style="font-size: 11px; opacity: 0.6;">Sun elev.</div>
+              <div style="font-size: 15px; font-weight: 600;">${elevation}</div>
+            </div>
+          </div>
+        </div>`;
+    ]]]

@@ -41,11 +41,7 @@ actions:
           entity_id: !include ../../mappings/heaters/manual_overrides.yaml
   - alias: Apply temperatures per room
     repeat:
-      for_each:
-        - bathroom
-        - bedroom
-        - office
-        - living_room
+      for_each: "{{ profiles.thermostats.keys() | list }}"
       sequence:
         - alias: Skip if thermostat unavailable or manual override active
           if:

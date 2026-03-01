@@ -172,7 +172,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 ### Bathroom
 | Entity | Description |
 |--------|-------------|
-| `switch.bath_ceiling_lamp_switch` | Ceiling lamp switch |
+| `switch.bathroom_ceiling_lamp_switch` | Ceiling lamp switch |
 | `switch.bathroom_mirror_switch` | Mirror light switch |
 | `climate.bathroom_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.bathroom_thermometer_temperature` | Temperature sensor |
@@ -221,6 +221,15 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `switch.alban_pc_fixe` | Desktop PC power |
 | `button.hass_pc_fixe_shutdown` | Desktop PC shutdown |
 | `sensor.hass_pc_fixe_cpuload` | Desktop PC CPU load |
+
+## Icon Mapping (Light entities)
+
+| Entity type              | MDI icon                      |
+|--------------------------|-------------------------------|
+| Ceiling lamp (all rooms) | `mdi:ceiling-light-outline`   |
+| Streetlight (living room)| `mdi:floor-lamp-torchiere`    |
+| Balcony outside lamp     | `mdi:coach-lamp-variant`      |
+| Under cabinet (kitchen)  | `mdi:dome-light`              |
 
 ## Conventions
 - Automations use numeric IDs (`id: "1740500000001"`)

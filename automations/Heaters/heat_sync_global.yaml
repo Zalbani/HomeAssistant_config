@@ -4,11 +4,7 @@ description: Manages synchronization and offline security for all valves.
 triggers:
   - alias: Temperature sensor update
     trigger: state
-    entity_id:
-      - sensor.bathroom_thermometer_temperature
-      - sensor.bedroom_thermometer_temperature
-      - sensor.office_thermometer_temperature
-      - sensor.living_room_thermometer_temperature
+    entity_id: !include ../../mappings/heaters/sensors.yaml
     not_from:
       - unavailable
       - unknown

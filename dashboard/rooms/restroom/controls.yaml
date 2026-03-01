@@ -10,4 +10,4 @@ cards:
     button_type: slider
     entity: switch.restroom_ceiling_lamp_switch
     name: Ceiling light
-    icon: mdi:lightbulb
+    icon: mdi:ceiling-light-outline

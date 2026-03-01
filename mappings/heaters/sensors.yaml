@@ -1,0 +1,7 @@
+# List of room temperature sensor entities
+# Used by automations/Heaters/heat_sync_global.yaml
+# Include with: !include mappings/heaters/sensors.yaml
+- sensor.bathroom_thermometer_temperature
+- sensor.bedroom_thermometer_temperature
+- sensor.office_thermometer_temperature
+- sensor.living_room_thermometer_temperature

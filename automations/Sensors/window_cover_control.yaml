@@ -1,0 +1,63 @@
+id: '1771400000000'
+alias: Sensors - Window to cover control
+description: >-
+  Raises the cover when a window opens (if currently closed).
+  Closes it back when the window shuts during nighttime (if configured).
+  Mapping in mappings/sensors/window_cover_mapping.yaml.
+triggers:
+  - alias: Window opened
+    trigger: state
+    entity_id: !include ../../mappings/sensors/window_sensors.yaml
+    not_from:
+      - unavailable
+      - unknown
+    to: 'on'
+    id: opening
+  - alias: Window closed
+    trigger: state
+    entity_id: !include ../../mappings/sensors/window_sensors.yaml
+    not_from:
+      - unavailable
+      - unknown
+    to: 'off'
+    id: closing
+variables:
+  window_cover_mapping: !include ../../mappings/sensors/window_cover_mapping.yaml
+  cover_config: "{{ window_cover_mapping[trigger.entity_id] }}"
+  cover_entity: "{{ cover_config.cover }}"
+  open_position: "{{ cover_config.open_position | default(70) }}"
+  close_at_night: "{{ cover_config.get('close_at_night', false) }}"
+actions:
+  - choose:
+      - alias: "Window opened: raise cover if it was down"
+        conditions:
+          - condition: trigger
+            id: opening
+          - condition: template
+            value_template: >
+              {{ state_attr(cover_entity, 'current_position') | int(100) < 10 }}
+        sequence:
+          - alias: Raise cover to configured position
+            action: cover.set_cover_position
+            target:
+              entity_id: "{{ cover_entity }}"
+            data:
+              position: "{{ open_position }}"
+      - alias: "Window closed at night: lower cover"
+        conditions:
+          - condition: trigger
+            id: closing
+          - condition: template
+            value_template: "{{ close_at_night }}"
+          - condition: sun
+            after: sunset
+            after_offset: "+00:30:00"
+            before: sunrise
+        sequence:
+          - alias: Close cover fully
+            action: cover.set_cover_position
+            target:
+              entity_id: "{{ cover_entity }}"
+            data:
+              position: 0
+mode: restart

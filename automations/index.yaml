@@ -22,4 +22,4 @@
 - !include Remotes/remote_shutter_hold_global.yaml
 - !include Remotes/remote_light_scroll_wheel_global.yaml
 - !include Remotes/office_button_toggle.yaml
-- !include Sensors/french_window_sensor.yaml
+- !include Sensors/window_cover_control.yaml

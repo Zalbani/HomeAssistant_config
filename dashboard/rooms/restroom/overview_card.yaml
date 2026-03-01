@@ -8,4 +8,4 @@ variables:
   sub_state: ""
   actions_columns:
     - - entity: switch.restroom_ceiling_lamp_switch
-        icon: mdi:lightbulb
+        icon: mdi:ceiling-light-outline

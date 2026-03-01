@@ -1,0 +1,5 @@
+# Flat list of window sensors for sensor→cover automation triggers.
+# Must match the keys in window_cover_mapping.yaml.
+# Add new sensors here and in window_cover_mapping.yaml when adding a window.
+#
+- binary_sensor.living_room_french_window

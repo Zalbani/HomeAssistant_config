@@ -12,4 +12,13 @@ header:
     icon: mdi:balcony
 
 sections:
+  - title: Weather
+    cards:
+      - !include ../cards/balcony_weather_card.yaml
+
+      - type: weather-forecast
+        entity: weather.forecast_home
+        forecast_type: daily
+        show_current: false
+
   - !include ../rooms/balcony/controls.yaml

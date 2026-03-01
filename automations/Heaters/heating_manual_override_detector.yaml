@@ -25,6 +25,7 @@ conditions:
     value_template: "{{ states('input_select.heating_profile') not in ['off', 'boost'] }}"
 variables:
   profiles: !include ../../mappings/heaters/profiles.yaml
+  window_valve_mapping: !include ../../mappings/heaters/window_valve_mapping.yaml
   room: "{{ profiles.thermostat_to_room[trigger.entity_id] }}"
   profile: "{{ states('input_select.heating_profile') }}"
   expected_temp: "{{ profiles.temperatures[profile][room] | float }}"
@@ -37,12 +38,14 @@ actions:
       - alias: No window recently changed for this room (avoid false positives during valve restore)
         condition: template
         value_template: >
-          {% set room_windows = {
-            'living_room': 'binary_sensor.living_room_french_window'
-          } %}
-          {% set window = room_windows.get(room) %}
-          {{ window is none or
-             (now() - states[window].last_changed).total_seconds() > 30 }}
+          {% set ns = namespace(sensor=none) %}
+          {% for sensor_id, cfg in window_valve_mapping.items() %}
+            {% if cfg is mapping and cfg.get('room') == room %}
+              {% set ns.sensor = sensor_id %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.sensor is none or
+             (now() - states[ns.sensor].last_changed).total_seconds() > 30 }}
     then:
       - action: input_boolean.turn_on
         target:

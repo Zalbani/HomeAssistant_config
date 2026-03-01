@@ -5,7 +5,11 @@ variables:
   name: Balcony
   room_id: balcony
   light_entity: switch.balcony_outside_lamp
-  sub_state: ""
+  sub_state: >
+    [[[
+      const temp = states['weather.forecast_home']?.attributes?.temperature;
+      return temp != null ? `${temp}°` : '';
+    ]]]
   actions_columns:
     - - entity: switch.balcony_outside_lamp
-        icon: mdi:lightbulb
+        icon: mdi:coach-lamp-variant

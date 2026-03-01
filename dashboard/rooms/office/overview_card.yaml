@@ -13,7 +13,7 @@ variables:
     ]]]
   actions_columns:
     - - entity: switch.office_ceiling_lamp_switch
-        icon: mdi:lightbulb
+        icon: mdi:ceiling-light-outline
         hold_action:
           action: more-info
           entity: light.office_ceiling_lamp_bulb
