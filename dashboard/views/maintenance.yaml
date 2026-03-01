@@ -12,8 +12,12 @@ header:
     icon: mdi:wrench
 
 sections:
-  - title: Batteries
-    cards:
+  - cards:
+      - type: custom:bubble-card
+        card_type: separator
+        name: Batteries
+        icon: mdi:battery
+
       - type: custom:auto-entities
         card:
           type: custom:bar-card
@@ -129,14 +133,18 @@ sections:
           numeric: true
           reverse: false
 
-  - title: System
-    cards:
+  - cards:
+      - type: custom:bubble-card
+        card_type: separator
+        name: System
+        icon: mdi:desktop-tower
+
       - type: custom:mushroom-template-card
         primary: Desktop PC
         entity: switch.alban_pc_fixe
-        secondary: "{% if is_state(entity, 'on') %} Online ({{ states('sensor.hass_pc_fixe_cpuload') | round(0) }}% CPU){% else %} Offline{% endif %}"
+        secondary: "{% if is_state(entity, 'on') %}Online ({{ states('sensor.hass_pc_fixe_cpuload') | round(0) }}% CPU){% else %}Offline{% endif %}"
         icon: mdi:desktop-tower
-        icon_color: "{% if is_state(entity, 'on') %} blue{% else %} grey{% endif %}"
+        icon_color: "{% if is_state(entity, 'on') %}blue{% else %}grey{% endif %}"
         tap_action:
           action: toggle
         hold_action:

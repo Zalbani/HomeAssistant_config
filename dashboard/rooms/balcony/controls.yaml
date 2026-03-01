@@ -1,24 +1,4 @@
-title: Controls
 cards:
-  - type: custom:bubble-card
-    card_type: separator
-    name: Environment
-    icon: mdi:thermometer
-
-  - type: custom:mushroom-template-card
-    primary: Temperature
-    secondary: "{{ state_attr('weather.forecast_home', 'temperature') }}°C"
-    icon: mdi:thermometer
-    icon_color: orange
-    entity: weather.forecast_home
-
-  - type: custom:mushroom-template-card
-    primary: Humidity
-    secondary: "{{ state_attr('weather.forecast_home', 'humidity') }}%"
-    icon: mdi:water-percent
-    icon_color: blue
-    entity: weather.forecast_home
-
   - type: custom:bubble-card
     card_type: separator
     name: Light

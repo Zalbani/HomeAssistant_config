@@ -77,15 +77,13 @@ header:
           navigation_path: /overview-dashboard/maintenance
 
 sections:
-  - title: Info
-    cards:
+  - cards:
       - type: vertical-stack
         cards:
           - !include ../cards/weather_card.yaml
           - !include ../cards/heating_overview_card.yaml
 
-  - title: Rooms
-    cards:
+  - cards:
       - type: horizontal-stack
         cards:
           - !include ../rooms/bedroom/overview_card.yaml

@@ -11,9 +11,14 @@ header:
     heading_style: title
     icon: mdi:balcony
 
+
 sections:
-  - title: Weather
-    cards:
+  - cards:
+      - type: custom:bubble-card
+        card_type: separator
+        name: Weather
+        icon: mdi:weather-cloudy
+
       - !include ../cards/balcony_weather_card.yaml
 
       - type: weather-forecast

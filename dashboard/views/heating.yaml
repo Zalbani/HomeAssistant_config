@@ -17,8 +17,12 @@ header:
         entity: weather.forecast_home
 
 sections:
-  - title: Control
-    cards:
+  - cards:
+      - type: custom:bubble-card
+        card_type: separator
+        name: Control
+        icon: mdi:thermostat-auto
+
       - type: custom:mushroom-template-card
         entity: input_select.heating_profile
         icon: mdi:thermostat-auto
@@ -132,8 +136,12 @@ sections:
         secondary: "{{ states('input_number.heating_boost_duration') }} min"
         icon_color: amber
 
-  - title: Temperatures
-    cards:
+  - cards:
+      - type: custom:bubble-card
+        card_type: separator
+        name: Temperatures
+        icon: mdi:thermometer
+
       - type: custom:mushroom-template-card
         entity: climate.general_thermostat
         icon: mdi:thermostat
