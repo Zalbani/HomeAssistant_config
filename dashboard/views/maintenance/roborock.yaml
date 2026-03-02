@@ -1,0 +1,30 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Roborock Qrevo Edge
+    icon: mdi:robot-vacuum
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.roborock_qrevo_edge_series_filter_time_left
+    name: Filter
+    icon: mdi:air-filter
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.roborock_qrevo_edge_series_main_brush_time_left
+    name: Main brush
+    icon: mdi:brush
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.roborock_qrevo_edge_series_side_brush_time_left
+    name: Side brush
+    icon: mdi:brush
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.roborock_qrevo_edge_series_sensor_time_left
+    name: Sensors
+    icon: mdi:leak
+    fill_container: true
+

@@ -1,0 +1,12 @@
+type: conditional
+conditions:
+  - condition: template
+    value_template: "{{ states('sensor.plex') | int(0) > 0 }}"
+chip:
+  type: template
+  icon: mdi:plex
+  icon_color: orange
+  content: "{{ states('sensor.plex') }}"
+  tap_action:
+    action: more-info
+    entity: sensor.plex

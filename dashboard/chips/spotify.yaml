@@ -1,0 +1,13 @@
+type: conditional
+conditions:
+  - condition: state
+    entity: media_player.spotify_zalbani
+    state: "playing"
+chip:
+  type: template
+  icon: mdi:spotify
+  icon_color: green
+  content: "{{ state_attr('media_player.spotify_zalbani', 'media_artist') }}"
+  tap_action:
+    action: more-info
+    entity: media_player.spotify_zalbani

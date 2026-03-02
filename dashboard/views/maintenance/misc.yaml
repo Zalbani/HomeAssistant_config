@@ -1,0 +1,18 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Calendar
+    icon: mdi:calendar
+
+  - type: calendar
+    entities:
+      - calendar.pro_pierson_alban_gmail_com
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Person
+    icon: mdi:account
+
+  - type: custom:mushroom-entity-card
+    entity: person.alban_pierson
+    fill_container: true

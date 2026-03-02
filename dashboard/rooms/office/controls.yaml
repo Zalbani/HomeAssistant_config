@@ -53,3 +53,28 @@ cards:
       action: toggle
     hold_action:
       action: more-info
+
+  - type: custom:mushroom-template-card
+    primary: NAS Backward
+    entity: sensor.backward_cpu_utilization_total
+    secondary: >-
+      {% set cpu = states('sensor.backward_cpu_utilization_total') %}
+      {% if cpu not in ['unavailable', 'unknown'] %}
+        {% set ram_used = states('sensor.backward_memory_usage_real') | float(0) %}
+        {% set ram_total = states('sensor.backward_memory_total_real') | float(1) %}
+        {% set disk = states('sensor.backward_volume_1_volume_used') | round(0) %}
+        CPU {{ cpu | round(0) }}% · RAM {{ (ram_used / ram_total * 100) | round(0) }}% · Disk {{ disk }}%
+      {% else %}Offline{% endif %}
+    icon: mdi:nas
+    icon_color: >-
+      {% set cpu = states('sensor.backward_cpu_utilization_total') %}
+      {% if cpu not in ['unavailable', 'unknown'] %}
+        {% if cpu | float(0) > 80 %}red{% else %}blue{% endif %}
+      {% else %}grey{% endif %}
+    tap_action:
+      action: more-info
+      entity: sensor.backward_cpu_utilization_total
+    hold_action:
+      action: more-info
+      entity: sensor.backward_cpu_utilization_total
+

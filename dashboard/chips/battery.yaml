@@ -1,0 +1,18 @@
+type: conditional
+conditions:
+  - condition: template
+    value_template: >
+      {{ states | selectattr('entity_id', 'match', '^sensor.*_battery$')
+                 | selectattr('state', 'lt', '20')
+                 | list | count > 0 }}
+chip:
+  type: template
+  icon: mdi:battery-alert
+  icon_color: red
+  content: >
+    {{ states | selectattr('entity_id', 'match', '^sensor.*_battery$')
+               | selectattr('state', 'lt', '20')
+               | list | count }}
+  tap_action:
+    action: navigate
+    navigation_path: /overview-dashboard/maintenance

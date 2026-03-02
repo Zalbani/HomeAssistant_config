@@ -1,0 +1,6 @@
+type: template
+icon: mdi:wrench
+icon_color: grey
+tap_action:
+  action: navigate
+  navigation_path: /overview-dashboard/maintenance

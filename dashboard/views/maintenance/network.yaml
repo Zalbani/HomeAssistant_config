@@ -1,0 +1,29 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Livebox
+    icon: mdi:router-network
+
+  - type: custom:mushroom-entity-card
+    entity: binary_sensor.orange_livebox_wan_status
+    name: WAN
+    icon: mdi:wan
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.orange_livebox_download_speed
+    name: Download
+    icon: mdi:download-network
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.orange_livebox_upload_speed
+    name: Upload
+    icon: mdi:upload-network
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.orange_livebox_external_ip
+    name: External IP
+    icon: mdi:ip-network
+    fill_container: true

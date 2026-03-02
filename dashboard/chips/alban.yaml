@@ -1,0 +1,7 @@
+type: template
+entity: person.alban_pierson
+icon: mdi:account
+content: Alban
+icon_color: "{{ 'green' if is_state('person.alban_pierson', 'home') else 'grey' }}"
+tap_action:
+  action: more-info

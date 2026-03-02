@@ -75,3 +75,28 @@ cards:
     name: French window
     icon: mdi:door-sliding-open
     fill_container: true
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Media
+    icon: mdi:television
+
+  - type: custom:mushroom-media-player-card
+    entity: media_player.tv
+    name: TV
+    icon: mdi:television
+    show_volume_level: true
+    volume_controls:
+      - volume_mute
+      - volume_set
+    media_controls:
+      - on_off
+    collapsible_controls: false
+
+  - type: custom:mushroom-media-player-card
+    entity: media_player.playstation_5
+    name: PS5
+    icon: mdi:sony-playstation
+    media_controls:
+      - on_off
+    collapsible_controls: false
