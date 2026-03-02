@@ -18,25 +18,6 @@ header:
 
       - type: conditional
         conditions:
-          - condition: template
-            value_template: >
-              {{ states('binary_sensor.living_room_french_window') == 'on' }}
-        chip:
-          type: template
-          icon: mdi:window-open-variant
-          icon_color: orange
-          content: >
-            {% set open = [] %}
-            {% if is_state('binary_sensor.living_room_french_window', 'on') %}
-              {% set open = open + ['Living room'] %}
-            {% endif %}
-            {{ open | join(', ') }}
-          tap_action:
-            action: more-info
-            entity: binary_sensor.living_room_french_window
-
-      - type: conditional
-        conditions:
           - condition: state
             entity: switch.alban_pc_fixe
             state: "on"
@@ -68,6 +49,20 @@ header:
           tap_action:
             action: navigate
             navigation_path: /overview-dashboard/maintenance
+
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.living_room_french_window
+            state: "on"
+        chip:
+          type: template
+          icon: mdi:window-open-variant
+          icon_color: orange
+          content: Living room
+          tap_action:
+            action: more-info
+            entity: binary_sensor.living_room_french_window
 
       - type: template
         icon: mdi:wrench

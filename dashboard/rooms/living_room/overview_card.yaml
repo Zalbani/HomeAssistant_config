@@ -10,13 +10,9 @@ variables:
   sub_state: >
     [[[
       const temp = states['sensor.living_room_thermometer_temperature']?.state;
-      const door = states['binary_sensor.living_room_french_window']?.state;
-      let parts = [];
-      if (temp && temp !== 'unknown') parts.push(`${parseFloat(temp).toFixed(1)}°`);
-      if (door === 'on') parts.push('🚪 Window open');
-      return parts.join('  ');
+      if (temp && temp !== 'unknown') return `${parseFloat(temp).toFixed(1)}°`;
+      return '';
     ]]]
-  door: binary_sensor.living_room_french_window
   hvac_action: sensor.living_room_thermostatic_valve_hvac_action
   actions_columns:
     - - entity: switch.living_room_ceiling_lamp_switch
