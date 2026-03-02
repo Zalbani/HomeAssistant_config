@@ -10,7 +10,8 @@ header:
     chips:
       - !include ../chips/alban.yaml
       - !include ../chips/pc.yaml
-      - !include ../chips/gaming.yaml
+      - !include ../chips/ps5.yaml
+      - !include ../chips/steam.yaml
       - !include ../chips/spotify.yaml
       - !include ../chips/plex.yaml
       - !include ../chips/roborock_cleaning.yaml

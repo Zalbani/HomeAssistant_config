@@ -1,0 +1,13 @@
+type: conditional
+conditions:
+  - condition: template
+    value_template: "{{ states('sensor.steam_76561198135828850') not in ['offline', 'online', 'unavailable', 'unknown'] }}"
+chip:
+  type: template
+  entity: sensor.steam_76561198135828850
+  icon: mdi:steam
+  icon_color: deep-purple
+  content: "{{ states('sensor.steam_76561198135828850') }}"
+  tap_action:
+    action: more-info
+    entity: sensor.steam_76561198135828850
