@@ -1,0 +1,27 @@
+id: '1771500000004'
+alias: Shutters - Sunshades - Wind Protection - Enforce
+description: >-
+  When wind protection is active and a sunshade starts moving down (position drops
+  below 100), immediately raises it back to 100% — even if triggered by a physical button.
+triggers:
+  - trigger: numeric_state
+    entity_id:
+      - cover.office_sunshade
+      - cover.living_room_sunshade
+      - cover.bedroom_sunshade
+    attribute: current_position
+    below: 100
+conditions:
+  - alias: Wind protection is active
+    condition: state
+    entity_id: input_boolean.wind_protection_active
+    state: 'on'
+actions:
+  - alias: Raise the sunshade back to safety position
+    action: cover.set_cover_position
+    target:
+      entity_id: "{{ trigger.entity_id }}"
+    data:
+      position: 100
+mode: parallel
+max: 3

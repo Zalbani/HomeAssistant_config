@@ -2,7 +2,7 @@ id: '1771500000003'
 alias: Shutters - Sunshades - Wind Protection - Release
 description: >-
   When wind speed drops below 35 km/h, deactivates the wind protection lock
-  so sunshades (BSOs) can be operated normally again.
+  so sunshades can be operated normally again.
 triggers:
   - alias: Wind speed back below 35 km/h
     trigger: numeric_state

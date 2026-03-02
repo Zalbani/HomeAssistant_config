@@ -30,9 +30,9 @@ actions:
               message: >-
                 Wind speed has reached {{ state_attr('weather.forecast_home', 'wind_speed') }} km/h.
                 {% if is_state('input_boolean.wind_protection_active', 'on') %}
-                BSOs have been automatically raised and locked. They will be unlocked when wind drops below 35 km/h.
+                Sunshades have been automatically raised and locked. They will be unlocked when wind drops below 35 km/h.
                 {% else %}
-                Gusts above 45 km/h will trigger automatic BSO protection.
+                Gusts above 45 km/h will trigger automatic sunshade protection.
                 {% endif %}
       - alias: Wind back to safe zone - dismiss notification
         conditions:

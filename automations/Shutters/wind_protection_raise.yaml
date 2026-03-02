@@ -1,7 +1,7 @@
 id: '1771500000002'
 alias: Shutters - Sunshades - Wind Protection - Raise
 description: >-
-  When wind speed exceeds 45 km/h, automatically raises all sunshades (BSOs)
+  When wind speed exceeds 45 km/h, automatically raises all sunshades
   to 100% and activates the wind protection lock to prevent them from being lowered.
 triggers:
   - alias: Wind gusts above 45 km/h

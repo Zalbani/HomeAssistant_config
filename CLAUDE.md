@@ -127,7 +127,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `light.living_room_streetlight_bulb` | Streetlight bulb (smart, color temp) |
 | `light.living_room_mushroom_lamp_bulb` | Mushroom lamp (smart, color temp) |
 | `cover.living_room_shutter` | Window shutter |
-| `cover.living_room_sunshade` | Sunshade / BSO |
+| `cover.living_room_sunshade` | Sunshade |
 | `binary_sensor.living_room_french_window` | French window sensor |
 | `climate.living_room_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.living_room_thermometer_temperature` | Temperature sensor |
@@ -141,7 +141,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 |--------|-------------|
 | `switch.office_ceiling_lamp_switch` | Ceiling lamp switch |
 | `light.office_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) |
-| `cover.office_sunshade` | Sunshade / BSO |
+| `cover.office_sunshade` | Sunshade |
 | `climate.office_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.office_thermometer_temperature` | Temperature sensor |
 | `sensor.office_thermometer_humidity` | Humidity sensor |
@@ -154,7 +154,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 |--------|-------------|
 | `light.bedroom_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) |
 | `light.bedroom_bed_led_strip` | Bed LED strip |
-| `cover.bedroom_sunshade` | Sunshade / BSO |
+| `cover.bedroom_sunshade` | Sunshade |
 | `climate.bedroom_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.bedroom_thermometer_temperature` | Temperature sensor |
 | `sensor.bedroom_thermometer_humidity` | Humidity sensor |
