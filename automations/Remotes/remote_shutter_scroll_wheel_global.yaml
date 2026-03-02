@@ -14,7 +14,7 @@ actions:
       step: "{{ 100 / 8 }}"
       delta: "{{ (step * count) | round(1) }}"
   - repeat:
-      for_each: "{{ mapping[trigger.entity_id].covers }}"
+      for_each: "{{ mapping[trigger.entity_id].shutters + mapping[trigger.entity_id].sunshades }}"
       sequence:
         - alias: Calculate and set position for each cover
           variables:
@@ -25,11 +25,20 @@ actions:
               {% else %}
                 {{ [100, current + delta] | min }}
               {% endif %}
-        - action: cover.set_cover_position
-          target:
-            entity_id: "{{ repeat.item }}"
-          data:
-            position: "{{ new_position }}"
+        - if:
+            - condition: template
+              value_template: >-
+                {{ not (
+                  'button_4' in trigger.entity_id
+                  and repeat.item in mapping[trigger.entity_id].sunshades
+                  and is_state('input_boolean.wind_protection_active', 'on')
+                ) }}
+          then:
+            - action: cover.set_cover_position
+              target:
+                entity_id: "{{ repeat.item }}"
+              data:
+                position: "{{ new_position }}"
 mode: single
 variables:
   mapping: !include ../../mappings/shutters/mapping.yaml

@@ -1,0 +1,45 @@
+id: '1771500000001'
+alias: Shutters - Sunshades - Wind Alert
+description: >-
+  Creates a persistent notification when wind speed exceeds 35 km/h.
+  Dismisses it when wind drops back below 35 km/h.
+triggers:
+  - alias: Wind above 35 km/h
+    trigger: numeric_state
+    entity_id: weather.forecast_home
+    attribute: wind_speed
+    above: 35
+    id: wind_high
+  - alias: Wind below 35 km/h
+    trigger: numeric_state
+    entity_id: weather.forecast_home
+    attribute: wind_speed
+    below: 35
+    id: wind_ok
+actions:
+  - choose:
+      - alias: Wind above alert threshold - create notification
+        conditions:
+          - condition: trigger
+            id: wind_high
+        sequence:
+          - action: persistent_notification.create
+            data:
+              notification_id: wind_alert
+              title: "Wind Alert - {{ state_attr('weather.forecast_home', 'wind_speed') }} km/h"
+              message: >-
+                Wind speed has reached {{ state_attr('weather.forecast_home', 'wind_speed') }} km/h.
+                {% if is_state('input_boolean.wind_protection_active', 'on') %}
+                BSOs have been automatically raised and locked. They will be unlocked when wind drops below 35 km/h.
+                {% else %}
+                Gusts above 45 km/h will trigger automatic BSO protection.
+                {% endif %}
+      - alias: Wind back to safe zone - dismiss notification
+        conditions:
+          - condition: trigger
+            id: wind_ok
+        sequence:
+          - action: persistent_notification.dismiss
+            data:
+              notification_id: wind_alert
+mode: single

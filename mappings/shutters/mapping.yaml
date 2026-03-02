@@ -5,15 +5,18 @@
 # Add a room here to enable shutter control on that remote
 #
 office: &office
-  covers:
+  shutters: []
+  sunshades:
     - cover.office_sunshade
 living_room: &living_room
-  covers:
+  shutters:
     - cover.living_room_shutter
-    - cover.living_room_sunshade
     - cover.kitchen_shutter
+  sunshades:
+    - cover.living_room_sunshade
 bedroom: &bedroom
-  covers:
+  shutters: []
+  sunshades:
     - cover.bedroom_sunshade
 #
 # Keys used by the automation (trigger.entity_id)

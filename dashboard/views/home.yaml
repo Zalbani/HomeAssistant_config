@@ -52,6 +52,20 @@ header:
 
       - type: conditional
         conditions:
+          - condition: template
+            value_template: >
+              {{ state_attr('weather.forecast_home', 'wind_speed') | float(0) > 35 }}
+        chip:
+          type: template
+          icon: mdi:weather-windy
+          icon_color: "{{ 'red' if is_state('input_boolean.wind_protection_active', 'on') else 'orange' }}"
+          content: "{{ state_attr('weather.forecast_home', 'wind_speed') | round(0) }} km/h"
+          tap_action:
+            action: more-info
+            entity: weather.forecast_home
+
+      - type: conditional
+        conditions:
           - condition: state
             entity: binary_sensor.living_room_french_window
             state: "on"

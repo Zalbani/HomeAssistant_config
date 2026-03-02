@@ -13,6 +13,9 @@
 - !include Shutters/wake_up_time_bedroom.yaml
 - !include Shutters/wake_up_sun_office_living_kitchen.yaml
 - !include Shutters/wake_up_phone_global.yaml
+- !include Shutters/wind_alert.yaml
+- !include Shutters/wind_protection_raise.yaml
+- !include Shutters/wind_protection_release.yaml
 - !include Lights/bedroom_switch_light_toggle.yaml
 - !include Lights/balcony_light_french_window.yaml
 - !include Lights/streetlight_mushroom_sync.yaml

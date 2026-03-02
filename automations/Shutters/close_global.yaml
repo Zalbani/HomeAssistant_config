@@ -24,7 +24,9 @@ actions:
         {% set ns = namespace(entities=[]) %}
         {% for cover, sensor in cover_window_sensors.items() %}
           {% if not sensor or not is_state(sensor, 'on') %}
-            {% set ns.entities = ns.entities + [cover] %}
+            {% if not ('sunshade' in cover and is_state('input_boolean.wind_protection_active', 'on')) %}
+              {% set ns.entities = ns.entities + [cover] %}
+            {% endif %}
           {% endif %}
         {% endfor %}
         {{ ns.entities }}

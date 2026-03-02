@@ -1,0 +1,31 @@
+id: '1771500000002'
+alias: Shutters - Sunshades - Wind Protection - Raise
+description: >-
+  When wind speed exceeds 45 km/h, automatically raises all sunshades (BSOs)
+  to 100% and activates the wind protection lock to prevent them from being lowered.
+triggers:
+  - alias: Wind gusts above 45 km/h
+    trigger: numeric_state
+    entity_id: weather.forecast_home
+    attribute: wind_speed
+    above: 45
+conditions:
+  - alias: Protection not already active
+    condition: state
+    entity_id: input_boolean.wind_protection_active
+    state: 'off'
+actions:
+  - alias: Raise all sunshades to safety position
+    action: cover.set_cover_position
+    target:
+      entity_id:
+        - cover.office_sunshade
+        - cover.living_room_sunshade
+        - cover.bedroom_sunshade
+    data:
+      position: 100
+  - alias: Activate wind protection lock
+    action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.wind_protection_active
+mode: single
