@@ -100,3 +100,30 @@ cards:
     media_controls:
       - on_off
     collapsible_controls: false
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Thermometer
+    icon: mdi:thermometer
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.living_room_thermometer_temperature
+    name: Temperature
+    icon: mdi:thermometer
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.living_room_thermometer_humidity
+    name: Humidity
+    icon: mdi:water-percent
+    tap_action:
+      action: more-info
+
+  - type: history-graph
+    entities:
+      - entity: sensor.living_room_thermometer_temperature
+        name: Temperature
+      - entity: sensor.living_room_thermometer_humidity
+        name: Humidity
+    hours_to_show: 24

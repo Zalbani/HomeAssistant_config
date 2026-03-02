@@ -78,3 +78,29 @@ cards:
       action: more-info
       entity: sensor.backward_cpu_utilization_total
 
+  - type: custom:bubble-card
+    card_type: separator
+    name: Thermometer
+    icon: mdi:thermometer
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.office_thermometer_temperature
+    name: Temperature
+    icon: mdi:thermometer
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.office_thermometer_humidity
+    name: Humidity
+    icon: mdi:water-percent
+    tap_action:
+      action: more-info
+
+  - type: history-graph
+    entities:
+      - entity: sensor.office_thermometer_temperature
+        name: Temperature
+      - entity: sensor.office_thermometer_humidity
+        name: Humidity
+    hours_to_show: 24

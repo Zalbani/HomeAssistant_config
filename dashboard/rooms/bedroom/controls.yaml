@@ -39,3 +39,30 @@ cards:
 
   - type: thermostat
     entity: climate.bedroom_thermostatic_valve_thermostat
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Thermometer
+    icon: mdi:thermometer
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bedroom_thermometer_temperature
+    name: Temperature
+    icon: mdi:thermometer
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bedroom_thermometer_humidity
+    name: Humidity
+    icon: mdi:water-percent
+    tap_action:
+      action: more-info
+
+  - type: history-graph
+    entities:
+      - entity: sensor.bedroom_thermometer_temperature
+        name: Temperature
+      - entity: sensor.bedroom_thermometer_humidity
+        name: Humidity
+    hours_to_show: 24

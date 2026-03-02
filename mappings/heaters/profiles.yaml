@@ -27,11 +27,11 @@ temperatures:
   comfort:
     bathroom: 20
     bedroom: 18
-    living_room: 21
-    office: 21
+    living_room: 20
+    office: 20
   eco:
     bathroom: 18
-    bedroom: 16
+    bedroom: 17
     living_room: 19
     office: 17
   night:

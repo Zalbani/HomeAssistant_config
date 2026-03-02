@@ -15,16 +15,6 @@ cards:
     hold_action:
       action: more-info
 
-  - type: custom:mushroom-entity-card
-    entity: button.hass_pc_fixe_shutdown
-    name: Shutdown PC
-    icon: mdi:power
-    tap_action:
-      action: call-service
-      service: button.press
-      target:
-        entity_id: button.hass_pc_fixe_shutdown
-
   - type: custom:bubble-card
     card_type: separator
     name: NAS Backward
