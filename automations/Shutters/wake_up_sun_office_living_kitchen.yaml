@@ -1,11 +1,18 @@
 id: '1765723709414'
 alias: Wake Up - Sunrise - Office / Living room / Kitchen
-description: Opens office, living room and kitchen shutters 30 min after sunrise.
+description: >-
+  Opens office, living room and kitchen shutters 30 min after sunrise.
+  Skipped entirely if mode_invites is on.
 triggers:
   - alias: 30 min after sunrise
     trigger: sun
     event: sunrise
     offset: "+00:30:00"
+conditions:
+  - alias: Skip if guests are present
+    condition: state
+    entity_id: input_boolean.guest_mode
+    state: "off"
 actions:
   - alias: Stop any ongoing cover movement
     action: cover.stop_cover
@@ -15,7 +22,7 @@ actions:
         - living_room
         - kitchen
   - delay: { seconds: 1 }
-  - alias: Open shutters fully
+  - alias: Open all shutters
     action: cover.set_cover_position
     data:
       position: 100

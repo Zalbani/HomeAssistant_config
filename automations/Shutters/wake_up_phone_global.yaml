@@ -2,7 +2,7 @@ id: '1765745986629'
 alias: Wake Up - Phone alarm - Global
 description: >-
   Opens all shutters 2 minutes before the phone alarm rings.
-  Uses a debounce flag to avoid repeated triggers.
+  Opens bedroom only if mode_invites is on.
 triggers:
   - alias: Phone alarm is within 2 minutes
     trigger: template
@@ -11,14 +11,29 @@ triggers:
          and now() >= (states('sensor.pixel_9_pro_next_alarm') | as_datetime - timedelta(minutes=2)) }}
 conditions: []
 actions:
-  - alias: Open all shutters
-    action: cover.set_cover_position
-    data:
-      position: 100
-    target:
-      area_id:
-        - living_room
-        - office
-        - kitchen
-        - bedroom
+  - alias: Open shutters (bedroom only if mode_invites)
+    choose:
+      - conditions:
+          - condition: state
+            entity_id: input_boolean.guest_mode
+            state: "on"
+        sequence:
+          - alias: Guests present - open bedroom only
+            action: cover.set_cover_position
+            data:
+              position: 100
+            target:
+              area_id:
+                - bedroom
+    default:
+      - alias: Open all shutters
+        action: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          area_id:
+            - living_room
+            - office
+            - kitchen
+            - bedroom
 mode: single

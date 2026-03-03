@@ -34,6 +34,9 @@ triggers:
     trigger: state
     entity_id: input_select.heating_profile
     from: "boost"
+  - alias: Mode invites changed
+    trigger: state
+    entity_id: input_boolean.guest_mode
   - alias: Periodic re-evaluation every 5 minutes
     trigger: time_pattern
     minutes: "/5"
@@ -63,13 +66,18 @@ actions:
               entity_id: input_select.heating_profile
             data:
               option: "off"
-      - alias: "Priority 2: Person away or outdoor temp warm → eco"
+      - alias: "Priority 2: Person away (and no guests) or outdoor temp warm → eco"
         conditions:
           - condition: or
             conditions:
-              - condition: state
-                entity_id: person.alban_pierson
-                state: "not_home"
+              - condition: and
+                conditions:
+                  - condition: state
+                    entity_id: person.alban_pierson
+                    state: "not_home"
+                  - condition: state
+                    entity_id: input_boolean.guest_mode
+                    state: "off"
               - condition: template
                 value_template: "{{ outdoor_temp > outdoor_threshold }}"
         sequence:

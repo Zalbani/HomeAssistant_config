@@ -19,6 +19,7 @@ header:
       - !include ../chips/battery.yaml
       - !include ../chips/wind.yaml
       - !include ../chips/window_living_room.yaml
+      - !include ../chips/guest_mode.yaml
       - !include ../chips/maintenance.yaml
 
 sections:
