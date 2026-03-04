@@ -12,13 +12,29 @@ triggers:
 variables:
   min_limit: "{{ states('input_number.heating_global_min') | float(16) }}"
   max_limit: "{{ states('input_number.heating_global_max') | float(23) }}"
-  requested_temp: "{{ state_attr(trigger.entity_id, 'temperature') | float }}"
+  requested_temp: "{{ trigger.to_state.attributes.temperature | float }}"
+  profiles: !include ../../mappings/heaters/profiles.yaml
+  window_valve_mapping: !include ../../mappings/heaters/window_valve_mapping.yaml
+  window_recently_changed: >
+    {% set room = profiles.thermostat_to_room.get(trigger.entity_id, none) %}
+    {% if room is none %}
+      {{ false }}
+    {% else %}
+      {% set ns = namespace(sensor=none) %}
+      {% for sensor_id, cfg in window_valve_mapping.items() %}
+        {% if cfg is mapping and cfg.get('room') == room %}
+          {% set ns.sensor = sensor_id %}
+        {% endif %}
+      {% endfor %}
+      {{ ns.sensor is not none and
+         (now() - states[ns.sensor].last_changed).total_seconds() <= 90 }}
+    {% endif %}
 actions:
   - choose:
       - alias: "Too cold: clamp to min"
         conditions:
           - condition: template
-            value_template: "{{ requested_temp < min_limit }}"
+            value_template: "{{ requested_temp < min_limit and not window_recently_changed }}"
         sequence:
           - action: climate.set_temperature
             target:
@@ -28,7 +44,7 @@ actions:
       - alias: "Too hot: clamp to max"
         conditions:
           - condition: template
-            value_template: "{{ requested_temp > max_limit }}"
+            value_template: "{{ requested_temp > max_limit and not window_recently_changed }}"
         sequence:
           - action: climate.set_temperature
             target:
