@@ -45,7 +45,7 @@ actions:
             {% endif %}
           {% endfor %}
           {{ ns.sensor is none or
-             (now() - states[ns.sensor].last_changed).total_seconds() > 30 }}
+             (now() - states[ns.sensor].last_changed).total_seconds() > 90 }}
     then:
       - action: input_boolean.turn_on
         target:

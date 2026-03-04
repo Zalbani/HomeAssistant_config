@@ -1,10 +1,10 @@
 type: template
+entity: input_boolean.guest_mode
 icon: mdi:account-group
 icon_color: "{{ 'blue' if is_state('input_boolean.guest_mode', 'on') else 'grey' }}"
 content: Guests
 tap_action:
   action: toggle
-  entity: input_boolean.guest_mode
 hold_action:
   action: more-info
   entity: input_boolean.guest_mode
