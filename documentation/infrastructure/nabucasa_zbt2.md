@@ -9,6 +9,8 @@
 | Protocol | Zigbee 3.0 + Thread / Matter |
 | Price | ~45 € |
 | Purchase link | [domadoo.fr](https://www.domadoo.fr/en/zigbee-dongle/8542-nabu-casa-home-assistant-connect-zigbee-usb-adapter-zbt-2-0860011789741.html) |
+| Quick Start Guide | [nabucasa_zbt2_quickstart.pdf](nabucasa_zbt2_quickstart.pdf) |
+| Specifications | [nabucasa_zbt2_manual.pdf](nabucasa_zbt2_manual.pdf) |
 
 ---
 
