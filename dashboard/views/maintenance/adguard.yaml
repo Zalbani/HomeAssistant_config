@@ -1,0 +1,51 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: AdGuard Home
+    icon: mdi:shield-check
+
+  - type: custom:mushroom-update-card
+    entity: update.adguard_home_update
+    name: AdGuard Home Update
+    collapsible_controls: false
+
+  - type: custom:mushroom-template-card
+    primary: DNS Protection
+    entity: switch.adguard_home_protection
+    secondary: "{% if is_state(entity, 'on') %}Active{% else %}Disabled{% endif %}"
+    icon: mdi:shield-check
+    icon_color: "{% if is_state(entity, 'on') %}green{% else %}red{% endif %}"
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.adguard_home_dns_queries
+    name: DNS Queries (24h)
+    icon: mdi:dns
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.adguard_home_dns_queries_blocked
+    name: Blocked Queries (24h)
+    icon: mdi:cancel
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.adguard_home_dns_queries_blocked_ratio
+    name: Block Rate
+    icon: mdi:percent
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.adguard_home_average_processing_speed
+    name: Processing Time
+    icon: mdi:timer-outline
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: switch.adguard_home_filtering
+    name: Filtering
+    icon: mdi:filter
+    fill_container: true

@@ -7,6 +7,17 @@ max_columns: 4
 header:
   card:
     type: custom:mushroom-chips-card
+    card_mod:
+      style: |
+        ha-card {
+          --chip-height: 36px;
+        }
+        .chips {
+          gap: 4px;
+        }
+        .chips mushroom-conditional-chip:empty {
+          display: none;
+        }
     chips:
       - !include ../chips/alban.yaml
       - !include ../chips/pc.yaml

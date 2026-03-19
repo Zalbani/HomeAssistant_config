@@ -1,0 +1,53 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Livebox
+    icon: mdi:router-network
+
+  - type: custom:mushroom-update-card
+    entity: update.orange_livebox_routeur_update
+    name: Livebox Update
+    collapsible_controls: false
+
+  - type: custom:mushroom-template-card
+    primary: WAN
+    entity: binary_sensor.livebox_nautilus_wan_status
+    secondary: >
+      {% set attr = state_attr(entity, 'wan_ipaddress') %}
+      {{ attr if attr else 'Unknown' }} —
+      {{ state_attr(entity, 'wired clients') | default(0) }} wired,
+      {{ state_attr(entity, 'wireless clients') | default(0) }} wireless
+    icon: mdi:wan
+    icon_color: "{% if is_state(entity, 'on') %}green{% else %}red{% endif %}"
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.orange_livebox_download_speed
+    name: Download
+    icon: mdi:download-network
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.orange_livebox_upload_speed
+    name: Upload
+    icon: mdi:upload-network
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: switch.livebox_nautilus_wifi
+    name: WiFi
+    icon: mdi:wifi
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: switch.livebox_nautilus_guest_wifi
+    name: Guest WiFi
+    icon: mdi:wifi-lock
+    fill_container: true
+
+  - type: tile
+    entity: button.livebox_nautilus_livebox_restart
+    name: Restart Livebox
+    icon: mdi:restart-alert
+    color: red
