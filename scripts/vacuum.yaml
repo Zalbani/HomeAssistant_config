@@ -1,0 +1,212 @@
+vacuum_stop:
+  alias: Vacuum — Stop & return to base
+  sequence:
+    - action: vacuum.return_to_base
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+
+vacuum_pause:
+  alias: Vacuum — Pause
+  sequence:
+    - action: vacuum.pause
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+
+vacuum_resume:
+  alias: Vacuum — Resume
+  sequence:
+    - action: vacuum.start
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+vacuum_clean_segment:
+  alias: Vacuum — Clean segment (vac only)
+  description: Sets mop to off then vacuums the given segment.
+  fields:
+    segment_id:
+      description: Roborock segment ID
+      example: 2
+      selector:
+        number:
+          min: 1
+          max: 100
+  sequence:
+    - action: select.select_option
+      target:
+        entity_id: select.roborock_qrevo_edge_series_mop_intensity
+      data:
+        option: "off"
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        command: app_segment_clean
+        params:
+          - segments:
+              - "{{ segment_id | int }}"
+            repeat: 1
+
+vacuum_mop_segment:
+  alias: Vacuum — Mop segment (mop only)
+  description: Sets fan to off and mop on, then mops the given segment.
+  fields:
+    segment_id:
+      description: Roborock segment ID
+      example: 2
+      selector:
+        number:
+          min: 1
+          max: 100
+  sequence:
+    - action: vacuum.set_fan_speed
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        fan_speed: "off"
+    - action: select.select_option
+      target:
+        entity_id: select.roborock_qrevo_edge_series_mop_intensity
+      data:
+        option: "custom_water_flow"
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        command: app_segment_clean
+        params:
+          - segments:
+              - "{{ segment_id | int }}"
+            repeat: 1
+
+vacuum_clean_mop_segment:
+  alias: Vacuum — Clean & mop segment (both)
+  description: Sets fan to max and mop on, then cleans the given segment.
+  fields:
+    segment_id:
+      description: Roborock segment ID
+      example: 2
+      selector:
+        number:
+          min: 1
+          max: 100
+  sequence:
+    - action: vacuum.set_fan_speed
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        fan_speed: "max"
+    - action: select.select_option
+      target:
+        entity_id: select.roborock_qrevo_edge_series_mop_intensity
+      data:
+        option: "custom_water_flow"
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        command: app_segment_clean
+        params:
+          - segments:
+              - "{{ segment_id | int }}"
+            repeat: 1
+vacuum_clean_selected:
+  alias: Vacuum — Clean selected rooms
+  sequence:
+    - condition: template
+      value_template: >
+        {% set rooms = ['living_room','office','bedroom','kitchen','bathroom','restroom','entry'] %}
+        {% set ns = namespace(any=false) %}
+        {% for room in rooms %}{% if is_state('input_boolean.vacuum_select_' ~ room, 'on') %}{% set ns.any = true %}{% endif %}{% endfor %}
+        {{ ns.any }}
+    - action: select.select_option
+      target:
+        entity_id: select.roborock_qrevo_edge_series_mop_intensity
+      data:
+        option: "off"
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        command: app_segment_clean
+        params:
+          - segments: |-
+              {%- set rooms = {'living_room': 6, 'office': 2, 'bedroom': 7, 'kitchen': 5, 'bathroom': 4, 'restroom': 3, 'entry': 1} -%}
+              {%- set ns = namespace(segs=[]) -%}
+              {%- for room, seg in rooms.items() -%}
+                {%- if is_state('input_boolean.vacuum_select_' ~ room, 'on') -%}
+                  {%- set ns.segs = ns.segs + [seg] -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {{- ns.segs }}
+            repeat: 1
+
+vacuum_mop_selected:
+  alias: Vacuum — Mop selected rooms
+  sequence:
+    - condition: template
+      value_template: >
+        {% set rooms = ['living_room','office','bedroom','kitchen','bathroom','restroom','entry'] %}
+        {% set ns = namespace(any=false) %}
+        {% for room in rooms %}{% if is_state('input_boolean.vacuum_select_' ~ room, 'on') %}{% set ns.any = true %}{% endif %}{% endfor %}
+        {{ ns.any }}
+    - action: vacuum.set_fan_speed
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        fan_speed: "off"
+    - action: select.select_option
+      target:
+        entity_id: select.roborock_qrevo_edge_series_mop_intensity
+      data:
+        option: "custom_water_flow"
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        command: app_segment_clean
+        params:
+          - segments: |-
+              {%- set rooms = {'living_room': 6, 'office': 2, 'bedroom': 7, 'kitchen': 5, 'bathroom': 4, 'restroom': 3, 'entry': 1} -%}
+              {%- set ns = namespace(segs=[]) -%}
+              {%- for room, seg in rooms.items() -%}
+                {%- if is_state('input_boolean.vacuum_select_' ~ room, 'on') -%}
+                  {%- set ns.segs = ns.segs + [seg] -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {{- ns.segs }}
+            repeat: 1
+
+vacuum_clean_mop_selected:
+  alias: Vacuum — Clean & mop selected rooms
+  sequence:
+    - condition: template
+      value_template: >
+        {% set rooms = ['living_room','office','bedroom','kitchen','bathroom','restroom','entry'] %}
+        {% set ns = namespace(any=false) %}
+        {% for room in rooms %}{% if is_state('input_boolean.vacuum_select_' ~ room, 'on') %}{% set ns.any = true %}{% endif %}{% endfor %}
+        {{ ns.any }}
+    - action: vacuum.set_fan_speed
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        fan_speed: "max"
+    - action: select.select_option
+      target:
+        entity_id: select.roborock_qrevo_edge_series_mop_intensity
+      data:
+        option: "custom_water_flow"
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        command: app_segment_clean
+        params:
+          - segments: |-
+              {%- set rooms = {'living_room': 6, 'office': 2, 'bedroom': 7, 'kitchen': 5, 'bathroom': 4, 'restroom': 3, 'entry': 1} -%}
+              {%- set ns = namespace(segs=[]) -%}
+              {%- for room, seg in rooms.items() -%}
+                {%- if is_state('input_boolean.vacuum_select_' ~ room, 'on') -%}
+                  {%- set ns.segs = ns.segs + [seg] -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {{- ns.segs }}
+            repeat: 1

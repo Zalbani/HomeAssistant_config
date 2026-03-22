@@ -1,0 +1,481 @@
+vacuum_btn:
+  show_name: true
+  show_icon: true
+  show_state: false
+  tap_action:
+    action: none
+    haptic: light
+  styles:
+    card:
+      - flex: '1'
+      - border-radius: 10px
+      - padding: 8px 2px
+      - background: rgba(255,255,255,0.06)
+      - border: none
+    icon:
+      - width: 18px
+      - color: rgba(255,255,255,0.75)
+      - margin-bottom: 2px
+    name:
+      - font-size: 10px
+      - opacity: 0.65
+
+vacuum_select_btn:
+  show_name: true
+  show_icon: true
+  show_state: false
+  tap_action:
+    action: toggle
+    haptic: light
+  styles:
+    card:
+      - border-radius: 12px
+      - padding: 10px 4px
+      - background: >
+          [[[ return entity && entity.state === 'on' ? 'rgba(76,175,80,0.25)' : 'rgba(255,255,255,0.06)'; ]]]
+      - border: >
+          [[[ return entity && entity.state === 'on' ? '1px solid rgba(76,175,80,0.5)' : '1px solid rgba(255,255,255,0.06)'; ]]]
+    icon:
+      - width: 20px
+      - color: >
+          [[[ return entity && entity.state === 'on' ? '#4CAF50' : 'rgba(255,255,255,0.4)'; ]]]
+      - margin-bottom: 3px
+    name:
+      - font-size: 10px
+      - color: >
+          [[[ return entity && entity.state === 'on' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.45)'; ]]]
+
+vacuum_status_card:
+  entity: sensor.roborock_qrevo_edge_series_status
+  show_name: false
+  show_state: false
+  show_icon: false
+  tap_action:
+    action: none
+  update_timer: 2
+  extra_styles: |
+    @keyframes vacuum-sweep {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(400%); }
+    }
+  styles:
+    card:
+      - border-radius: 16px
+      - padding: 12px
+      - background: rgba(var(--rgb-card-background-color), 0.4)
+      - border: 1px solid rgba(255, 255, 255, 0.08)
+      - box-shadow: none
+    grid:
+      - grid-template-areas: '"header" "progress" "actions"'
+      - grid-template-rows: min-content min-content min-content
+      - gap: 8px
+    custom_fields:
+      header:
+        - display: flex
+        - align-items: center
+        - justify-content: space-between
+      progress:
+        - width: 100%
+        - display: block
+        - box-sizing: border-box
+  custom_fields:
+    header: >
+      [[[
+        const status      = states['sensor.roborock_qrevo_edge_series_status']?.state || 'unknown';
+        const error       = states['sensor.roborock_qrevo_edge_series_vacuum_error']?.state;
+        const currentRoom = states['sensor.roborock_qrevo_edge_series_current_room']?.state || '';
+        const hasError    = error && error !== 'none';
+        const activeStates = ['cleaning','segment_cleaning','mopping','segment_mopping',
+          'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+          'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+          'segment_mopping','zoned_mopping','paused',
+          'going_to_target','returning_home','docking',
+          'washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+        const cleaningStates = ['cleaning','segment_cleaning','mopping','segment_mopping',
+          'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+          'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+          'segment_mopping','zoned_mopping'];
+        const isActive   = activeStates.includes(status);
+        const isCleaning = cleaningStates.includes(status);
+        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+        const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
+        const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
+        const isPending  = !isActive && _secsSince < 45;
+        const _lc = ['script.vacuum_clean_segment','script.vacuum_clean_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
+        const _lm = ['script.vacuum_mop_segment','script.vacuum_mop_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
+        const _lb = ['script.vacuum_clean_mop_segment','script.vacuum_clean_mop_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
+        const _mm = [_lc,_lm,_lb].reduce((a,b)=>b>a?b:a,'');
+        const modeName = _mm ? (_mm === _lb ? 'Vac & Mop' : _mm === _lm ? 'Mop' : 'Vac') : '';
+        const mainColor  = hasError ? '#e74c3c' : 'rgba(255,255,255,0.85)';
+        const mainIcon   = hasError ? 'mdi:robot-vacuum-alert' : 'mdi:robot-vacuum';
+        let statusText, statusColor;
+        if (hasError) {
+          statusText  = error.replace(/_/g,' ');
+          statusColor = '#e74c3c';
+        } else if (isPending) {
+          statusText  = 'Starting…';
+          statusColor = '#FF9800';
+        } else if (isCleaning) {
+          const _room = currentRoom || status.replace(/_/g,' ');
+          statusText  = modeName ? modeName + (_room ? ' · ' + _room : '') : _room;
+          statusColor = '#4CAF50';
+        } else {
+          statusText  = status.replace(/_/g,' ');
+          statusColor = 'rgba(255,255,255,0.45)';
+        }
+        return `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <ha-icon icon="${mainIcon}" style="width:18px;color:${mainColor}"></ha-icon>
+            <span style="font-size:14px;font-weight:600;color:${mainColor}">Vacuum</span>
+          </div>
+          <span style="font-size:12px;color:${statusColor}">${statusText}</span>`;
+      ]]]
+    progress: >
+      [[[
+        const status = states['sensor.roborock_qrevo_edge_series_status']?.state || '';
+        const activeStates = ['cleaning','segment_cleaning','mopping','segment_mopping',
+          'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+          'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+          'segment_mopping','zoned_mopping','paused',
+          'going_to_target','returning_home','docking',
+          'washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+        const returningStates = ['returning_home','docking','washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+        const cleaningStates  = ['cleaning','segment_cleaning','mopping','segment_mopping',
+          'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+          'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+          'segment_mopping','zoned_mopping','paused','going_to_target'];
+        const isReturning = returningStates.includes(status);
+        const isCleaning  = cleaningStates.includes(status);
+        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+        const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
+        const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
+        const isPending = !isCleaning && !isReturning && _secsSince < 45;
+        const _pauseTriggered  = states['script.vacuum_pause']?.attributes?.last_triggered || '';
+        const _resumeTriggered = states['script.vacuum_resume']?.attributes?.last_triggered || '';
+        const isPausePending  = isCleaning && status !== 'paused' && (Date.now() - new Date(_pauseTriggered).getTime())  / 1000 < 8;
+        const isResumePending = status === 'paused'              && (Date.now() - new Date(_resumeTriggered).getTime()) / 1000 < 8;
+        const _stopTriggered  = states['script.vacuum_stop']?.attributes?.last_triggered || '';
+        const isStopPending   = !isReturning && (isCleaning || status === 'paused') && (Date.now() - new Date(_stopTriggered).getTime()) / 1000 < 8;
+        if (!isCleaning && !isReturning && !isPending) return '';
+        if (isPending) {
+          return `
+            <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;position:relative;">
+              <div style="position:absolute;top:0;left:0;width:25%;height:100%;background:rgba(255,152,0,0.7);border-radius:6px;animation:vacuum-sweep 1.2s ease-in-out infinite;"></div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:rgba(255,152,0,0.8);margin-top:5px;text-align:center;">...</div>`;
+        }
+        if (isStopPending) {
+          return `
+            <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;position:relative;">
+              <div style="position:absolute;top:0;left:0;width:25%;height:100%;background:rgba(231,76,60,0.7);border-radius:6px;animation:vacuum-sweep 1.2s ease-in-out infinite;"></div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:rgba(231,76,60,0.7);margin-top:5px;text-align:center;">Stopping…</div>`;
+        }
+        if (isReturning) {
+          return `
+            <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;position:relative;">
+              <div style="position:absolute;top:0;left:0;width:25%;height:100%;background:rgba(231,76,60,0.7);border-radius:6px;animation:vacuum-sweep 1.2s ease-in-out infinite;"></div>
+            </div>`;
+        }
+        if (isPausePending || isResumePending) {
+          const transitionLabel = isPausePending ? 'Pausing…' : 'Resuming…';
+          return `
+            <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;position:relative;">
+              <div style="position:absolute;top:0;left:0;width:25%;height:100%;background:rgba(255,255,255,0.35);border-radius:6px;animation:vacuum-sweep 1.2s ease-in-out infinite;"></div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);margin-top:5px;text-align:center;">${transitionLabel}</div>`;
+        }
+        const progress = Number(states['sensor.roborock_qrevo_edge_series_cleaning_progress']?.state || 0);
+        return `
+          <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;">
+            <div style="width:${progress}%;background:#4CAF50;height:100%;border-radius:6px;transition:width 0.5s ease;"></div>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);margin-top:5px;text-align:center;">${progress}%</div>`;
+      ]]]
+    actions:
+      card:
+        type: horizontal-stack
+        cards: |
+          [[[
+            const vacuum = 'vacuum.roborock_qrevo_edge_series';
+            const status = states['sensor.roborock_qrevo_edge_series_status']?.state || '';
+            const activeStates = ['cleaning','segment_cleaning','mopping','segment_mopping',
+              'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+              'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+              'segment_mopping','zoned_mopping','paused',
+              'going_to_target','returning_home','docking',
+              'washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+            const isActive = activeStates.includes(status);
+            const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+            const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
+            const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
+            const returningStates = ['returning_home','docking','washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+            const isReturning = returningStates.includes(status);
+            const isPending = !isActive && !isReturning && _secsSince < 45;
+            if (isReturning) return [];
+            if (isPending) return [];
+            const _pauseTriggered  = states['script.vacuum_pause']?.attributes?.last_triggered || '';
+            const _resumeTriggered = states['script.vacuum_resume']?.attributes?.last_triggered || '';
+            const isPausePending  = isActive && status !== 'paused' && (Date.now() - new Date(_pauseTriggered).getTime())  / 1000 < 8;
+            const isResumePending = status === 'paused'             && (Date.now() - new Date(_resumeTriggered).getTime()) / 1000 < 8;
+            const _stopTriggered  = states['script.vacuum_stop']?.attributes?.last_triggered || '';
+            const isStopPending   = !isReturning && (isActive || status === 'paused') && (Date.now() - new Date(_stopTriggered).getTime()) / 1000 < 8;
+            if (isStopPending || isPausePending || isResumePending) return [];
+            if (isActive) {
+              const isPaused = status === 'paused';
+              return [
+                {
+                  type: 'custom:button-card',
+                  template: 'vacuum_btn',
+                  entity: vacuum,
+                  icon: isPaused ? 'mdi:play' : 'mdi:pause',
+                  name: isPaused ? 'Resume' : 'Pause',
+                  tap_action: isPaused
+                    ? { action: 'call-service', service: 'script.vacuum_resume', haptic: 'light' }
+                    : { action: 'call-service', service: 'script.vacuum_pause',  haptic: 'light' },
+                },
+                {
+                  type: 'custom:button-card',
+                  template: 'vacuum_btn',
+                  entity: vacuum,
+                  icon: 'mdi:stop',
+                  name: 'Stop',
+                  tap_action: { action: 'call-service', service: 'script.vacuum_stop', haptic: 'medium' },
+                },
+              ];
+            }
+            const btn = (icon, name, service) => ({
+              type: 'custom:button-card',
+              template: 'vacuum_btn',
+              entity: vacuum,
+              icon,
+              name,
+              tap_action: { action: 'call-service', service, haptic: 'light' },
+            });
+            return [
+              btn('mdi:vacuum',  'Vac',  'script.vacuum_clean_selected'),
+              btn('mdi:water',   'Mop',  'script.vacuum_mop_selected'),
+              btn('mdi:shimmer', 'Both', 'script.vacuum_clean_mop_selected'),
+            ];
+          ]]]
+
+vacuum_room_card:
+  variables:
+    room_configs: !include ../rooms/config.yaml
+  entity: sensor.roborock_qrevo_edge_series_status
+  show_name: false
+  show_state: false
+  show_icon: false
+  tap_action:
+    action: none
+  update_timer: 2
+  extra_styles: |
+    @keyframes vacuum-sweep {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(400%); }
+    }
+  styles:
+    card:
+      - border-radius: 16px
+      - padding: 12px
+      - background: rgba(var(--rgb-card-background-color), 0.4)
+      - border: 1px solid rgba(255, 255, 255, 0.08)
+      - box-shadow: none
+    grid:
+      - grid-template-areas: '"header" "progress" "actions"'
+      - grid-template-rows: min-content min-content min-content
+      - gap: 8px
+    custom_fields:
+      header:
+        - display: flex
+        - align-items: center
+        - justify-content: space-between
+      progress:
+        - width: 100%
+        - display: block
+        - box-sizing: border-box
+  custom_fields:
+    header: >
+      [[[
+        const status      = states['sensor.roborock_qrevo_edge_series_status']?.state || 'unknown';
+        const error       = states['sensor.roborock_qrevo_edge_series_vacuum_error']?.state;
+        const currentRoom = states['sensor.roborock_qrevo_edge_series_current_room']?.state;
+        const hasError    = error && error !== 'none';
+        const cfg         = variables.room_configs?.[variables.room_id] || {};
+        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+        const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
+        const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
+        const activeStates = ['cleaning','segment_cleaning','mopping','segment_mopping',
+          'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+          'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+          'segment_mopping','zoned_mopping','paused',
+          'going_to_target','returning_home','docking',
+          'washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+        const cleaningStates = ['cleaning','segment_cleaning','mopping','segment_mopping',
+          'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+          'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+          'segment_mopping','zoned_mopping'];
+        const isActive   = activeStates.includes(status);
+        const isCleaning = cleaningStates.includes(status);
+        const isPending  = !isActive && _secsSince < 45;
+        const isThisRoom = currentRoom === cfg.name;
+        const _lc = ['script.vacuum_clean_segment','script.vacuum_clean_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
+        const _lm = ['script.vacuum_mop_segment','script.vacuum_mop_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
+        const _lb = ['script.vacuum_clean_mop_segment','script.vacuum_clean_mop_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
+        const _mm = [_lc,_lm,_lb].reduce((a,b)=>b>a?b:a,'');
+        const modeName = _mm ? (_mm === _lb ? 'Vac & Mop' : _mm === _lm ? 'Mop' : 'Vac') : '';
+        const mainColor  = hasError ? '#e74c3c' : 'rgba(255,255,255,0.85)';
+        const mainIcon   = hasError ? 'mdi:robot-vacuum-alert' : 'mdi:robot-vacuum';
+        let statusText, statusColor;
+        if (hasError) {
+          statusText  = error.replace(/_/g,' ');
+          statusColor = '#e74c3c';
+        } else if (isPending) {
+          statusText  = 'Starting…';
+          statusColor = '#FF9800';
+        } else if (isCleaning && isThisRoom) {
+          statusText  = modeName ? modeName + ' here…' : 'Cleaning here…';
+          statusColor = '#4CAF50';
+        } else if (isCleaning) {
+          statusText  = modeName ? modeName + (currentRoom ? ' · ' + currentRoom : '') : (currentRoom || '');
+          statusColor = '#FF9800';
+        } else {
+          statusText  = status.replace(/_/g,' ');
+          statusColor = 'rgba(255,255,255,0.45)';
+        }
+        return `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <ha-icon icon="${mainIcon}" style="width:18px;color:${mainColor}"></ha-icon>
+            <span style="font-size:14px;font-weight:600;color:${mainColor}">Vacuum</span>
+          </div>
+          <span style="font-size:12px;color:${statusColor}">${statusText}</span>`;
+      ]]]
+    progress: >
+      [[[
+        const status = states['sensor.roborock_qrevo_edge_series_status']?.state || '';
+        const activeStates = ['cleaning','segment_cleaning','mopping','segment_mopping',
+          'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+          'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+          'segment_mopping','zoned_mopping','paused',
+          'going_to_target','returning_home','docking',
+          'washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+        const returningStates = ['returning_home','docking','washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+        const cleaningStates  = ['cleaning','segment_cleaning','mopping','segment_mopping',
+          'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+          'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+          'segment_mopping','zoned_mopping','paused','going_to_target'];
+        const isReturning = returningStates.includes(status);
+        const isCleaning  = cleaningStates.includes(status);
+        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+        const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
+        const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
+        const isPending = !isCleaning && !isReturning && _secsSince < 45;
+        const _pauseTriggered  = states['script.vacuum_pause']?.attributes?.last_triggered || '';
+        const _resumeTriggered = states['script.vacuum_resume']?.attributes?.last_triggered || '';
+        const isPausePending  = isCleaning && status !== 'paused' && (Date.now() - new Date(_pauseTriggered).getTime())  / 1000 < 8;
+        const isResumePending = status === 'paused'              && (Date.now() - new Date(_resumeTriggered).getTime()) / 1000 < 8;
+        const _stopTriggered  = states['script.vacuum_stop']?.attributes?.last_triggered || '';
+        const isStopPending   = !isReturning && (isCleaning || status === 'paused') && (Date.now() - new Date(_stopTriggered).getTime()) / 1000 < 8;
+        if (!isCleaning && !isReturning && !isPending) return '';
+        if (isPending) {
+          return `
+            <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;position:relative;">
+              <div style="position:absolute;top:0;left:0;width:25%;height:100%;background:rgba(255,152,0,0.7);border-radius:6px;animation:vacuum-sweep 1.2s ease-in-out infinite;"></div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:rgba(255,152,0,0.8);margin-top:5px;text-align:center;">...</div>`;
+        }
+        if (isStopPending) {
+          return `
+            <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;position:relative;">
+              <div style="position:absolute;top:0;left:0;width:25%;height:100%;background:rgba(231,76,60,0.7);border-radius:6px;animation:vacuum-sweep 1.2s ease-in-out infinite;"></div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:rgba(231,76,60,0.7);margin-top:5px;text-align:center;">Stopping…</div>`;
+        }
+        if (isReturning) {
+          return `
+            <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;position:relative;">
+              <div style="position:absolute;top:0;left:0;width:25%;height:100%;background:rgba(231,76,60,0.7);border-radius:6px;animation:vacuum-sweep 1.2s ease-in-out infinite;"></div>
+            </div>`;
+        }
+        if (isPausePending || isResumePending) {
+          const transitionLabel = isPausePending ? 'Pausing…' : 'Resuming…';
+          return `
+            <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;position:relative;">
+              <div style="position:absolute;top:0;left:0;width:25%;height:100%;background:rgba(255,255,255,0.35);border-radius:6px;animation:vacuum-sweep 1.2s ease-in-out infinite;"></div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);margin-top:5px;text-align:center;">${transitionLabel}</div>`;
+        }
+        const progress = Number(states['sensor.roborock_qrevo_edge_series_cleaning_progress']?.state || 0);
+        return `
+          <div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;">
+            <div style="width:${progress}%;background:#4CAF50;height:100%;border-radius:6px;transition:width 0.5s ease;"></div>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);margin-top:5px;text-align:center;">${progress}%</div>`;
+      ]]]
+    actions:
+      card:
+        type: horizontal-stack
+        cards: |
+          [[[
+            const segId = variables.room_configs?.[variables.room_id]?.segment_id;
+            const vacuum = 'vacuum.roborock_qrevo_edge_series';
+            const status = states['sensor.roborock_qrevo_edge_series_status']?.state || '';
+            const activeStates = ['cleaning','segment_cleaning','mopping','segment_mopping',
+              'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+              'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+              'segment_mopping','zoned_mopping','paused',
+              'going_to_target','returning_home','docking',
+              'washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+            const isActive = activeStates.includes(status);
+            const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+            const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
+            const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
+            const returningStates = ['returning_home','docking','washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
+            const isReturning = returningStates.includes(status);
+            const isPending = !isActive && !isReturning && _secsSince < 45;
+            if (isReturning) return [];
+            if (isPending) return [];
+            const _pauseTriggered  = states['script.vacuum_pause']?.attributes?.last_triggered || '';
+            const _resumeTriggered = states['script.vacuum_resume']?.attributes?.last_triggered || '';
+            const isPausePending  = isActive && status !== 'paused' && (Date.now() - new Date(_pauseTriggered).getTime())  / 1000 < 8;
+            const isResumePending = status === 'paused'             && (Date.now() - new Date(_resumeTriggered).getTime()) / 1000 < 8;
+            const _stopTriggered  = states['script.vacuum_stop']?.attributes?.last_triggered || '';
+            const isStopPending   = !isReturning && (isActive || status === 'paused') && (Date.now() - new Date(_stopTriggered).getTime()) / 1000 < 8;
+            if (isStopPending || isPausePending || isResumePending) return [];
+            if (isActive) {
+              const isPaused = status === 'paused';
+              return [
+                {
+                  type: 'custom:button-card',
+                  template: 'vacuum_btn',
+                  entity: vacuum,
+                  icon: isPaused ? 'mdi:play' : 'mdi:pause',
+                  name: isPaused ? 'Resume' : 'Pause',
+                  tap_action: isPaused
+                    ? { action: 'call-service', service: 'script.vacuum_resume', haptic: 'light' }
+                    : { action: 'call-service', service: 'script.vacuum_pause',  haptic: 'light' },
+                },
+                {
+                  type: 'custom:button-card',
+                  template: 'vacuum_btn',
+                  entity: vacuum,
+                  icon: 'mdi:stop',
+                  name: 'Stop',
+                  tap_action: { action: 'call-service', service: 'script.vacuum_stop', haptic: 'medium' },
+                },
+              ];
+            }
+            const btn = (icon, name, service, data) => ({
+              type: 'custom:button-card',
+              template: 'vacuum_btn',
+              entity: vacuum,
+              icon,
+              name,
+              tap_action: { action: 'call-service', service, service_data: data, haptic: 'light' },
+            });
+            return [
+              btn('mdi:vacuum',  'Vac',  'script.vacuum_clean_segment',    { segment_id: segId }),
+              btn('mdi:water',   'Mop',  'script.vacuum_mop_segment',       { segment_id: segId }),
+              btn('mdi:shimmer', 'Both', 'script.vacuum_clean_mop_segment', { segment_id: segId }),
+            ];
+          ]]]

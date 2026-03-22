@@ -59,6 +59,16 @@ cards:
 
   - type: custom:bubble-card
     card_type: separator
+    name: Vacuum
+    icon: mdi:robot-vacuum
+
+  - type: custom:button-card
+    template: vacuum_room_card
+    variables:
+      room_id: living_room
+
+  - type: custom:bubble-card
+    card_type: separator
     name: Heating
     icon: mdi:radiator
 

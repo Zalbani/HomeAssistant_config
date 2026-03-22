@@ -11,3 +11,13 @@ cards:
     name: Entry light
     icon: mdi:ceiling-light-outline
 
+  - type: custom:bubble-card
+    card_type: separator
+    name: Vacuum
+    icon: mdi:robot-vacuum
+
+  - type: custom:button-card
+    template: vacuum_room_card
+    variables:
+      room_id: entry
+

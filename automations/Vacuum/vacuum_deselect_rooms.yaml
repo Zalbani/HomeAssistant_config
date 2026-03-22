@@ -1,0 +1,21 @@
+id: '1740500000020'
+alias: Vacuum — Deselect rooms when docked
+description: >-
+  Turns off all room selection toggles once the vacuum returns to its base,
+  so the selection is clean for the next run.
+triggers:
+  - trigger: state
+    entity_id: vacuum.roborock_qrevo_edge_series
+    to: docked
+actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id:
+        - input_boolean.vacuum_select_living_room
+        - input_boolean.vacuum_select_office
+        - input_boolean.vacuum_select_bedroom
+        - input_boolean.vacuum_select_kitchen
+        - input_boolean.vacuum_select_bathroom
+        - input_boolean.vacuum_select_restroom
+        - input_boolean.vacuum_select_entry
+mode: single

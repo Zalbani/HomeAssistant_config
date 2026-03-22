@@ -13,19 +13,23 @@ _HomeAssistant_Config/
 │   └── index.yaml        # !include_dir_merge_list of all subdirectories
 ├── dashboard/
 │   ├── main.yaml         # Dashboard entry point (includes templates/ + views/)
-│   ├── templates/        # Reusable button-card templates
-│   │   └── overview_card_templates.yaml   # room_card, room_card_action
+│   ├── templates/        # Reusable button-card templates (auto-merged via !include_dir_merge_named)
+│   │   ├── overview_card_templates.yaml   # room_card, room_card_action
+│   │   └── vacuum_card_templates.yaml     # vacuum_room_card, vacuum_btn
 │   ├── views/            # One file per dashboard page
 │   └── rooms/            # Per-room cards, included from views
-│       ├── config.yaml   # Centralized room metadata (name, icon, color) keyed by room_id
+│       ├── config.yaml   # Centralized room metadata (name, icon, color, segment_id) keyed by room_id
 │       └── <room>/
 │           ├── overview_card.yaml  # Summary card used in home.yaml
-│           └── controls.yaml       # Bubble cards (lights, shutters, PC)
+│           └── controls.yaml       # Bubble cards (lights, shutters, vacuum…)
 ├── mappings/
 │   ├── heaters/          # Profiles, thermostats, valves, window sensors
 │   ├── lights/           # Remote → light entities mapping
 │   └── shutters/         # Remote → shutter entities mapping
-├── scripts.yaml
+├── scripts/              # Scripts organized by domain (auto-merged via !include_dir_merge_named)
+│   ├── vacuum.yaml       # Roborock segment cleaning scripts
+│   ├── heating.yaml      # Heating profile helpers
+│   └── pc.yaml           # PC toggle
 └── scenes.yaml
 ```
 
@@ -62,16 +66,16 @@ variables:
 
 Source of truth: `dashboard/rooms/config.yaml`. The icon and color defined here must be used consistently in `overview_card.yaml`, view headers (`dashboard/views/<room>.yaml`), and any card referencing that room.
 
-| room_id      | Name        | Icon                     | Color     |
-|--------------|-------------|--------------------------|-----------|
-| living_room  | Living Room | mdi:sofa-outline         | #4CAF50   |
-| office       | Office      | mdi:microsoft-office     | #C9A96E   |
-| bedroom      | Bedroom     | mdi:bed-outline          | #B55233   |
-| kitchen      | Kitchen     | mdi:coffee-maker-outline | #E6B800   |
-| bathroom     | Bathroom    | mdi:bathtub-outline      | #45B5C4   |
-| restroom     | Restroom    | mdi:paper-roll-outline   | #D4759E   |
-| balcony      | Balcony     | mdi:balcony              | #8BC34A   |
-| entry        | Entry       | mdi:door-open            | #78909C   |
+| room_id      | Name        | Icon                     | Color     | segment_id |
+|--------------|-------------|--------------------------|-----------|------------|
+| living_room  | Living Room | mdi:sofa-outline         | #4CAF50   | 6          |
+| office       | Office      | mdi:microsoft-office     | #C9A96E   | 2          |
+| bedroom      | Bedroom     | mdi:bed-outline          | #B55233   | 7          |
+| kitchen      | Kitchen     | mdi:coffee-maker-outline | #E6B800   | 5          |
+| bathroom     | Bathroom    | mdi:bathtub-outline      | #45B5C4   | 4          |
+| restroom     | Restroom    | mdi:paper-roll-outline   | #D4759E   | 3          |
+| balcony      | Balcony     | mdi:balcony              | #8BC34A   | —          |
+| entry        | Entry       | mdi:door-open            | #78909C   | 1          |
 
 ## Heating System
 
@@ -231,8 +235,45 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | Balcony outside lamp     | `mdi:coach-lamp-variant`      |
 | Under cabinet (kitchen)  | `mdi:dome-light`              |
 
+## Vacuum (Roborock Qrevo Edge Series)
+
+### Segment IDs
+Stored in `dashboard/rooms/config.yaml` under `segment_id`. See Existing Rooms table above.
+
+### Scripts (`scripts/vacuum.yaml`)
+Each script takes `segment_id` (int) as a field:
+- `vacuum_clean_segment` — sets mop off, vacuums segment
+- `vacuum_mop_segment` — sets fan off + mop on, mops segment
+- `vacuum_clean_mop_segment` — sets fan max + mop on, cleans & mops segment
+
+### `vacuum_room_card` Template
+Defined in `dashboard/templates/vacuum_card_templates.yaml`. Reads `segment_id` from `room_configs[room_id]`.
+
+Usage in `controls.yaml`:
+```yaml
+- type: custom:button-card
+  template: vacuum_room_card
+  variables:
+    room_id: office   # Must match key in rooms/config.yaml
+```
+
+To add vacuum to a new room: add `segment_id` in `rooms/config.yaml` and add the card above to the room's `controls.yaml`.
+
+### Key Entities
+- `vacuum.roborock_qrevo_edge_series`
+- `sensor.roborock_qrevo_edge_series_status`
+- `sensor.roborock_qrevo_edge_series_current_room` (options: Entry, Office, Restroom, Bathroom, Kitchen, Living room, Bedroom)
+- `sensor.roborock_qrevo_edge_series_vacuum_error`
+- `select.roborock_qrevo_edge_series_mop_intensity`
+
+## Scripts
+
+Scripts are split by domain in `scripts/` and auto-loaded via `!include_dir_merge_named`. To add a new group, create a new file — no index needed.
+
 ## Conventions
 - Automations use numeric IDs (`id: "1740500000001"`)
 - YAML anchors (`&alias` / `*alias`) are used in mappings to avoid duplication
 - Button-card templates use inline JavaScript in `custom_fields`
 - Dashboard navigation path: `/overview-dashboard/<path>`
+- Button-card templates are split by feature in `dashboard/templates/` (auto-merged)
+- Scripts are split by domain in `scripts/` (auto-merged via `!include_dir_merge_named`)

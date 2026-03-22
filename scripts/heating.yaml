@@ -1,31 +1,14 @@
-toggle_on_off_pc_fix:
-  alias: Toggle ON/OFF PC Fix
-  sequence:
-  - if:
-    - condition: state
-      entity_id: switch.alban_pc_fixe
-      state: 'off'
-    then:
-    - action: switch.turn_on
-      target:
-        entity_id: switch.alban_pc_fixe
-    else:
-    - action: button.press
-      target:
-        entity_id: button.hass_pc_fixe_shutdown
-  description: ''
-
 reset_heating_profile:
   alias: Reset Heating Profile
   description: Clears all manual overrides and re-applies temperatures for the current profile.
   variables:
-    profiles: !include mappings/heaters/profiles.yaml
+    profiles: !include ../mappings/heaters/profiles.yaml
     profile: "{{ states('input_select.heating_profile') }}"
   sequence:
     - alias: Clear all manual overrides
       action: input_boolean.turn_off
       target:
-        entity_id: !include mappings/heaters/manual_overrides.yaml
+        entity_id: !include ../mappings/heaters/manual_overrides.yaml
     - alias: Re-apply temperatures for current profile
       repeat:
         for_each:

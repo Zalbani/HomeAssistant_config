@@ -26,3 +26,4 @@
 - !include Remotes/remote_light_scroll_wheel_global.yaml
 - !include Remotes/office_button_toggle.yaml
 - !include Sensors/window_cover_control.yaml
+- !include Vacuum/vacuum_deselect_rooms.yaml

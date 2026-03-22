@@ -33,3 +33,13 @@ cards:
     show_position_control: true
     collapsible_controls: false
 
+  - type: custom:bubble-card
+    card_type: separator
+    name: Vacuum
+    icon: mdi:robot-vacuum
+
+  - type: custom:button-card
+    template: vacuum_room_card
+    variables:
+      room_id: kitchen
+

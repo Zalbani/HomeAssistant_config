@@ -28,3 +28,59 @@ cards:
     icon: mdi:leak
     fill_container: true
 
+  - type: custom:button-card
+    template: vacuum_status_card
+    styles:
+      grid:
+        - grid-template-areas: '"rooms" "divider" "header" "progress" "actions"'
+        - grid-template-rows: auto 1px min-content min-content min-content
+      custom_fields:
+        rooms:
+          - width: 100%
+        divider:
+          - width: 100%
+          - height: 1px
+          - background: rgba(255,255,255,0.08)
+    custom_fields:
+      divider: "<div></div>"
+      rooms:
+        card:
+          type: grid
+          columns: 3
+          square: false
+          cards:
+            - type: custom:button-card
+              template: vacuum_select_btn
+              entity: input_boolean.vacuum_select_living_room
+              name: Living Room
+              icon: mdi:sofa-outline
+            - type: custom:button-card
+              template: vacuum_select_btn
+              entity: input_boolean.vacuum_select_office
+              name: Office
+              icon: mdi:microsoft-office
+            - type: custom:button-card
+              template: vacuum_select_btn
+              entity: input_boolean.vacuum_select_bedroom
+              name: Bedroom
+              icon: mdi:bed-outline
+            - type: custom:button-card
+              template: vacuum_select_btn
+              entity: input_boolean.vacuum_select_kitchen
+              name: Kitchen
+              icon: mdi:coffee-maker-outline
+            - type: custom:button-card
+              template: vacuum_select_btn
+              entity: input_boolean.vacuum_select_bathroom
+              name: Bathroom
+              icon: mdi:bathtub-outline
+            - type: custom:button-card
+              template: vacuum_select_btn
+              entity: input_boolean.vacuum_select_restroom
+              name: Restroom
+              icon: mdi:paper-roll-outline
+            - type: custom:button-card
+              template: vacuum_select_btn
+              entity: input_boolean.vacuum_select_entry
+              name: Entry
+              icon: mdi:door-open

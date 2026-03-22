@@ -2,31 +2,37 @@ living_room:
   name: Living Room
   icon: mdi:sofa-outline
   color: "#4CAF50"
+  segment_id: 6
 
 office:
   name: Office
   icon: mdi:microsoft-office
   color: "#C9A96E"
+  segment_id: 2
 
 bedroom:
   name: Bedroom
   icon: mdi:bed-outline
   color: "#B55233"
+  segment_id: 7
 
 kitchen:
   name: Kitchen
   icon: mdi:coffee-maker-outline
   color: "#E6B800"
+  segment_id: 5
 
 bathroom:
   name: Bathroom
   icon: mdi:bathtub-outline
   color: "#45B5C4"
+  segment_id: 4
 
 restroom:
   name: Restroom
   icon: mdi:paper-roll-outline
   color: "#D4759E"
+  segment_id: 3
 
 balcony:
   name: Balcony
@@ -37,3 +43,4 @@ entry:
   name: Entry
   icon: mdi:door-open
   color: "#78909C"
+  segment_id: 1

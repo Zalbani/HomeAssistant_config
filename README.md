@@ -25,9 +25,14 @@ HomeAssistant_Config/
 │   ├── views/                  # Per-room & feature views
 │   ├── cards/                  # Shared dashboard cards (weather, heating overview)
 │   ├── rooms/                  # Per-room cards (overview, controls, heating, climate)
-│   │   └── config.yaml         # Room metadata (name, icon, color)
-│   └── templates/              # Reusable button-card templates
-├── scripts.yaml
+│   │   └── config.yaml         # Room metadata (name, icon, color, segment_id)
+│   └── templates/              # Reusable button-card templates (auto-merged)
+│       ├── overview_card_templates.yaml
+│       └── vacuum_card_templates.yaml
+├── scripts/                    # Scripts by domain (auto-merged)
+│   ├── vacuum.yaml             # Roborock segment cleaning
+│   ├── heating.yaml            # Heating profile helpers
+│   └── pc.yaml                 # PC toggle
 ├── scenes.yaml
 └── README.md
 ```
@@ -159,21 +164,40 @@ The dashboard is defined in `dashboard/main.yaml` and uses reusable **button-car
 | Template | Purpose |
 |----------|---------|
 | `overview_card_templates.yaml` | Room card: temperature, door status, action buttons, heating & door indicators. |
-| `thermostat_card_templates.yaml` | Thermostat control: current/target temp, +/− buttons, heating state indicator. |
-| `climate_card_templates.yaml` | Climate display: temperature, humidity, 24 h graph placeholder. |
+| `vacuum_card_templates.yaml` | Vacuum card: 4-button segment cleaner (Vac / Mop / Both / Play-Stop) with status & error indicator. |
 
 ### Room config (`dashboard/rooms/config.yaml`)
 
-Defines metadata for 8 rooms: **living_room**, **office**, **bedroom**, **kitchen**, **bathroom**, **restroom**, **balcony**, **entry** — each with name, icon and color.
+Defines metadata for 8 rooms: **living_room**, **office**, **bedroom**, **kitchen**, **bathroom**, **restroom**, **balcony**, **entry** — each with name, icon, color and Roborock `segment_id`.
 
 ---
 
 ## 📋 Scripts
 
+Scripts are split by domain in `scripts/` and auto-loaded via `!include_dir_merge_named`. Add a new file to add a new group.
+
+### `vacuum.yaml` — Roborock segment cleaning
+
+Each script takes `segment_id` (int) as input:
+
+| Script | Role |
+|--------|------|
+| **vacuum_clean_segment** | Sets mop off, vacuums the segment. |
+| **vacuum_mop_segment** | Sets fan off + mop on, mops the segment. |
+| **vacuum_clean_mop_segment** | Sets fan max + mop on, cleans & mops the segment. |
+
+### `heating.yaml`
+
+| Script | Role |
+|--------|------|
+| **Toggle Heating Boost** | Activates boost profile or reverts to comfort if already boosted. |
+| **Reset Heating Profile** | Clears manual overrides and re-applies current profile temperatures. |
+
+### `pc.yaml`
+
 | Script | Role |
 |--------|------|
 | **Toggle ON/OFF PC Fix** | Turns PC on (WoL) when off, otherwise triggers shutdown. |
-| **Toggle Heating Boost** | Activates boost profile or reverts to comfort if already boosted. |
 
 ---
 
@@ -182,7 +206,7 @@ Defines metadata for 8 rooms: **living_room**, **office**, **bedroom**, **kitche
 1. Include this folder in your Home Assistant config, e.g.:
    ```yaml
    automation: !include _HomeAssistant_Config/automations/index.yaml
-   script: !include _HomeAssistant_Config/scripts.yaml
+   script: !include_dir_merge_named _HomeAssistant_Config/scripts/
    ```
 2. For the dashboard, use YAML mode and point to `dashboard/main.yaml`.
 3. Restart Home Assistant or reload automations.
