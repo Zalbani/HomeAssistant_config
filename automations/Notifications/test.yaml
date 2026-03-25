@@ -1,0 +1,12 @@
+id: '1772000000003'
+alias: Notifications - Test
+description: >-
+  Manually triggered automation to verify notification delivery.
+  Run from the automation UI or Developer Tools.
+triggers: []
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Test notification"
+      message: "Notifications are working."
+mode: single

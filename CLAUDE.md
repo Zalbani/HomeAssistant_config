@@ -5,12 +5,14 @@
 ```
 _HomeAssistant_Config/
 ├── automations/          # YAML automations organized by category
-│   ├── Heaters/          # 10 heating automations
-│   ├── Shutters/         # 4 shutter automations
-│   ├── Lights/           # 2 light automations
-│   ├── Remotes/          # 6 remote control automations
-│   ├── Sensors/          # Sensors (window → shutter)
-│   └── index.yaml        # !include_dir_merge_list of all subdirectories
+│   ├── Heaters/          # Heating automations
+│   ├── Shutters/         # Shutter automations
+│   ├── Lights/           # Light automations
+│   ├── Remotes/          # Remote control automations
+│   ├── Sensors/          # Sensor-driven automations (window → shutter)
+│   ├── Notifications/    # Notification automations — named <subject>.yaml (e.g. heating_profile.yaml, window_open.yaml)
+│   ├── Vacuum/           # Vacuum automations
+│   └── index.yaml        # Flat !include list (HA does not auto-merge subdirs here)
 ├── dashboard/
 │   ├── main.yaml         # Dashboard entry point (includes templates/ + views/)
 │   ├── templates/        # Reusable button-card templates (auto-merged via !include_dir_merge_named)

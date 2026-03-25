@@ -1,0 +1,17 @@
+id: '1772000000001'
+alias: Sensors - Window Open Alert
+description: >-
+  Envoie une notification si une fenêtre est restée ouverte plus de 30 minutes.
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/sensors/window_sensors.yaml
+    to: 'on'
+    for: "00:30:00"
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Fenetre ouverte"
+      message: >
+        {{ trigger.to_state.attributes.friendly_name }} est ouverte depuis 30 minutes.
+mode: parallel
+max: 5
