@@ -1,0 +1,90 @@
+awtrix_btn:
+  show_name: true
+  show_icon: true
+  show_state: false
+  tap_action:
+    action: none
+    haptic: light
+  styles:
+    card:
+      - flex: '1'
+      - border-radius: 10px
+      - padding: 8px 2px
+      - background: rgba(255,255,255,0.06)
+      - border: none
+    icon:
+      - width: 18px
+      - color: rgba(255,255,255,0.75)
+      - margin-bottom: 2px
+    name:
+      - font-size: 10px
+      - opacity: 0.65
+
+awtrix_card:
+  entity: sensor.clock_awtrix_current_app
+  show_name: false
+  show_state: false
+  show_icon: false
+  tap_action:
+    action: navigate
+    navigation_path: /config/devices/device/f3bfa27d50c8dce4e59fb891d7cc77ba
+  styles:
+    card:
+      - border-radius: 16px
+      - padding: 12px
+      - background: rgba(var(--rgb-card-background-color), 0.4)
+      - border: 1px solid rgba(255, 255, 255, 0.08)
+      - box-shadow: none
+    grid:
+      - grid-template-areas: '"header" "actions"'
+      - grid-template-rows: min-content min-content
+      - gap: 8px
+    custom_fields:
+      header:
+        - display: flex
+        - align-items: center
+        - justify-content: space-between
+  custom_fields:
+    header: >
+      [[[
+        const currentApp = states['sensor.clock_awtrix_current_app']?.state || '—';
+        return `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <ha-icon icon="mdi:clock-digital" style="width:18px;color:rgba(255,255,255,0.85)"></ha-icon>
+            <span style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.85)">Awtrix</span>
+          </div>
+          <span style="font-size:12px;color:rgba(255,255,255,0.45)">${currentApp}</span>`;
+      ]]]
+    actions:
+      card:
+        type: horizontal-stack
+        cards: |
+          [[[
+            const matrixOn = states['light.clock_awtrix_matrix']?.state === 'on';
+            return [
+              {
+                type: 'custom:button-card',
+                template: 'awtrix_btn',
+                entity: 'button.clock_awtrix_previous_app',
+                icon: 'mdi:skip-previous',
+                name: 'Prev',
+                tap_action: { action: 'call-service', service: 'button.press', target: { entity_id: 'button.clock_awtrix_previous_app' }, haptic: 'light' },
+              },
+              {
+                type: 'custom:button-card',
+                template: 'awtrix_btn',
+                entity: 'light.clock_awtrix_matrix',
+                icon: matrixOn ? 'mdi:power-off' : 'mdi:power',
+                name: matrixOn ? 'Off' : 'On',
+                tap_action: { action: 'call-service', service: 'light.toggle', target: { entity_id: 'light.clock_awtrix_matrix' }, haptic: 'light' },
+              },
+              {
+                type: 'custom:button-card',
+                template: 'awtrix_btn',
+                entity: 'button.clock_awtrix_next_app',
+                icon: 'mdi:skip-next',
+                name: 'Next',
+                tap_action: { action: 'call-service', service: 'button.press', target: { entity_id: 'button.clock_awtrix_next_app' }, haptic: 'light' },
+              },
+            ];
+          ]]]

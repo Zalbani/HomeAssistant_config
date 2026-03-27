@@ -10,6 +10,7 @@ _HomeAssistant_Config/
 │   ├── Lights/           # Light automations
 │   ├── Remotes/          # Remote control automations
 │   ├── Sensors/          # Sensor-driven automations (window → shutter)
+│   ├── Awtrix/           # Awtrix clock automations
 │   ├── Notifications/    # Notification automations — named <subject>.yaml (e.g. heating_profile.yaml, window_open.yaml)
 │   ├── Vacuum/           # Vacuum automations
 │   └── index.yaml        # Flat !include list (HA does not auto-merge subdirs here)
@@ -17,7 +18,8 @@ _HomeAssistant_Config/
 │   ├── main.yaml         # Dashboard entry point (includes templates/ + views/)
 │   ├── templates/        # Reusable button-card templates (auto-merged via !include_dir_merge_named)
 │   │   ├── overview_card_templates.yaml   # room_card, room_card_action
-│   │   └── vacuum_card_templates.yaml     # vacuum_room_card, vacuum_btn
+│   │   ├── vacuum_card_templates.yaml     # vacuum_room_card, vacuum_btn
+│   │   └── awtrix_card_templates.yaml     # awtrix_card, awtrix_btn
 │   ├── views/            # One file per dashboard page
 │   └── rooms/            # Per-room cards, included from views
 │       ├── config.yaml   # Centralized room metadata (name, icon, color, segment_id) keyed by room_id
@@ -174,6 +176,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `switch.kitchen_ceiling_lamp_switch` | Ceiling lamp switch |
 | `switch.kitchen_under_cabinet_lighting_switch` | Under cabinet lighting |
 | `cover.kitchen_shutter` | Window shutter |
+| `binary_sensor.kitchen_water_leak_sensor_water_leak` | Water leak sensor |
 
 ### Bathroom
 | Entity | Description |
@@ -185,11 +188,13 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `sensor.bathroom_thermometer_humidity` | Humidity sensor |
 | `sensor.bathroom_thermostatic_valve_hvac_action` | HVAC action |
 | `input_boolean.heating_manual_bathroom` | Manual heating override |
+| `binary_sensor.bathroom_water_leak_sensor_water_leak` | Water leak sensor |
 
 ### Restroom
 | Entity | Description |
 |--------|-------------|
 | `switch.restroom_ceiling_lamp_switch` | Ceiling lamp switch |
+| `binary_sensor.restroom_water_leak_sensor_water_leak` | Water leak sensor |
 
 ### Balcony
 | Entity | Description |
@@ -227,6 +232,18 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `switch.alban_pc_fixe` | Desktop PC power |
 | `button.hass_pc_fixe_shutdown` | Desktop PC shutdown |
 | `sensor.hass_pc_fixe_cpuload` | Desktop PC CPU load |
+| `button.clock_awtrix_dismiss_notification` | Awtrix clock — dismiss notification |
+| `button.clock_awtrix_next_app` | Awtrix clock — next app |
+| `button.clock_awtrix_previous_app` | Awtrix clock — previous app |
+| `sensor.clock_awtrix_current_app` | Awtrix clock — currently displayed app |
+| `light.clock_awtrix_matrix` | Awtrix clock — matrix power (on/off) |
+
+### Awtrix Clock
+- MQTT prefix: `awtrix_6f0891c`
+- Notification topic: `awtrix_6f0891c/notify`
+- Power control: `POST http://192.168.1.25/api/power` with `{"power": true/false}` or MQTT topic `awtrix_6f0891c/power`
+- Payload format: `{"text": "...", "icon": "<id>", "color": "#RRGGBB", "duration": <seconds>}`
+- Custom app topic: `awtrix_6f0891c/custom/<app_name>`
 
 ## Icon Mapping (Light entities)
 

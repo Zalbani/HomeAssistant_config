@@ -9,4 +9,8 @@ actions:
     data:
       title: "Test notification"
       message: "Notifications are working."
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: '{"text": "Notifications are working.", "icon": "a5588", "duration": 10}'
 mode: single

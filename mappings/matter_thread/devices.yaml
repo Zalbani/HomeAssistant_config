@@ -1,0 +1,7 @@
+# Matter / Thread entities to monitor for connectivity loss.
+# Add one line per device's primary entity, e.g.:
+#   - light.matter_living_room_bulb
+#   - switch.thread_office_plug
+#
+# Once populated, activate the automation by adding to automations/index.yaml:
+#   - !include Notifications/matter_thread_connectivity.yaml

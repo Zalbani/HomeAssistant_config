@@ -1,0 +1,20 @@
+id: '1772000000004'
+alias: Devices - Matter/Thread Connectivity Lost
+description: >-
+  Sends a notification if a Matter or Thread device loses connection for more
+  than 2 minutes. Add entity IDs to mappings/matter_thread/devices.yaml, then
+  enable by adding this file to automations/index.yaml.
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/matter_thread/devices.yaml
+    to: unavailable
+    for: "00:02:00"
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Device unreachable"
+      message: >-
+        {{ trigger.to_state.attributes.friendly_name | default(trigger.entity_id) }}
+        has been unreachable for 2 minutes.
+mode: parallel
+max: 10

@@ -19,4 +19,12 @@ actions:
     action: input_boolean.turn_off
     target:
       entity_id: input_boolean.wind_protection_active
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Wind protection released"
+      message: "Wind dropped below 35 km/h — sunshades can be operated normally again."
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: '{"text": "Wind OK — BSO released", "icon": "59", "color": "#00FF00", "duration": 10}'
 mode: single

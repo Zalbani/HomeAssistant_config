@@ -13,6 +13,18 @@ cards:
 
   - type: custom:bubble-card
     card_type: separator
+    name: Water leak
+    icon: mdi:water-alert
+
+  - type: custom:mushroom-entity-card
+    entity: binary_sensor.restroom_water_leak_sensor_water_leak
+    name: Water leak
+    icon: mdi:water-alert
+    tap_action:
+      action: more-info
+
+  - type: custom:bubble-card
+    card_type: separator
     name: Vacuum
     icon: mdi:robot-vacuum
 

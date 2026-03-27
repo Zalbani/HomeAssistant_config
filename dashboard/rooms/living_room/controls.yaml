@@ -111,6 +111,9 @@ cards:
       - on_off
     collapsible_controls: false
 
+  - type: custom:button-card
+    template: awtrix_card
+
   - type: custom:bubble-card
     card_type: separator
     name: Thermometer

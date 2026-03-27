@@ -28,4 +28,13 @@ actions:
     action: input_boolean.turn_on
     target:
       entity_id: input_boolean.wind_protection_active
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Wind protection active — {{ state_attr('weather.forecast_home', 'wind_speed') }} km/h"
+      message: Sunshades raised and locked. They will be released when wind drops below 35 km/h.
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: >-
+        {"text": "Wind {{ state_attr('weather.forecast_home', 'wind_speed') }}km/h — BSO locked", "icon": "a4297", "color": "#FF8C00", "duration": 10}
 mode: single

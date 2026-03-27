@@ -26,7 +26,7 @@ actions:
           - action: persistent_notification.create
             data:
               notification_id: wind_alert
-              title: "Wind Alert - {{ state_attr('weather.forecast_home', 'wind_speed') }} km/h"
+              title: "Wind Alert — {{ state_attr('weather.forecast_home', 'wind_speed') }} km/h"
               message: >-
                 Wind speed has reached {{ state_attr('weather.forecast_home', 'wind_speed') }} km/h.
                 {% if is_state('input_boolean.wind_protection_active', 'on') %}

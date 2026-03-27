@@ -1,0 +1,19 @@
+id: '1772000000005'
+alias: Sensors - Water Leak Alert
+description: Sends an immediate notification when a water leak is detected.
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/sensors/water_leak_sensors.yaml
+    to: 'on'
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Water leak detected"
+      message: "{{ trigger.to_state.attributes.friendly_name }} has detected water."
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: >-
+        {"text": "{{ trigger.to_state.attributes.friendly_name }} — water leak!", "icon": "555", "color": "#FF0000", "duration": 30}
+mode: parallel
+max: 5
