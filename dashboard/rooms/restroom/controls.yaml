@@ -4,12 +4,12 @@ cards:
     name: Light
     icon: mdi:lightbulb
 
-  - type: custom:bubble-card
-    card_type: button
-    button_type: slider
+  - type: custom:mushroom-entity-card
     entity: switch.restroom_ceiling_lamp_switch
     name: Ceiling light
     icon: mdi:ceiling-light-outline
+    tap_action:
+      action: toggle
 
   - type: custom:bubble-card
     card_type: separator

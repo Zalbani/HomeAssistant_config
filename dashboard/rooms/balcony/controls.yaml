@@ -4,9 +4,9 @@ cards:
     name: Light
     icon: mdi:coach-lamp-variant
 
-  - type: custom:bubble-card
-    card_type: button
-    button_type: slider
+  - type: custom:mushroom-entity-card
     entity: switch.balcony_outside_lamp
     name: Outdoor lamp
     icon: mdi:coach-lamp-variant
+    tap_action:
+      action: toggle

@@ -4,16 +4,14 @@ cards:
     name: Lights
     icon: mdi:lightbulb
 
-  - type: custom:bubble-card
-    card_type: button
-    button_type: slider
+  - type: custom:mushroom-entity-card
     entity: switch.kitchen_ceiling_lamp_switch
     name: Ceiling light
     icon: mdi:ceiling-light-outline
+    tap_action:
+      action: toggle
 
-
-  - type: custom:bubble-card
-    card_type: button
+  - type: custom:mushroom-entity-card
     entity: switch.kitchen_under_cabinet_lighting_switch
     name: Under cabinet
     icon: mdi:dome-light
