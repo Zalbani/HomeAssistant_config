@@ -1,15 +1,14 @@
 id: '1774836000004'
 alias: Awtrix - Brightness Restore - Media Inactive
 description: >-
-  Restores the Awtrix matrix to the current time-of-day brightness when both
-  the PS5 and Plex are no longer active on the living room TV.
+  Restores the Awtrix matrix to the current time-of-day brightness when TV media
+  becomes inactive (PS5, Plex, YouTube, and Twitch all inactive).
 triggers:
-  - alias: PS5 and Plex both inactive on TV
-    trigger: template
-    value_template: >-
-      {{ (is_state('media_player.playstation_5', ['off', 'standby', 'unavailable', 'unknown'])
-          or is_state('media_player.tv', 'off'))
-         and not is_state('media_player.plex_plex_for_lg_lg_oled48c25lb', ['playing', 'paused']) }}
+  - alias: TV media becomes inactive
+    trigger: state
+    entity_id: binary_sensor.tv_media_active
+    from: "on"
+    to: "off"
 actions:
   - action: script.awtrix_apply_time_brightness
 mode: single

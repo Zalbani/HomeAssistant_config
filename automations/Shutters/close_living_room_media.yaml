@@ -1,0 +1,24 @@
+id: '1774836000012'
+alias: Shutters - Close Living Room - Media Active
+description: >-
+  Closes the living room shutter when TV media becomes active — only if the
+  shutter is not already closed.
+triggers:
+  - alias: TV media becomes active
+    trigger: state
+    entity_id: binary_sensor.tv_media_active
+    from: "off"
+    to: "on"
+conditions:
+  - alias: Living room shutter is not already closed
+    condition: numeric_state
+    entity_id: cover.living_room_shutter
+    attribute: current_position
+    above: 0
+actions:
+  - action: cover.set_cover_position
+    target:
+      entity_id: cover.living_room_shutter
+    data:
+      position: 0
+mode: single
