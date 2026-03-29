@@ -1,0 +1,17 @@
+# Awtrix icon mapping for Home Assistant weather conditions
+# Used by automations/Awtrix/outdoor_weather.yaml
+sunny: "2155"
+partlycloudy: "73"
+clear-night: "18433"
+cloudy: "91"
+fog: "676"
+rainy: "a72"
+pouring: "a72"
+hail: "a72"
+snowy: "1983"
+snowy-rainy: "a49301"
+lightning: "95"
+lightning-rainy: "95"
+windy: "73"
+windy-variant: "73"
+exceptional: "73"

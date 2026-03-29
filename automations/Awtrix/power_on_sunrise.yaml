@@ -1,0 +1,18 @@
+id: '1774836000002'
+alias: Awtrix - Power On - Sunrise
+description: >-
+  Turns on the Awtrix matrix 30 minutes after sunrise, matching the shutter wake-up schedule.
+  Skipped if nobody is home and guest mode is off.
+triggers:
+  - alias: 30 min after sunrise
+    trigger: sun
+    event: sunrise
+    offset: "+00:30:00"
+conditions:
+  - alias: Someone is home
+    condition: template
+    value_template: >-
+      {{ is_state('person.alban_pierson', 'home') or is_state('input_boolean.guest_mode', 'on') }}
+actions:
+  - action: script.awtrix_apply_time_brightness
+mode: single

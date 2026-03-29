@@ -1,0 +1,19 @@
+id: '1774836000006'
+alias: Awtrix - Power On - Home
+description: >-
+  Turns on the Awtrix matrix when arriving home or on HA restart if already home.
+  Applies the current time-of-day brightness.
+triggers:
+  - trigger: state
+    entity_id: person.alban_pierson
+    to: home
+  - trigger: homeassistant
+    event: start
+conditions:
+  - alias: Person is home
+    condition: state
+    entity_id: person.alban_pierson
+    state: home
+actions:
+  - action: script.awtrix_apply_time_brightness
+mode: single

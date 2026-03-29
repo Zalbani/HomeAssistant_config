@@ -1,0 +1,36 @@
+id: '1774836000011'
+alias: Awtrix - PS5 Game
+description: >-
+  Shows the current PS5 game on the Awtrix clock when the console is active.
+  Clears the app when the PS5 is off or in standby.
+triggers:
+  - trigger: state
+    entity_id: media_player.playstation_5
+actions:
+  - choose:
+      - alias: PS5 active with a game title — show game
+        conditions:
+          - condition: not
+            conditions:
+              - condition: state
+                entity_id: media_player.playstation_5
+                state:
+                  - "off"
+                  - standby
+                  - unavailable
+                  - unknown
+          - condition: template
+            value_template: "{{ state_attr('media_player.playstation_5', 'media_title') not in [none, ''] }}"
+        sequence:
+          - action: mqtt.publish
+            data:
+              topic: awtrix_6f0891c/custom/ps5_game
+              payload: >-
+                {"text": "{{ state_attr('media_player.playstation_5', 'media_title') }}",
+                 "icon": "a5588"}
+    default:
+      - action: mqtt.publish
+        data:
+          topic: awtrix_6f0891c/custom/ps5_game
+          payload: ""
+mode: single

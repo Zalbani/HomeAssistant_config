@@ -1,0 +1,35 @@
+id: '1774836000008'
+alias: Awtrix - Power - Guest Mode
+description: >-
+  Turns on the Awtrix when guest mode is enabled.
+  Turns it off when guest mode is disabled and the owner is away.
+triggers:
+  - alias: Guest mode turned on
+    trigger: state
+    entity_id: input_boolean.guest_mode
+    to: "on"
+  - alias: Guest mode turned off
+    trigger: state
+    entity_id: input_boolean.guest_mode
+    to: "off"
+actions:
+  - choose:
+      - alias: Guest mode on — turn on
+        conditions:
+          - condition: state
+            entity_id: input_boolean.guest_mode
+            state: "on"
+        sequence:
+          - action: script.awtrix_apply_time_brightness
+      - alias: Guest mode off and owner away — turn off
+        conditions:
+          - condition: not
+            conditions:
+              - condition: state
+                entity_id: person.alban_pierson
+                state: home
+        sequence:
+          - action: light.turn_off
+            target:
+              entity_id: light.clock_awtrix_matrix
+mode: single

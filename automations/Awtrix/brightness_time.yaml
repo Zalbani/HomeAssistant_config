@@ -1,0 +1,29 @@
+id: '1774836000007'
+alias: Awtrix - Brightness - Time of Day
+description: >-
+  Adjusts Awtrix brightness in steps based on the sun's progress through the day
+  (0% = sunrise, 100% = sunset). Skipped when media is active on the TV to avoid
+  overriding the 2% dim.
+triggers:
+  - trigger: sun
+    event: sunrise
+  - trigger: sun
+    event: sunset
+  - trigger: time_pattern
+    minutes: "/30"
+  - trigger: homeassistant
+    event: start
+conditions:
+  - alias: Awtrix is on
+    condition: state
+    entity_id: light.clock_awtrix_matrix
+    state: "on"
+  - alias: No media active on TV
+    condition: template
+    value_template: >-
+      {{ (is_state('media_player.playstation_5', ['off', 'standby', 'unavailable', 'unknown'])
+          or is_state('media_player.tv', 'off'))
+         and not is_state('media_player.plex_plex_for_lg_lg_oled48c25lb', ['playing', 'paused']) }}
+actions:
+  - action: script.awtrix_apply_time_brightness
+mode: single

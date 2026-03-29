@@ -1,0 +1,22 @@
+id: '1774836000001'
+alias: Awtrix - Power Off - Lights Out After Sunset
+description: >-
+  Turns off the Awtrix matrix after sunset when all lights have been off
+  for 30 consecutive minutes.
+variables:
+  all_lights: !include ../../mappings/lights/all_lights.yaml
+triggers:
+  - alias: All lights off for 30 min
+    trigger: template
+    value_template: >-
+      {{ all_lights.entities | map('states') | select('equalto', 'on') | list | count == 0 }}
+    for: "00:30:00"
+conditions:
+  - alias: Only after sunset
+    condition: sun
+    after: sunset
+actions:
+  - action: light.turn_off
+    target:
+      entity_id: light.clock_awtrix_matrix
+mode: single

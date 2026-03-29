@@ -1,0 +1,48 @@
+id: '1774836000012'
+alias: Awtrix - Heating Boost Countdown
+description: >-
+  Shows a countdown with progress bar on the Awtrix clock while the heating
+  boost timer is active. Refreshes every minute. Clears the app when done.
+triggers:
+  - trigger: state
+    entity_id: timer.heating_boost
+  - trigger: time_pattern
+    minutes: "/1"
+  - trigger: homeassistant
+    event: start
+conditions:
+  - alias: Skip time_pattern refresh when boost is not active
+    condition: template
+    value_template: >-
+      {{ trigger.platform != 'time_pattern' or is_state('timer.heating_boost', 'active') }}
+actions:
+  - choose:
+      - alias: Boost active — show countdown
+        conditions:
+          - condition: state
+            entity_id: timer.heating_boost
+            state: active
+        sequence:
+          - action: mqtt.publish
+            data:
+              topic: awtrix_6f0891c/custom/heating_boost
+              payload: >-
+                {% set r = state_attr('timer.heating_boost', 'remaining') %}
+                {% set d = state_attr('timer.heating_boost', 'duration') %}
+                {% set r_parts = r.split(':') %}
+                {% set d_parts = d.split(':') %}
+                {% set r_sec = r_parts[0]|int * 3600 + r_parts[1]|int * 60 + r_parts[2]|int %}
+                {% set d_sec = d_parts[0]|int * 3600 + d_parts[1]|int * 60 + d_parts[2]|int %}
+                {% set progress = ((d_sec - r_sec) / d_sec * 100) | round(0) | int %}
+                {% if r_parts[0]|int > 0 %}
+                  {% set text = r_parts[0]|int ~ 'h' ~ r_parts[1] %}
+                {% else %}
+                  {% set text = r_parts[1] ~ ':' ~ r_parts[2] %}
+                {% endif %}
+                {"text": "{{ text }}", "icon": "a2546", "progress": {{ progress }}, "progressC": "#FF6600"}
+    default:
+      - action: mqtt.publish
+        data:
+          topic: awtrix_6f0891c/custom/heating_boost
+          payload: ""
+mode: single

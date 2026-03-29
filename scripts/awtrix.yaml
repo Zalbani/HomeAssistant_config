@@ -1,1 +1,28 @@
-# Awtrix scripts — power managed directly via light.clock_awtrix_matrix
+awtrix_apply_time_brightness:
+  alias: Awtrix - Apply Time of Day Brightness
+  description: >-
+    Sets the Awtrix brightness based on the sun's progress through the day
+    (0% = sunrise, 100% = sunset). Paliers: 8% / 25% / 65% / 90% / 65% / 25%.
+  sequence:
+    - variables:
+        brightness: >-
+          {% set now_ts = as_timestamp(now()) %}
+          {% set next_rise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
+          {% set next_set = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+          {% if is_state('sun.sun', 'above_horizon') %}
+            {% set today_rise = next_rise - 86400 %}
+            {% set pct = ((now_ts - today_rise) / (next_set - today_rise) * 100) | round(1) %}
+            {% if pct < 10 %}25
+            {% elif pct < 35 %}65
+            {% elif pct < 65 %}90
+            {% elif pct < 90 %}65
+            {% else %}25
+            {% endif %}
+          {% else %}8
+          {% endif %}
+    - action: light.turn_on
+      target:
+        entity_id: light.clock_awtrix_matrix
+      data:
+        brightness_pct: "{{ brightness | int }}"
+  mode: single

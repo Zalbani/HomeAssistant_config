@@ -1,0 +1,19 @@
+id: '1774836000005'
+alias: Awtrix - Power Off - Away
+description: >-
+  Turns off the Awtrix matrix when leaving the apartment.
+  Skipped if guest mode is active.
+triggers:
+  - trigger: state
+    entity_id: person.alban_pierson
+    from: home
+conditions:
+  - alias: Skip if guests are present
+    condition: state
+    entity_id: input_boolean.guest_mode
+    state: "off"
+actions:
+  - action: light.turn_off
+    target:
+      entity_id: light.clock_awtrix_matrix
+mode: single

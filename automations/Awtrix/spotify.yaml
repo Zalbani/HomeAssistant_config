@@ -1,0 +1,44 @@
+id: '1774836000010'
+alias: Awtrix - Spotify
+description: >-
+  Shows the current Spotify track and playback progress bar on the Awtrix clock
+  when playing or paused. Refreshes every minute to keep the progress bar accurate.
+  Clears the app when Spotify is inactive.
+triggers:
+  - trigger: state
+    entity_id: media_player.spotify_zalbani
+  - trigger: time_pattern
+    minutes: "/1"
+conditions:
+  - alias: Skip time_pattern refresh when Spotify is not active
+    condition: template
+    value_template: >-
+      {{ trigger.platform != 'time_pattern' or is_state('media_player.spotify_zalbani', ['playing', 'paused']) }}
+actions:
+  - choose:
+      - alias: Spotify playing or paused — show track with progress
+        conditions:
+          - condition: state
+            entity_id: media_player.spotify_zalbani
+            state:
+              - playing
+              - paused
+        sequence:
+          - action: mqtt.publish
+            data:
+              topic: awtrix_6f0891c/custom/spotify
+              payload: >-
+                {% set position = state_attr('media_player.spotify_zalbani', 'media_position') | float(0) %}
+                {% set updated_at = state_attr('media_player.spotify_zalbani', 'media_position_updated_at') %}
+                {% set duration = state_attr('media_player.spotify_zalbani', 'media_duration') | float(1) %}
+                {% set elapsed = (now() - updated_at).total_seconds() if updated_at else 0 %}
+                {% set current = [position + elapsed, duration] | min %}
+                {% set progress = (current / duration * 100) | round(0) | int %}
+                {"text": "{{ state_attr('media_player.spotify_zalbani', 'media_artist') }} - {{ state_attr('media_player.spotify_zalbani', 'media_title') }}",
+                 "icon": "647", "progress": {{ progress }}, "progressC": "#1DB954"}
+    default:
+      - action: mqtt.publish
+        data:
+          topic: awtrix_6f0891c/custom/spotify
+          payload: ""
+mode: single
