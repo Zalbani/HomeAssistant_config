@@ -2,7 +2,7 @@
 # Used by automations/Awtrix/outdoor_weather.yaml
 sunny: "2155"
 partlycloudy: "73"
-clear-night: "18433"
+clear-night: "a18433"
 cloudy: "91"
 fog: "676"
 rainy: "a72"

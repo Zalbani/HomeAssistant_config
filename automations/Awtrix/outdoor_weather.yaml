@@ -2,8 +2,10 @@ id: '1774836000009'
 alias: Awtrix - Outdoor Weather
 description: >-
   Pushes the outdoor temperature to the Awtrix clock with a dynamic icon based
-  on the weather condition (mappings/awtrix/weather_icons.yaml) and a day
-  progress bar. Refreshes every 10 min. Clears the app if unavailable.
+  on the weather condition (mappings/awtrix/weather_icons.yaml). During the day,
+  shows a day progress bar (sunrise → sunset, amber). At night, shows the moon
+  icon with a night progress bar (sunset → next sunrise, blue). Refreshes every
+  10 min. Clears the app if unavailable.
 triggers:
   - trigger: state
     entity_id: weather.forecast_home
@@ -31,15 +33,21 @@ actions:
           topic: awtrix_6f0891c/custom/outdoor_weather
           payload: >-
             {% set condition = states('weather.forecast_home') %}
-            {% set icon = weather_icons.get(condition, '73') %}
             {% set now_ts = as_timestamp(now()) %}
             {% set next_rise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
             {% set next_set = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+            {% set temp = state_attr('weather.forecast_home', 'temperature') | float(0) | round(0) | int %}
+            {% set ns = namespace(icon='73', pct=0, color='#FFB300') %}
             {% if is_state('sun.sun', 'above_horizon') %}
+              {% set ns.icon = weather_icons.get(condition, '73') %}
               {% set today_rise = next_rise - 86400 %}
-              {% set day_pct = ((now_ts - today_rise) / (next_set - today_rise) * 100) | round(0) | int %}
+              {% set ns.pct = ((now_ts - today_rise) / (next_set - today_rise) * 100) | round(0) | int %}
+              {% set ns.color = "#FFB300" %}
             {% else %}
-              {% set day_pct = 0 %}
+              {% set ns.icon = "a18433" %}
+              {% set last_set = next_set - 86400 %}
+              {% set ns.pct = ((now_ts - last_set) / (next_rise - last_set) * 100) | round(0) | int %}
+              {% set ns.color = "#1565C0" %}
             {% endif %}
-            {"text": "{{ state_attr('weather.forecast_home', 'temperature') | float(0) | round(0) | int }}°", "icon": "{{ icon }}", "progress": {{ day_pct }}, "progressC": "#FFB300"}
+            {"text": "{{ temp }}°", "icon": "{{ ns.icon }}", "progress": {{ ns.pct }}, "progressC": "{{ ns.color }}"}
 mode: single

@@ -3,7 +3,8 @@ alias: Awtrix - Spotify
 description: >-
   Shows the current Spotify track and playback progress bar on the Awtrix clock
   when playing or paused. Refreshes every minute to keep the progress bar accurate.
-  Clears the app when Spotify is inactive.
+  Clears the app when Spotify is inactive or when the estimated playback position
+  exceeds the track duration by more than 3 minutes (stale state after HA restart).
 triggers:
   - trigger: state
     entity_id: media_player.spotify_zalbani
@@ -23,6 +24,14 @@ actions:
             state:
               - playing
               - paused
+          - alias: Track not yet 3 minutes past its end (stale after restart)
+            condition: template
+            value_template: >-
+              {% set position = state_attr('media_player.spotify_zalbani', 'media_position') | float(0) %}
+              {% set updated_at = state_attr('media_player.spotify_zalbani', 'media_position_updated_at') %}
+              {% set duration = state_attr('media_player.spotify_zalbani', 'media_duration') | float(1) %}
+              {% set elapsed = (now() - updated_at).total_seconds() if updated_at else 0 %}
+              {{ updated_at is not none and (position + elapsed) < (duration + 180) }}
         sequence:
           - action: mqtt.publish
             data:
@@ -35,7 +44,7 @@ actions:
                 {% set current = [position + elapsed, duration] | min %}
                 {% set progress = (current / duration * 100) | round(0) | int %}
                 {"text": "{{ state_attr('media_player.spotify_zalbani', 'media_artist') }} - {{ state_attr('media_player.spotify_zalbani', 'media_title') }}",
-                 "icon": "647", "progress": {{ progress }}, "progressC": "#1DB954"}
+                 "icon": "647", "progress": {{ progress }}, "progressC": "#C8963C"}
     default:
       - action: mqtt.publish
         data:
