@@ -37,17 +37,17 @@ actions:
             {% set next_rise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
             {% set next_set = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
             {% set temp = state_attr('weather.forecast_home', 'temperature') | float(0) | round(0) | int %}
-            {% set ns = namespace(icon='73', pct=0, color='#FFB300') %}
+            {% set ns = namespace(icon='73', pct=0, color='#1565C0') %}
             {% if is_state('sun.sun', 'above_horizon') %}
               {% set ns.icon = weather_icons.get(condition, '73') %}
               {% set today_rise = next_rise - 86400 %}
               {% set ns.pct = ((now_ts - today_rise) / (next_set - today_rise) * 100) | round(0) | int %}
-              {% set ns.color = "#FFB300" %}
+              {% set ns.color = "#1565C0" %}
             {% else %}
               {% set ns.icon = "a18433" %}
               {% set last_set = next_set - 86400 %}
               {% set ns.pct = ((now_ts - last_set) / (next_rise - last_set) * 100) | round(0) | int %}
-              {% set ns.color = "#1565C0" %}
+              {% set ns.color = "#FFB300" %}
             {% endif %}
             {"text": "{{ temp }}°", "icon": "{{ ns.icon }}", "progress": {{ ns.pct }}, "progressC": "{{ ns.color }}"}
 mode: single
