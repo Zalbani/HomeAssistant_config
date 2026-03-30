@@ -44,7 +44,7 @@ actions:
                 {% set current = [position + elapsed, duration] | min %}
                 {% set progress = (current / duration * 100) | round(0) | int %}
                 {"text": "{{ state_attr('media_player.spotify_zalbani', 'media_artist') }} - {{ state_attr('media_player.spotify_zalbani', 'media_title') }}",
-                 "icon": "647", "progress": {{ progress }}, "progressC": "#C8963C"}
+                 "icon": "647", "progress": {{ progress }}, "progressC": "#1DB954"}
     default:
       - action: mqtt.publish
         data:
