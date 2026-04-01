@@ -111,12 +111,6 @@ vacuum_clean_mop_segment:
 vacuum_clean_selected:
   alias: Vacuum — Clean selected rooms
   sequence:
-    - condition: template
-      value_template: >
-        {% set rooms = ['living_room','office','bedroom','kitchen','bathroom','restroom','entry'] %}
-        {% set ns = namespace(any=false) %}
-        {% for room in rooms %}{% if is_state('input_boolean.vacuum_select_' ~ room, 'on') %}{% set ns.any = true %}{% endif %}{% endfor %}
-        {{ ns.any }}
     - action: select.select_option
       target:
         entity_id: select.roborock_qrevo_edge_series_mop_intensity
@@ -136,18 +130,15 @@ vacuum_clean_selected:
                   {%- set ns.segs = ns.segs + [seg] -%}
                 {%- endif -%}
               {%- endfor -%}
+              {%- if ns.segs | length == 0 -%}
+                {%- set ns.segs = rooms.values() | list -%}
+              {%- endif -%}
               {{- ns.segs }}
             repeat: 1
 
 vacuum_mop_selected:
   alias: Vacuum — Mop selected rooms
   sequence:
-    - condition: template
-      value_template: >
-        {% set rooms = ['living_room','office','bedroom','kitchen','bathroom','restroom','entry'] %}
-        {% set ns = namespace(any=false) %}
-        {% for room in rooms %}{% if is_state('input_boolean.vacuum_select_' ~ room, 'on') %}{% set ns.any = true %}{% endif %}{% endfor %}
-        {{ ns.any }}
     - action: vacuum.set_fan_speed
       target:
         entity_id: vacuum.roborock_qrevo_edge_series
@@ -172,18 +163,15 @@ vacuum_mop_selected:
                   {%- set ns.segs = ns.segs + [seg] -%}
                 {%- endif -%}
               {%- endfor -%}
+              {%- if ns.segs | length == 0 -%}
+                {%- set ns.segs = rooms.values() | list -%}
+              {%- endif -%}
               {{- ns.segs }}
             repeat: 1
 
 vacuum_clean_mop_selected:
   alias: Vacuum — Clean & mop selected rooms
   sequence:
-    - condition: template
-      value_template: >
-        {% set rooms = ['living_room','office','bedroom','kitchen','bathroom','restroom','entry'] %}
-        {% set ns = namespace(any=false) %}
-        {% for room in rooms %}{% if is_state('input_boolean.vacuum_select_' ~ room, 'on') %}{% set ns.any = true %}{% endif %}{% endfor %}
-        {{ ns.any }}
     - action: vacuum.set_fan_speed
       target:
         entity_id: vacuum.roborock_qrevo_edge_series
@@ -208,5 +196,8 @@ vacuum_clean_mop_selected:
                   {%- set ns.segs = ns.segs + [seg] -%}
                 {%- endif -%}
               {%- endfor -%}
+              {%- if ns.segs | length == 0 -%}
+                {%- set ns.segs = rooms.values() | list -%}
+              {%- endif -%}
               {{- ns.segs }}
             repeat: 1
