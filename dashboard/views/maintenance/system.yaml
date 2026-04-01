@@ -4,21 +4,14 @@ cards:
     name: System
     icon: mdi:desktop-tower
 
-  - type: custom:mushroom-template-card
-    primary: Desktop PC
-    entity: switch.alban_pc_fixe
-    secondary: "{% if is_state(entity, 'on') %}Online ({{ states('sensor.hass_pc_fixe_cpuload') | round(0) }}% CPU){% else %}Offline{% endif %}"
-    icon: mdi:desktop-tower
-    icon_color: "{% if is_state(entity, 'on') %}blue{% else %}grey{% endif %}"
-    tap_action:
-      action: toggle
-    hold_action:
-      action: more-info
+  - !include ../../cards/pc_power_card.yaml
 
   - type: custom:bubble-card
     card_type: separator
     name: NAS Backward
     icon: mdi:nas
+
+  - !include ../../cards/nas_card.yaml
 
   - type: custom:mushroom-entity-card
     entity: sensor.backward_volume_1_volume_used

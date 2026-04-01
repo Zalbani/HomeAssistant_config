@@ -1,0 +1,66 @@
+type: custom:button-card
+entity: sensor.backward_cpu_utilization_total
+show_name: false
+show_icon: false
+show_state: false
+tap_action:
+  action: more-info
+  haptic: light
+hold_action:
+  action: more-info
+styles:
+  card:
+    - padding: 8px 12px
+    - height: auto
+  grid:
+    - grid-template-areas: '"nas_icon info status_btn"'
+    - grid-template-columns: min-content 1fr min-content
+    - grid-template-rows: auto
+    - align-items: center
+    - column-gap: 10px
+  custom_fields:
+    nas_icon:
+      - align-self: center
+      - justify-self: center
+    info:
+      - align-self: center
+      - justify-self: start
+    status_btn:
+      - align-self: center
+      - justify-self: center
+custom_fields:
+  nas_icon: |
+    [[[
+      const cpu = states['sensor.backward_cpu_utilization_total']?.state;
+      const online = cpu && !['unavailable', 'unknown'].includes(cpu);
+      const color = online ? (parseFloat(cpu) > 80 ? '#F44336' : '#2196F3') : 'rgba(255,255,255,0.4)';
+      return `<ha-icon icon="mdi:nas" style="width:28px;height:28px;color:${color};"></ha-icon>`;
+    ]]]
+  info: |
+    [[[
+      const cpu = states['sensor.backward_cpu_utilization_total']?.state;
+      const online = cpu && !['unavailable', 'unknown'].includes(cpu);
+      let status = 'Offline';
+      if (online) {
+        const ramUsed = parseFloat(states['sensor.backward_memory_usage_real']?.state || 0);
+        const ramTotal = parseFloat(states['sensor.backward_memory_total_real']?.state || 1);
+        const disk = Math.round(parseFloat(states['sensor.backward_volume_1_volume_used']?.state || 0));
+        const ram = Math.round(ramUsed / ramTotal * 100);
+        status = `CPU ${Math.round(parseFloat(cpu))}% · RAM ${ram}% · Disk ${disk}%`;
+      }
+      return `<div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
+        <span style="font-size:12px;font-weight:600;color:var(--primary-text-color);">NAS Backward</span>
+        <span style="font-size:11px;opacity:0.6;color:var(--primary-text-color);">${status}</span>
+      </div>`;
+    ]]]
+  status_btn: |
+    [[[
+      const cpu = states['sensor.backward_cpu_utilization_total']?.state;
+      const online = cpu && !['unavailable', 'unknown'].includes(cpu);
+      const color = online ? '#4CAF50' : 'rgba(255,255,255,0.3)';
+      const bg = online ? 'rgba(76,175,80,0.15)' : 'rgba(255,255,255,0.05)';
+      const icon = online ? 'mdi:lan-connect' : 'mdi:lan-disconnect';
+      return `<div style="width:34px;height:34px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;">
+        <ha-icon icon="${icon}" style="width:18px;color:${color};"></ha-icon>
+      </div>`;
+    ]]]

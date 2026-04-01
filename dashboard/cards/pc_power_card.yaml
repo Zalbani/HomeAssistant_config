@@ -1,0 +1,58 @@
+type: custom:button-card
+entity: switch.alban_pc_fixe
+show_name: false
+show_icon: false
+show_state: false
+tap_action:
+  action: perform-action
+  perform_action: script.toggle_on_off_pc_fix
+  haptic: light
+hold_action:
+  action: more-info
+styles:
+  card:
+    - padding: 8px 12px
+    - height: auto
+  grid:
+    - grid-template-areas: '"pc_icon info power_btn"'
+    - grid-template-columns: min-content 1fr min-content
+    - grid-template-rows: auto
+    - align-items: center
+    - column-gap: 10px
+  custom_fields:
+    pc_icon:
+      - align-self: center
+      - justify-self: center
+    info:
+      - align-self: center
+      - justify-self: start
+    power_btn:
+      - align-self: center
+      - justify-self: center
+custom_fields:
+  pc_icon: |
+    [[[
+      const color = entity.state === 'on' ? '#2196F3' : 'rgba(255,255,255,0.4)';
+      return `<ha-icon icon="mdi:desktop-tower" style="width:28px;height:28px;color:${color};"></ha-icon>`;
+    ]]]
+  info: |
+    [[[
+      const isOn = entity.state === 'on';
+      const cpu = states['sensor.hass_pc_fixe_cpuload']?.state;
+      const status = isOn && cpu && !['unavailable','unknown'].includes(cpu)
+        ? `Online (${Math.round(parseFloat(cpu))}% CPU)`
+        : 'Offline';
+      return `<div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
+        <span style="font-size:12px;font-weight:600;color:var(--primary-text-color);">Desktop PC</span>
+        <span style="font-size:11px;opacity:0.6;color:var(--primary-text-color);">${status}</span>
+      </div>`;
+    ]]]
+  power_btn: |
+    [[[
+      const isOn = entity.state === 'on';
+      const color = isOn ? '#4CAF50' : 'rgba(255,255,255,0.3)';
+      const bg = isOn ? 'rgba(76,175,80,0.15)' : 'rgba(255,255,255,0.05)';
+      return `<div style="width:34px;height:34px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;">
+        <ha-icon icon="mdi:power" style="width:18px;color:${color};"></ha-icon>
+      </div>`;
+    ]]]
