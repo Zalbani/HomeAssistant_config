@@ -2,26 +2,25 @@
 # Used by automations/Awtrix/power_off_lights_out.yaml
 # Smart bulbs slaved to a dumb switch (e.g. living_room_ceiling_lamp_bulb) are
 # intentionally excluded — their parent switch is the authority for that circuit.
-entities:
-  # Living room
-  - switch.living_room_ceiling_lamp_switch
-  - switch.living_room_outlet_switch
-  - light.living_room_streetlight_bulb
-  - light.living_room_mushroom_lamp_bulb
-  # Office
-  - switch.office_ceiling_lamp_switch
-  # Bedroom
-  - light.bedroom_ceiling_lamp_bulb
-  - light.bedroom_bed_led_strip
-  # Kitchen
-  - switch.kitchen_ceiling_lamp_switch
-  - switch.kitchen_under_cabinet_lighting_switch
-  # Bathroom
-  - switch.bathroom_ceiling_lamp_switch
-  - switch.bathroom_mirror_switch
-  # Restroom
-  - switch.restroom_ceiling_lamp_switch
-  # Balcony
-  - switch.balcony_outside_lamp
-  # Entry
-  - light.entry_telecontrol_switch
+# Living room
+- switch.living_room_ceiling_lamp_switch
+- switch.living_room_outlet_switch
+- light.living_room_streetlight_bulb
+- light.living_room_mushroom_lamp_bulb
+# Office
+- switch.office_ceiling_lamp_switch
+# Bedroom
+- light.bedroom_ceiling_lamp_bulb
+- light.bedroom_bed_led_strip
+# Kitchen
+- switch.kitchen_ceiling_lamp_switch
+- switch.kitchen_under_cabinet_lighting_switch
+# Bathroom
+- switch.bathroom_ceiling_lamp_switch
+- switch.bathroom_mirror_switch
+# Restroom
+- switch.restroom_ceiling_lamp_switch
+# Balcony
+- switch.balcony_outside_lamp
+# Entry
+- light.entry_telecontrol_switch

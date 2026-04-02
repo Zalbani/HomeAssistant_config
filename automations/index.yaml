@@ -32,6 +32,7 @@
 - !include Awtrix/spotify.yaml
 - !include Awtrix/ps5_game.yaml
 - !include Awtrix/heating_boost_countdown.yaml
+- !include Awtrix/vacuum.yaml
 - !include Awtrix/power_off_lights_out.yaml
 - !include Awtrix/power_on_sunrise.yaml
 - !include Awtrix/brightness_dim_media.yaml

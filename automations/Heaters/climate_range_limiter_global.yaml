@@ -29,6 +29,10 @@ variables:
       {{ ns.sensor is not none and
          (now() - states[ns.sensor].last_changed).total_seconds() <= 90 }}
     {% endif %}
+conditions:
+  - alias: Temperature attribute is valid (not None)
+    condition: template
+    value_template: "{{ trigger.to_state.attributes.temperature is not none }}"
 actions:
   - choose:
       - alias: "Too cold: clamp to min"

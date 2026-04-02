@@ -6,15 +6,19 @@ description: >-
 variables:
   all_lights: !include ../../mappings/lights/all_lights.yaml
 triggers:
-  - alias: All lights off for 30 min
-    trigger: template
-    value_template: >-
-      {{ all_lights.entities | map('states') | select('equalto', 'on') | list | count == 0 }}
+  - alias: Any light off for 30 min
+    trigger: state
+    entity_id: !include ../../mappings/lights/all_lights.yaml
+    to: "off"
     for: "00:30:00"
 conditions:
   - alias: Only after sunset
     condition: sun
     after: sunset
+  - alias: All lights are off
+    condition: template
+    value_template: >-
+      {{ all_lights | map('states') | select('equalto', 'on') | list | count == 0 }}
 actions:
   - action: light.turn_off
     target:

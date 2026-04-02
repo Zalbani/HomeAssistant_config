@@ -13,6 +13,9 @@ triggers:
       - unavailable
       - unknown
 conditions:
+  - alias: Temperature attribute is valid (not None)
+    condition: template
+    value_template: "{{ trigger.to_state.attributes.temperature is not none }}"
   - alias: Trigger is a room thermostat (has room mapping)
     condition: template
     value_template: "{{ trigger.entity_id in profiles.thermostat_to_room }}"
@@ -26,9 +29,9 @@ conditions:
 variables:
   profiles: !include ../../mappings/heaters/profiles.yaml
   window_valve_mapping: !include ../../mappings/heaters/window_valve_mapping.yaml
-  room: "{{ profiles.thermostat_to_room[trigger.entity_id] }}"
+  room: "{{ profiles.thermostat_to_room.get(trigger.entity_id, '') }}"
   profile: "{{ states('input_select.heating_profile') }}"
-  expected_temp: "{{ profiles.temperatures[profile][room] | float }}"
+  expected_temp: "{{ profiles.temperatures[profile].get(room, 0) | float(0) if room else 0 }}"
   actual_temp: "{{ trigger.to_state.attributes.temperature | float }}"
 actions:
   - alias: Flag as manual only if temperature differs from profile

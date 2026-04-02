@@ -1,0 +1,57 @@
+id: '1774836000014'
+alias: Awtrix - Vacuum
+description: >-
+  Shows the vacuum robot status on the Awtrix clock while it is active
+  (cleaning, returning, paused, error). Displays the current room when cleaning.
+  Progress bar shows cleaning progress. Clears the app when docked or idle.
+triggers:
+  - trigger: state
+    entity_id:
+      - sensor.roborock_qrevo_edge_series_status
+      - sensor.roborock_qrevo_edge_series_current_room
+      - sensor.roborock_qrevo_edge_series_cleaning_progress
+  - trigger: homeassistant
+    event: start
+actions:
+  - choose:
+      - alias: Vacuum active — show status
+        conditions:
+          - condition: template
+            value_template: >-
+              {% set s = states('sensor.roborock_qrevo_edge_series_status') %}
+              {{ s in ['cleaning','segment_cleaning','mopping','segment_mopping',
+                'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+                'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+                'zoned_mopping','paused','going_to_target',
+                'returning_home','docking',
+                'washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'] }}
+        sequence:
+          - action: mqtt.publish
+            data:
+              topic: awtrix_6f0891c/custom/vacuum
+              payload: >-
+                {%- set status = states('sensor.roborock_qrevo_edge_series_status') -%}
+                {%- set room = states('sensor.roborock_qrevo_edge_series_current_room') -%}
+                {%- set progress = states('sensor.roborock_qrevo_edge_series_cleaning_progress') | int(0) -%}
+                {%- set returning = ['returning_home','docking','washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'] -%}
+                {%- set cleaning = ['cleaning','segment_cleaning','mopping','segment_mopping',
+                  'segment_clean_mop_cleaning','segment_clean_mop_mopping',
+                  'clean_mop_cleaning','clean_mop_mopping','robot_status_mopping',
+                  'zoned_mopping','going_to_target'] -%}
+                {%- if status in returning -%}
+                  {%- set text = 'Going home' -%}
+                {%- elif status == 'paused' -%}
+                  {%- set text = 'Paused' -%}
+                {%- elif status in cleaning -%}
+                  {%- set text = room if room not in ['unknown', 'unavailable', ''] else 'Cleaning' -%}
+                {%- else -%}
+                  {%- set text = status | replace('_', ' ') -%}
+                {%- endif -%}
+                {%- set color = '#4CAF50' if status in cleaning else '#FF9800' -%}
+                {"text": "{{ text }}", "icon": "a56402", "progress": {{ progress }}, "progressC": "{{ color }}"}
+    default:
+      - action: mqtt.publish
+        data:
+          topic: awtrix_6f0891c/custom/vacuum
+          payload: ""
+mode: single

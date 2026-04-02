@@ -73,13 +73,13 @@ actions:
       - condition: trigger
         id: general_setpoint
       - condition: template
-        value_template: "{{ trigger.to_state.attributes.temperature | float != desired_general | float }}"
+        value_template: "{{ trigger.to_state.attributes.temperature | float(0) != desired_general | float(0) }}"
     then:
       - action: climate.set_temperature
         target:
           entity_id: climate.living_room_thermostatic_valve_thermostat
         data:
-          temperature: "{{ trigger.to_state.attributes.temperature | float }}"
+          temperature: "{{ trigger.to_state.attributes.temperature | float(0) }}"
   - alias: "Apply desired general setpoint if different and sane"
     if:
       - condition: template
