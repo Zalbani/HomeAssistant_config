@@ -1,0 +1,106 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Bambu Lab P2S
+    icon: mdi:printer-3d
+
+  - type: custom:mushroom-entity-card
+    entity: binary_sensor.bambu_farm_printer_online
+    name: Online
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_printer_print_status
+    name: Print status
+    icon: mdi:printer-3d
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_printer_current_stage
+    name: Stage
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_printer_print_progress
+    name: Progress
+    icon: mdi:progress-clock
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_printer_remaining_time
+    name: Remaining time
+    icon: mdi:timer-outline
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: binary_sensor.bambu_farm_printer_hms_errors
+    name: HMS errors
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: binary_sensor.bambu_farm_printer_print_error
+    name: Print error
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_printer_nozzle_temperature
+    name: Nozzle
+    icon: mdi:printer-3d-nozzle
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_printer_bed_temperature
+    name: Bed
+    icon: mdi:thermometer
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_printer_chamber_temperature
+    name: Chamber
+    icon: mdi:cube-outline
+    fill_container: true
+
+  - type: custom:mushroom-update-card
+    entity: update.bambu_lab_update
+    name: Bambu Lab Update
+    collapsible_controls: false
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: AMS
+    icon: mdi:package-variant-closed
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_ams_temperature
+    name: Temperature
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_ams_humidity
+    name: Humidity
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_ams_tray_1
+    name: Tray 1
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_ams_tray_2
+    name: Tray 2
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_ams_tray_3
+    name: Tray 3
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.bambu_farm_ams_tray_4
+    name: Tray 4
+    fill_container: true
+
+  - type: custom:mushroom-light-card
+    entity: light.bambu_farm_printer_chamber_light
+    name: Chamber light
+    fill_container: true

@@ -33,6 +33,7 @@
 - !include Awtrix/ps5_game.yaml
 - !include Awtrix/heating_boost_countdown.yaml
 - !include Awtrix/vacuum.yaml
+- !include Awtrix/bambulab_printing.yaml
 - !include Awtrix/power_off_lights_out.yaml
 - !include Awtrix/power_on_sunrise.yaml
 - !include Awtrix/brightness_dim_media.yaml
@@ -44,4 +45,5 @@
 - !include Notifications/test.yaml
 - !include Notifications/window_open.yaml
 - !include Notifications/water_leak.yaml
+- !include Notifications/bambulab_print_done.yaml
 - !include Vacuum/vacuum_deselect_rooms.yaml

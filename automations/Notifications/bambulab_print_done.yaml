@@ -1,0 +1,17 @@
+id: '1774836000016'
+alias: Notification - Bambu Lab Print Done
+description: Sends a notification and Awtrix alert when a print finishes.
+triggers:
+  - trigger: state
+    entity_id: sensor.bambu_farm_printer_print_status
+    to: finish
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Print complete"
+      message: "{{ states('sensor.bambu_farm_printer_task_name') | replace('unknown', 'Your print') }} is done."
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: '{"text": "Print done!", "icon": "53694", "color": "#4CAF50", "duration": 10}'
+mode: single

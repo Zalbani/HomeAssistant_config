@@ -25,6 +25,7 @@ header:
       - !include ../chips/steam.yaml
       - !include ../chips/spotify.yaml
       - !include ../chips/plex.yaml
+      - !include ../chips/bambulab_printing.yaml
       - !include ../chips/roborock_cleaning.yaml
       - !include ../chips/roborock_water.yaml
       - !include ../chips/battery.yaml

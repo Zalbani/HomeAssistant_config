@@ -1,0 +1,55 @@
+id: '1774836000015'
+alias: Awtrix - Bambu Lab Printing
+description: >-
+  Shows the 3D print progress on the Awtrix clock while a print is running or
+  paused. Progress bar tracks completion. Clears the app when idle.
+triggers:
+  - trigger: state
+    entity_id:
+      - sensor.bambu_farm_printer_print_status
+      - sensor.bambu_farm_printer_print_progress
+      - sensor.bambu_farm_printer_remaining_time
+  - trigger: homeassistant
+    event: start
+actions:
+  - choose:
+      - alias: Printing or paused — show progress
+        conditions:
+          - condition: template
+            value_template: >-
+              {{ states('sensor.bambu_farm_printer_print_status') in ['running', 'pause', 'prepare'] }}
+        sequence:
+          - action: mqtt.publish
+            data:
+              topic: awtrix_6f0891c/custom/bambulab
+              payload: >-
+                {%- set status = states('sensor.bambu_farm_printer_print_status') -%}
+                {%- set progress = states('sensor.bambu_farm_printer_print_progress') | int(0) -%}
+                {%- set remaining = states('sensor.bambu_farm_printer_remaining_time') | float(0) -%}
+                {%- if status == 'pause' -%}
+                  {%- set text = 'Paused ' ~ progress ~ '%' -%}
+                  {%- set color = '#FF9800' -%}
+                {%- elif status == 'prepare' -%}
+                  {%- set text = 'Preparing' -%}
+                  {%- set color = '#2196F3' -%}
+                {%- elif remaining > 0 -%}
+                  {%- if remaining >= 1 -%}
+                    {%- set h = remaining | int -%}
+                    {%- set m = ((remaining - h) * 60) | round(0) | int -%}
+                    {%- set text = h ~ 'h' ~ '%02d' | format(m) -%}
+                  {%- else -%}
+                    {%- set m = (remaining * 60) | round(0) | int -%}
+                    {%- set text = m ~ 'min' -%}
+                  {%- endif -%}
+                  {%- set color = '#4CAF50' -%}
+                {%- else -%}
+                  {%- set text = progress ~ '%' -%}
+                  {%- set color = '#4CAF50' -%}
+                {%- endif -%}
+                {"text": "{{ text }}", "icon": "53694", "progress": {{ progress }}, "progressC": "{{ color }}"}
+    default:
+      - action: mqtt.publish
+        data:
+          topic: awtrix_6f0891c/custom/bambulab
+          payload: ""
+mode: single

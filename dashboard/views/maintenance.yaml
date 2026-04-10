@@ -16,5 +16,6 @@ sections:
   - !include maintenance/misc.yaml
   - !include maintenance/system.yaml
   - !include maintenance/roborock.yaml
+  - !include maintenance/bambulab.yaml
   - !include maintenance/livebox.yaml
   - !include maintenance/adguard.yaml
