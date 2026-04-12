@@ -97,13 +97,13 @@ vacuum_status_card:
           'segment_mopping','zoned_mopping'];
         const isActive   = activeStates.includes(status);
         const isCleaning = cleaningStates.includes(status);
-        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected','script.vacuum_clean_mop_all'];
         const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
         const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
         const isPending  = !isActive && _secsSince < 45;
         const _lc = ['script.vacuum_clean_segment','script.vacuum_clean_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
         const _lm = ['script.vacuum_mop_segment','script.vacuum_mop_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
-        const _lb = ['script.vacuum_clean_mop_segment','script.vacuum_clean_mop_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
+        const _lb = ['script.vacuum_clean_mop_segment','script.vacuum_clean_mop_selected','script.vacuum_clean_mop_all'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
         const _mm = [_lc,_lm,_lb].reduce((a,b)=>b>a?b:a,'');
         const modeName = _mm ? (_mm === _lb ? 'Vac & Mop' : _mm === _lm ? 'Mop' : 'Vac') : '';
         const mainColor  = hasError ? '#e74c3c' : 'rgba(255,255,255,0.85)';
@@ -146,7 +146,7 @@ vacuum_status_card:
           'segment_mopping','zoned_mopping','paused','going_to_target'];
         const isReturning = returningStates.includes(status);
         const isCleaning  = cleaningStates.includes(status);
-        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected','script.vacuum_clean_mop_all'];
         const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
         const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
         const isPending = !isCleaning && !isReturning && _secsSince < 45;
@@ -206,7 +206,7 @@ vacuum_status_card:
               'going_to_target','returning_home','docking',
               'washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
             const isActive = activeStates.includes(status);
-            const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+            const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected','script.vacuum_clean_mop_all'];
             const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
             const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
             const returningStates = ['returning_home','docking','washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
@@ -302,7 +302,7 @@ vacuum_room_card:
         const currentRoom = states['sensor.roborock_qrevo_edge_series_current_room']?.state;
         const hasError    = error && error !== 'none';
         const cfg         = variables.room_configs?.[variables.room_id] || {};
-        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected','script.vacuum_clean_mop_all'];
         const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
         const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
         const activeStates = ['cleaning','segment_cleaning','mopping','segment_mopping',
@@ -321,7 +321,7 @@ vacuum_room_card:
         const isThisRoom = currentRoom === cfg.name;
         const _lc = ['script.vacuum_clean_segment','script.vacuum_clean_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
         const _lm = ['script.vacuum_mop_segment','script.vacuum_mop_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
-        const _lb = ['script.vacuum_clean_mop_segment','script.vacuum_clean_mop_selected'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
+        const _lb = ['script.vacuum_clean_mop_segment','script.vacuum_clean_mop_selected','script.vacuum_clean_mop_all'].reduce((m,s)=>{const t=states[s]?.attributes?.last_triggered||'';return t>m?t:m;},'');
         const _mm = [_lc,_lm,_lb].reduce((a,b)=>b>a?b:a,'');
         const modeName = _mm ? (_mm === _lb ? 'Vac & Mop' : _mm === _lm ? 'Mop' : 'Vac') : '';
         const mainColor  = hasError ? '#e74c3c' : 'rgba(255,255,255,0.85)';
@@ -366,7 +366,7 @@ vacuum_room_card:
           'segment_mopping','zoned_mopping','paused','going_to_target'];
         const isReturning = returningStates.includes(status);
         const isCleaning  = cleaningStates.includes(status);
-        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+        const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected','script.vacuum_clean_mop_all'];
         const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
         const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
         const isPending = !isCleaning && !isReturning && _secsSince < 45;
@@ -427,7 +427,7 @@ vacuum_room_card:
               'going_to_target','returning_home','docking',
               'washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
             const isActive = activeStates.includes(status);
-            const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected'];
+            const _scripts = ['script.vacuum_clean_segment','script.vacuum_mop_segment','script.vacuum_clean_mop_segment','script.vacuum_clean_selected','script.vacuum_mop_selected','script.vacuum_clean_mop_selected','script.vacuum_clean_mop_all'];
             const _lastTriggered = _scripts.reduce((max, s) => { const t = states[s]?.attributes?.last_triggered || ''; return t > max ? t : max; }, '');
             const _secsSince = _lastTriggered ? (Date.now() - new Date(_lastTriggered).getTime()) / 1000 : Infinity;
             const returningStates = ['returning_home','docking','washing_the_mop','going_to_wash_the_mop','back_to_dock_washing_duster'];
@@ -473,9 +473,10 @@ vacuum_room_card:
               name,
               tap_action: { action: 'call-service', service, service_data: data, haptic: 'light' },
             });
+            const roomId = variables.room_id;
             return [
-              btn('mdi:vacuum',  'Vac',  'script.vacuum_clean_segment',    { segment_id: segId }),
-              btn('mdi:water',   'Mop',  'script.vacuum_mop_segment',       { segment_id: segId }),
-              btn('mdi:shimmer', 'Both', 'script.vacuum_clean_mop_segment', { segment_id: segId }),
+              btn('mdi:vacuum',  'Vac',  'script.vacuum_clean_segment',    { room_id: roomId, segment_id: segId }),
+              btn('mdi:water',   'Mop',  'script.vacuum_mop_segment',       { room_id: roomId, segment_id: segId }),
+              btn('mdi:shimmer', 'Both', 'script.vacuum_clean_mop_segment', { room_id: roomId, segment_id: segId }),
             ];
           ]]]

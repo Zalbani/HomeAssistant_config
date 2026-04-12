@@ -18,9 +18,10 @@ vacuum_resume:
     - action: vacuum.start
       target:
         entity_id: vacuum.roborock_qrevo_edge_series
+
 vacuum_clean_segment:
-  alias: Vacuum — Clean segment (vac only)
-  description: Sets mop to off then vacuums the given segment.
+  alias: Vacuum — Clean segment
+  description: Sets mop to off then vacuums the given segment. If room_id is provided, syncs the room selection booleans.
   fields:
     segment_id:
       description: Roborock segment ID
@@ -29,7 +30,20 @@ vacuum_clean_segment:
         number:
           min: 1
           max: 100
+    room_id:
+      description: Optional — room ID matching input_boolean suffix (e.g. bathroom). If set, syncs room selection.
+      example: bathroom
   sequence:
+    - if:
+        - condition: template
+          value_template: "{{ room_id is defined and room_id != '' }}"
+      then:
+        - action: input_boolean.turn_off
+          target:
+            entity_id: !include ../mappings/vacuum/room_selects.yaml
+        - action: input_boolean.turn_on
+          target:
+            entity_id: "input_boolean.vacuum_select_{{ room_id }}"
     - action: select.select_option
       target:
         entity_id: select.roborock_qrevo_edge_series_mop_intensity
@@ -46,8 +60,8 @@ vacuum_clean_segment:
             repeat: 1
 
 vacuum_mop_segment:
-  alias: Vacuum — Mop segment (mop only)
-  description: Sets fan to off and mop on, then mops the given segment.
+  alias: Vacuum — Mop segment
+  description: Sets fan to off and mop on, then mops the given segment. If room_id is provided, syncs the room selection booleans.
   fields:
     segment_id:
       description: Roborock segment ID
@@ -56,7 +70,20 @@ vacuum_mop_segment:
         number:
           min: 1
           max: 100
+    room_id:
+      description: Optional — room ID matching input_boolean suffix (e.g. bathroom). If set, syncs room selection.
+      example: bathroom
   sequence:
+    - if:
+        - condition: template
+          value_template: "{{ room_id is defined and room_id != '' }}"
+      then:
+        - action: input_boolean.turn_off
+          target:
+            entity_id: !include ../mappings/vacuum/room_selects.yaml
+        - action: input_boolean.turn_on
+          target:
+            entity_id: "input_boolean.vacuum_select_{{ room_id }}"
     - action: vacuum.set_fan_speed
       target:
         entity_id: vacuum.roborock_qrevo_edge_series
@@ -78,8 +105,8 @@ vacuum_mop_segment:
             repeat: 1
 
 vacuum_clean_mop_segment:
-  alias: Vacuum — Clean & mop segment (both)
-  description: Sets fan to max and mop on, then cleans the given segment.
+  alias: Vacuum — Clean & mop segment
+  description: Sets fan to max and mop on, then cleans the given segment. If room_id is provided, syncs the room selection booleans.
   fields:
     segment_id:
       description: Roborock segment ID
@@ -88,7 +115,20 @@ vacuum_clean_mop_segment:
         number:
           min: 1
           max: 100
+    room_id:
+      description: Optional — room ID matching input_boolean suffix (e.g. bathroom). If set, syncs room selection.
+      example: bathroom
   sequence:
+    - if:
+        - condition: template
+          value_template: "{{ room_id is defined and room_id != '' }}"
+      then:
+        - action: input_boolean.turn_off
+          target:
+            entity_id: !include ../mappings/vacuum/room_selects.yaml
+        - action: input_boolean.turn_on
+          target:
+            entity_id: "input_boolean.vacuum_select_{{ room_id }}"
     - action: vacuum.set_fan_speed
       target:
         entity_id: vacuum.roborock_qrevo_edge_series
@@ -108,6 +148,7 @@ vacuum_clean_mop_segment:
           - segments:
               - "{{ segment_id | int }}"
             repeat: 1
+
 vacuum_clean_selected:
   alias: Vacuum — Clean selected rooms
   sequence:
@@ -167,6 +208,36 @@ vacuum_mop_selected:
                 {%- set ns.segs = rooms.values() | list -%}
               {%- endif -%}
               {{- ns.segs }}
+            repeat: 1
+
+vacuum_clean_mop_all:
+  alias: Vacuum — Clean & mop all rooms
+  description: Sets fan to max and mop on, then cleans & mops the entire home.
+  sequence:
+    - action: vacuum.set_fan_speed
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        fan_speed: "max"
+    - action: select.select_option
+      target:
+        entity_id: select.roborock_qrevo_edge_series_mop_intensity
+      data:
+        option: "custom_water_flow"
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_qrevo_edge_series
+      data:
+        command: app_segment_clean
+        params:
+          - segments:
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+              - 6
+              - 7
             repeat: 1
 
 vacuum_clean_mop_selected:

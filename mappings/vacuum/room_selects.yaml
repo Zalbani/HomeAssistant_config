@@ -1,0 +1,7 @@
+- input_boolean.vacuum_select_living_room
+- input_boolean.vacuum_select_office
+- input_boolean.vacuum_select_bedroom
+- input_boolean.vacuum_select_kitchen
+- input_boolean.vacuum_select_bathroom
+- input_boolean.vacuum_select_restroom
+- input_boolean.vacuum_select_entry

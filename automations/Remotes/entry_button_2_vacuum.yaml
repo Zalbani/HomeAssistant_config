@@ -1,0 +1,42 @@
+id: '1744500000001'
+alias: Remotes - Entry - Button 2 - Vacuum
+description: >
+  Single press = vacuum bathroom. Double press = vac & mop bathroom.
+  Hold = vac & mop entire home.
+triggers:
+  - alias: Button 2 pressed
+    trigger: state
+    entity_id: event.entry_remote_button_2
+    not_from:
+      - unavailable
+      - unknown
+actions:
+  - choose:
+      - alias: Hold — vac & mop entire home
+        conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.attributes.event_type in ['hold', 'long_press'] }}"
+        sequence:
+          - action: input_boolean.turn_on
+            target:
+              entity_id: !include ../../mappings/vacuum/room_selects.yaml
+          - action: script.vacuum_clean_mop_all
+      - alias: Double press — vac & mop bathroom
+        conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_2' }}"
+        sequence:
+          - action: script.vacuum_clean_mop_segment
+            data:
+              room_id: bathroom
+              segment_id: 4
+      - alias: Single press — vacuum bathroom
+        conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.attributes.event_type in ['single', 'single_click', 'multi_press_1'] }}"
+        sequence:
+          - action: script.vacuum_clean_segment
+            data:
+              room_id: bathroom
+              segment_id: 4
+mode: single

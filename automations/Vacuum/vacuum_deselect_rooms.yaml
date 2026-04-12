@@ -10,12 +10,5 @@ triggers:
 actions:
   - action: input_boolean.turn_off
     target:
-      entity_id:
-        - input_boolean.vacuum_select_living_room
-        - input_boolean.vacuum_select_office
-        - input_boolean.vacuum_select_bedroom
-        - input_boolean.vacuum_select_kitchen
-        - input_boolean.vacuum_select_bathroom
-        - input_boolean.vacuum_select_restroom
-        - input_boolean.vacuum_select_entry
+      entity_id: !include ../../mappings/vacuum/room_selects.yaml
 mode: single

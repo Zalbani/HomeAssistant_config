@@ -26,6 +26,7 @@
 - !include Remotes/remote_shutter_hold_global.yaml
 - !include Remotes/remote_light_scroll_wheel_global.yaml
 - !include Remotes/office_button_toggle.yaml
+- !include Remotes/entry_button_2_vacuum.yaml
 - !include Sensors/window_cover_control.yaml
 - !include Awtrix/living_room_temperature.yaml
 - !include Awtrix/outdoor_weather.yaml
