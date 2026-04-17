@@ -7,6 +7,7 @@ triggers:
   - trigger: state
     entity_id: vacuum.roborock_qrevo_edge_series
     to: docked
+    for: "00:02:00"
 actions:
   - action: input_boolean.turn_off
     target:
