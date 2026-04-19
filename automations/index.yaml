@@ -47,5 +47,7 @@
 - !include Notifications/test.yaml
 - !include Notifications/window_open.yaml
 - !include Notifications/water_leak.yaml
+- !include Notifications/ams_humidity_alert.yaml
 - !include Notifications/bambulab_print_done.yaml
+- !include Notifications/bambulab_print_error.yaml
 - !include Vacuum/vacuum_deselect_rooms.yaml

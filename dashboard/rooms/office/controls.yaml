@@ -58,6 +58,13 @@ cards:
 
   - type: custom:bubble-card
     card_type: separator
+    name: 3D Printer
+    icon: mdi:printer-3d
+
+  - !include ../../cards/bambulab_card.yaml
+
+  - type: custom:bubble-card
+    card_type: separator
     name: Thermometer
     icon: mdi:thermometer
 

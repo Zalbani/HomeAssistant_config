@@ -1,0 +1,14 @@
+id: '1772000000006'
+alias: Sensors - AMS Humidity Alert
+description: Sends a notification when AMS humidity stays above 20% for 5 minutes.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.office_thermometer_ams_humidity
+    above: 20
+    for: "00:05:00"
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "AMS humidity too high"
+      message: "AMS humidity is at {{ states('sensor.office_thermometer_ams_humidity') | round(0) }}% — consider replacing the desiccants."
+mode: single

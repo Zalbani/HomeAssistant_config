@@ -1,0 +1,13 @@
+type: conditional
+conditions:
+  - condition: numeric_state
+    entity: sensor.office_thermometer_ams_humidity
+    above: 20
+chip:
+  type: template
+  icon: mdi:water-alert
+  icon_color: orange
+  content: "AMS {{ states('sensor.office_thermometer_ams_humidity') | round(0) }}%"
+  tap_action:
+    action: navigate
+    navigation_path: /overview-dashboard/maintenance

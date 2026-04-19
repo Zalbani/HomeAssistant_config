@@ -1,0 +1,77 @@
+type: custom:button-card
+entity: sensor.bambu_farm_printer_print_status
+show_name: false
+show_icon: false
+show_state: false
+tap_action:
+  action: navigate
+  navigation_path: /overview-dashboard/maintenance
+  haptic: light
+hold_action:
+  action: more-info
+styles:
+  card:
+    - padding: 8px 12px
+    - height: auto
+  grid:
+    - grid-template-areas: '"printer_icon info status_btn"'
+    - grid-template-columns: min-content 1fr min-content
+    - grid-template-rows: auto
+    - align-items: center
+    - column-gap: 10px
+  custom_fields:
+    printer_icon:
+      - align-self: center
+      - justify-self: center
+    info:
+      - align-self: center
+      - justify-self: start
+    status_btn:
+      - align-self: center
+      - justify-self: center
+custom_fields:
+  printer_icon: |
+    [[[
+      const status = entity.state;
+      const offline = ['unavailable', 'unknown'].includes(status);
+      const printing = ['printing', 'running'].includes(status);
+      const error = ['failed', 'error'].includes(status);
+      const color = offline ? 'rgba(255,255,255,0.2)' : error ? '#F44336' : printing ? '#2196F3' : 'rgba(255,255,255,0.4)';
+      return `<ha-icon icon="mdi:printer-3d" style="width:28px;height:28px;color:${color};"></ha-icon>`;
+    ]]]
+  info: |
+    [[[
+      const status = entity.state;
+      const offline = ['unavailable', 'unknown'].includes(status);
+      const printing = ['printing', 'running'].includes(status);
+      let sub = offline ? 'Offline' : status.charAt(0).toUpperCase() + status.slice(1);
+      if (printing) {
+        const progress = states['sensor.bambu_farm_printer_print_progress']?.state;
+        const remaining = states['sensor.bambu_farm_printer_remaining_time']?.state;
+        const parts = [];
+        if (progress && !['unavailable','unknown'].includes(progress)) parts.push(`${Math.round(parseFloat(progress))}%`);
+        if (remaining && !['unavailable','unknown'].includes(remaining)) parts.push(`${remaining} left`);
+        if (parts.length) sub = parts.join(' · ');
+      }
+      const humidity = states['sensor.office_thermometer_ams_humidity']?.state;
+      const humStr = humidity && !['unavailable','unknown'].includes(humidity)
+        ? ` · AMS ${Math.round(parseFloat(humidity))}%`
+        : '';
+      return `<div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
+        <span style="font-size:12px;font-weight:600;color:var(--primary-text-color);">Bambu Lab P2S</span>
+        <span style="font-size:11px;opacity:0.6;color:var(--primary-text-color);">${sub}${humStr}</span>
+      </div>`;
+    ]]]
+  status_btn: |
+    [[[
+      const status = entity.state;
+      const offline = ['unavailable', 'unknown'].includes(status);
+      const printing = ['printing', 'running'].includes(status);
+      const error = ['failed', 'error'].includes(status);
+      const color = offline ? 'rgba(255,255,255,0.2)' : error ? '#F44336' : printing ? '#4CAF50' : 'rgba(255,255,255,0.3)';
+      const bg = offline ? 'rgba(255,255,255,0.03)' : error ? 'rgba(244,67,54,0.15)' : printing ? 'rgba(76,175,80,0.15)' : 'rgba(255,255,255,0.05)';
+      const icon = offline ? 'mdi:lan-disconnect' : error ? 'mdi:alert-circle' : printing ? 'mdi:play-circle' : 'mdi:sleep';
+      return `<div style="width:34px;height:34px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;">
+        <ha-icon icon="${icon}" style="width:18px;color:${color};"></ha-icon>
+      </div>`;
+    ]]]

@@ -1,0 +1,17 @@
+id: '1772000000007'
+alias: Sensors - Bambu Lab Print Error Alert
+description: Sends a notification when a print error or HMS error is detected.
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.bambu_farm_printer_hms_errors
+    to: 'on'
+  - trigger: state
+    entity_id: binary_sensor.bambu_farm_printer_print_error
+    to: 'on'
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Bambu Lab — Print error"
+      message: "{{ trigger.to_state.attributes.friendly_name }} detected on the printer."
+mode: parallel
+max: 2
