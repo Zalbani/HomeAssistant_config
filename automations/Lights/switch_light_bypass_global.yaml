@@ -1,0 +1,32 @@
+id: '1771400000006'
+alias: Light Sync - Bypass switch toggle global
+description: >-
+  Controls smart bulbs when a Shelly bypass switch is toggled.
+  Mapping in mappings/lights/switch_bypass_mapping.yaml.
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/lights/switch_bypass_triggers.yaml
+    not_from:
+      - unavailable
+      - unknown
+actions:
+  - choose:
+      - alias: "Bulb is ON: turn off"
+        conditions:
+          - condition: template
+            value_template: "{{ is_state(mapping[trigger.entity_id], 'on') }}"
+        sequence:
+          - action: light.turn_off
+            target:
+              entity_id: "{{ mapping[trigger.entity_id] }}"
+      - alias: "Bulb is OFF: turn on"
+        conditions:
+          - condition: template
+            value_template: "{{ is_state(mapping[trigger.entity_id], 'off') }}"
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: "{{ mapping[trigger.entity_id] }}"
+mode: parallel
+variables:
+  mapping: !include ../../mappings/lights/switch_bypass_mapping.yaml

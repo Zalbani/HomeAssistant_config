@@ -22,9 +22,10 @@ Installed inside wall electrical boxes (EUROHM D67) behind existing switches.
 
 | Room | HA Entity | Controls |
 |------|-----------|----------|
-| Living Room — ceiling | `switch.living_room_ceiling_lamp_switch` | Ceiling lamp bulb |
+| Living Room — ceiling | `switch.living_room_ceiling_lamp_switch` | Ceiling lamp bulb (Shelly bypass in fixture — bulb always powered) |
 | Living Room — outlet | `switch.living_room_outlet_switch` | Floor lamp |
-| Office — ceiling | `switch.office_ceiling_lamp_switch` | Ceiling lamp bulb |
+| Office — ceiling | `switch.office_ceiling_lamp_switch` | Ceiling lamp bulb (Shelly bypass in fixture — bulb always powered) |
+| Bedroom — ceiling | `switch.bedroom_ceiling_lamp_switch` | Ceiling lamp bulb (Shelly bypass in fixture — bulb always powered) |
 | Restroom | `switch.restroom_ceiling_lamp_switch` | Ceiling lamp |
 | Balcony | `switch.balcony_outside_lamp` | Outdoor lamp |
 

@@ -32,18 +32,21 @@
 | Bedroom — LED strip | `light.bedroom_bed_led_strip` | _(to be filled)_ | _(under bed / behind headboard)_ |
 | Entry | `light.entry_telecontrol_switch` | IKEA KAJPLATS E27 | ceiling fixture |
 
-**Associated wall switches** (physical power — must stay ON for Zigbee control):
+**Rooms with Shelly bypass** (bulb always powered — wall switch safe to toggle):
 
-| Room | Switch entity |
-|------|--------------|
-| Living Room | `switch.living_room_ceiling_lamp_switch` |
-| Office | `switch.office_ceiling_lamp_switch` |
+| Room | Switch entity | Notes |
+|------|--------------|-------|
+| Living Room — ceiling | `switch.living_room_ceiling_lamp_switch` | Bypass installed in fixture |
+| Office — ceiling | `switch.office_ceiling_lamp_switch` | Bypass installed in fixture |
+| Bedroom — ceiling | `switch.bedroom_ceiling_lamp_switch` | Bypass installed in fixture |
+
+The bypass automation (`Lights/switch_light_bypass_global.yaml`) intercepts the switch state change and controls the bulb via Zigbee, so the bulb always has power.
 
 ---
 
 ## Important — Wall Switches
 
-If a wall switch is turned **off physically**, the bulb loses power and **cannot be controlled from HA**. Always keep wall switches in the ON position and use HA or the remote to control lights.
+For bulbs **without** a Shelly bypass (Entry, streetlight, mushroom): if the wall switch is turned **off physically**, the bulb loses power and **cannot be controlled from HA**. Always keep those switches in the ON position.
 
 ---
 
@@ -70,7 +73,7 @@ If a wall switch is turned **off physically**, the bulb loses power and **cannot
 
 ### Factory reset (on/off method)
 
-Using the physical wall switch:
+Using the physical wall switch (or cut power at breaker for bypass rooms):
 
 1. Turn the bulb on
 2. Turn it off after **2 seconds**

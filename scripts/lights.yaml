@@ -1,0 +1,26 @@
+light_bypass_resync:
+  alias: Light Bypass - Resync bulbs to switch states
+  description: Forces bulb states to match their bypass switch states (bedroom, living room, office).
+  icon: mdi:sync
+  mode: single
+  sequence:
+    - repeat:
+        for_each:
+          - switch: switch.living_room_ceiling_lamp_switch
+            bulb: light.living_room_ceiling_lamp_bulb
+          - switch: switch.office_ceiling_lamp_switch
+            bulb: light.office_ceiling_lamp_bulb
+          - switch: switch.bedroom_ceiling_lamp_switch
+            bulb: light.bedroom_ceiling_lamp_bulb
+        sequence:
+          - if:
+              - condition: template
+                value_template: "{{ is_state(repeat.item.switch, 'on') }}"
+            then:
+              - action: light.turn_on
+                target:
+                  entity_id: "{{ repeat.item.bulb }}"
+            else:
+              - action: light.turn_off
+                target:
+                  entity_id: "{{ repeat.item.bulb }}"

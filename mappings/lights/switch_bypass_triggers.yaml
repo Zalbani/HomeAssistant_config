@@ -1,0 +1,5 @@
+# Trigger entities for bypass switch → bulb control
+# Used by automations/Lights/switch_light_bypass_global.yaml
+# Keep in sync with switch_bypass_mapping.yaml
+- switch.living_room_ceiling_lamp_switch
+- switch.office_ceiling_lamp_switch

@@ -10,11 +10,6 @@ cards:
     icon: mdi:ceiling-light-outline
     show_brightness_control: true
     collapsible_controls: false
-    tap_action:
-      action: perform-action
-      perform_action: switch.toggle
-      target:
-        entity_id: switch.living_room_ceiling_lamp_switch
 
   - type: custom:mushroom-light-card
     entity: light.living_room_streetlight_bulb

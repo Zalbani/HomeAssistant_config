@@ -18,6 +18,8 @@
 - !include Shutters/wind_protection_raise.yaml
 - !include Shutters/wind_protection_release.yaml
 - !include Lights/bedroom_switch_light_toggle.yaml
+- !include Lights/switch_light_bypass_global.yaml
+- !include Lights/switch_bypass_resync_on_start.yaml
 - !include Lights/balcony_light_french_window.yaml
 - !include Lights/streetlight_mushroom_sync.yaml
 - !include Remotes/remote_light_toggle_global.yaml

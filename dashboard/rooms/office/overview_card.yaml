@@ -4,7 +4,7 @@ name: Office
 variables:
   name: Office
   room_id: office
-  light_entity: switch.office_ceiling_lamp_switch
+  light_entity: light.office_ceiling_lamp_bulb
   sub_state: >
     [[[
       const temp = states['sensor.office_thermometer_temperature']?.state;
@@ -12,11 +12,12 @@ variables:
       return '';
     ]]]
   actions_columns:
-    - - entity: switch.office_ceiling_lamp_switch
+    - - entity: light.office_ceiling_lamp_bulb
         icon: mdi:ceiling-light-outline
+        tap_action:
+          action: toggle
         hold_action:
           action: more-info
-          entity: light.office_ceiling_lamp_bulb
       - entity: cover.office_sunshade
         icon: mdi:blinds
       - entity: climate.office_thermostatic_valve_thermostat

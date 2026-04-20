@@ -5,7 +5,7 @@ variables:
   name: Living Room
   room_id: living_room
   light_entity:
-    - switch.living_room_ceiling_lamp_switch
+    - light.living_room_ceiling_lamp_bulb
     - switch.living_room_outlet_switch
   sub_state: >
     [[[
@@ -15,11 +15,12 @@ variables:
     ]]]
   hvac_action: sensor.living_room_thermostatic_valve_hvac_action
   actions_columns:
-    - - entity: switch.living_room_ceiling_lamp_switch
+    - - entity: light.living_room_ceiling_lamp_bulb
         icon: mdi:ceiling-light-outline
+        tap_action:
+          action: toggle
         hold_action:
           action: more-info
-          entity: light.living_room_ceiling_lamp_bulb
       - entity: switch.living_room_outlet_switch
         icon: mdi:floor-lamp-torchiere
         variables:

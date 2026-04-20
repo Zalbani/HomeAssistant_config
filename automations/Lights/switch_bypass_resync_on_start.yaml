@@ -1,0 +1,9 @@
+id: '1771400000008'
+alias: Light Bypass - Resync on HA start
+description: Syncs bypass bulb states to their switch states after HA restarts.
+triggers:
+  - trigger: homeassistant
+    event: start
+actions:
+  - action: script.light_bypass_resync
+mode: single

@@ -1,6 +1,19 @@
 cards:
   - type: custom:bubble-card
     card_type: separator
+    name: Lights
+    icon: mdi:lightbulb
+
+  - type: custom:mushroom-template-card
+    primary: Resync bypass bulbs
+    secondary: Bedroom · Living Room · Office
+    icon: mdi:sync
+    tap_action:
+      action: perform-action
+      perform_action: script.light_bypass_resync
+
+  - type: custom:bubble-card
+    card_type: separator
     name: Person
     icon: mdi:account
 

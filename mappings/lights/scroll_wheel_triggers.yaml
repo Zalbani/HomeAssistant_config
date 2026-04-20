@@ -3,3 +3,7 @@
 # Keep in sync with scroll_wheel_mapping.yaml
 - event.bedroom_remote_button_1
 - event.bedroom_remote_button_2
+- event.living_room_remote_button_1
+- event.living_room_remote_button_2
+- event.office_remote_button_1
+- event.office_remote_button_2

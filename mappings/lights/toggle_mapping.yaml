@@ -5,10 +5,10 @@
 #
 office: &office
   entities:
-    - switch.office_ceiling_lamp_switch
+    - light.office_ceiling_lamp_bulb
 living_room: &living_room
   entities:
-    - switch.living_room_ceiling_lamp_switch
+    - light.living_room_ceiling_lamp_bulb
     - switch.living_room_outlet_switch
     - switch.kitchen_ceiling_lamp_switch
     - switch.kitchen_under_cabinet_lighting_switch

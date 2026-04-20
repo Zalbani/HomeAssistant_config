@@ -25,7 +25,6 @@ actions:
     action: switch.turn_off
     target:
       entity_id:
-        - switch.living_room_ceiling_lamp_switch
         - switch.living_room_outlet_switch
         - switch.kitchen_ceiling_lamp_switch
         - switch.kitchen_under_cabinet_lighting_switch
@@ -33,7 +32,6 @@ actions:
         - switch.bathroom_mirror_switch
         - switch.restroom_ceiling_lamp_switch
         - switch.balcony_outside_lamp
-        - switch.office_ceiling_lamp_switch
   - alias: Turn off Awtrix
     action: light.turn_off
     target:

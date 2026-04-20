@@ -1,0 +1,5 @@
+# Shelly bypass switch → smart bulb mapping
+# Used by automations/Lights/switch_light_bypass_global.yaml
+# When the physical switch is toggled, the automation controls the bulb via Zigbee.
+switch.living_room_ceiling_lamp_switch: light.living_room_ceiling_lamp_bulb
+switch.office_ceiling_lamp_switch: light.office_ceiling_lamp_bulb

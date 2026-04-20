@@ -1,14 +1,12 @@
 # All controllable light and switch entities in the apartment
 # Used by automations/Awtrix/power_off_lights_out.yaml
-# Smart bulbs slaved to a dumb switch (e.g. living_room_ceiling_lamp_bulb) are
-# intentionally excluded — their parent switch is the authority for that circuit.
 # Living room
-- switch.living_room_ceiling_lamp_switch
+- light.living_room_ceiling_lamp_bulb
 - switch.living_room_outlet_switch
 - light.living_room_streetlight_bulb
 - light.living_room_mushroom_lamp_bulb
 # Office
-- switch.office_ceiling_lamp_switch
+- light.office_ceiling_lamp_bulb
 # Bedroom
 - light.bedroom_ceiling_lamp_bulb
 - light.bedroom_bed_led_strip

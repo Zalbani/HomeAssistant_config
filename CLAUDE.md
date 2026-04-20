@@ -28,7 +28,7 @@ _HomeAssistant_Config/
 │           └── controls.yaml       # Bubble cards (lights, shutters, vacuum…)
 ├── mappings/
 │   ├── heaters/          # Profiles, thermostats, valves, window sensors
-│   ├── lights/           # Remote → light entities mapping
+│   ├── lights/           # Light/switch mappings (remote toggles, bypass switches)
 │   └── shutters/         # Remote → shutter entities mapping
 ├── scripts/              # Scripts organized by domain (auto-merged via !include_dir_merge_named)
 │   ├── vacuum.yaml       # Roborock segment cleaning scripts
@@ -111,7 +111,8 @@ Priority order (automation `heating_profile_resolver`):
 
 ## Remote Control Mappings
 
-Remotes have numbered buttons (3, 4, 5, 6, 9):
+Remotes have numbered buttons (1, 2, 3, 4, 5, 6, 9):
+- Buttons 1/2 → brightness scroll wheel (`mappings/lights/scroll_wheel_mapping.yaml`) — bypass rooms only (bedroom, living room, office)
 - Button 3 → toggle lights (`mappings/lights/toggle_mapping.yaml`)
 - Buttons 4/5 → scroll shutters (`mappings/shutters/mapping.yaml`)
 - Button 6 → toggle/hold shutters
@@ -129,8 +130,8 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 ### Living Room
 | Entity | Description |
 |--------|-------------|
-| `switch.living_room_ceiling_lamp_switch` | Ceiling lamp switch |
-| `light.living_room_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) |
+| `switch.living_room_ceiling_lamp_switch` | Ceiling lamp switch (SONOFF, Shelly bypass in fixture) |
+| `light.living_room_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) — always powered, controlled via bypass automation |
 | `switch.living_room_outlet_switch` | Outlet switch (floor lamp) |
 | `light.living_room_streetlight_bulb` | Streetlight bulb (smart, color temp) |
 | `light.living_room_mushroom_lamp_bulb` | Mushroom lamp (smart, color temp) |
@@ -147,8 +148,8 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 ### Office
 | Entity | Description |
 |--------|-------------|
-| `switch.office_ceiling_lamp_switch` | Ceiling lamp switch |
-| `light.office_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) |
+| `switch.office_ceiling_lamp_switch` | Ceiling lamp switch (SONOFF, Shelly bypass in fixture) |
+| `light.office_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) — always powered, controlled via bypass automation |
 | `cover.office_sunshade` | Sunshade |
 | `climate.office_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.office_thermometer_temperature` | Temperature sensor |
@@ -160,7 +161,8 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 ### Bedroom
 | Entity | Description |
 |--------|-------------|
-| `light.bedroom_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) |
+| `switch.bedroom_ceiling_lamp_switch` | Ceiling lamp switch (SONOFF, Shelly bypass in fixture) |
+| `light.bedroom_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) — always powered, controlled via bypass automation |
 | `light.bedroom_bed_led_strip` | Bed LED strip |
 | `cover.bedroom_sunshade` | Sunshade |
 | `climate.bedroom_thermostatic_valve_thermostat` | Thermostat |
