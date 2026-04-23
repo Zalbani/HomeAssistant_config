@@ -40,6 +40,7 @@
 - !include Awtrix/bambulab_printing.yaml
 - !include Awtrix/power_off_lights_out.yaml
 - !include Awtrix/power_on_sunrise.yaml
+- !include Awtrix/power_on_button_select.yaml
 - !include Awtrix/brightness_dim_media.yaml
 - !include Awtrix/brightness_restore_media.yaml
 - !include Awtrix/presence_off.yaml
@@ -52,4 +53,5 @@
 - !include Notifications/ams_humidity_alert.yaml
 - !include Notifications/bambulab_print_done.yaml
 - !include Notifications/bambulab_print_error.yaml
+- !include Notifications/toothbrush_battery_low.yaml
 - !include Vacuum/vacuum_deselect_rooms.yaml

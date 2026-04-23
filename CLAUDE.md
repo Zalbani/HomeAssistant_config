@@ -234,11 +234,21 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `switch.alban_pc_fixe` | Desktop PC power |
 | `button.hass_pc_fixe_shutdown` | Desktop PC shutdown |
 | `sensor.hass_pc_fixe_cpuload` | Desktop PC CPU load |
-| `button.clock_awtrix_dismiss_notification` | Awtrix clock — dismiss notification |
-| `button.clock_awtrix_next_app` | Awtrix clock — next app |
-| `button.clock_awtrix_previous_app` | Awtrix clock — previous app |
+| `button.clock_awtrix_dismiss_notification` | Awtrix clock — dismiss notification (command) |
+| `button.clock_awtrix_next_app` | Awtrix clock — next app (command) |
+| `button.clock_awtrix_previous_app` | Awtrix clock — previous app (command) |
+| `binary_sensor.clock_awtrix_button_select` | Awtrix clock — center button physical press |
+| `binary_sensor.clock_awtrix_button_left` | Awtrix clock — left button physical press |
+| `binary_sensor.clock_awtrix_button_right` | Awtrix clock — right button physical press |
 | `sensor.clock_awtrix_current_app` | Awtrix clock — currently displayed app |
 | `light.clock_awtrix_matrix` | Awtrix clock — matrix power (on/off) |
+| `light.clock_awtrix_indicator_1` | Awtrix clock — top-right indicator dot |
+| `light.clock_awtrix_indicator_2` | Awtrix clock — right indicator dot |
+| `light.clock_awtrix_indicator_3` | Awtrix clock — bottom-right indicator dot |
+| `select.clock_awtrix_brightness_mode` | Awtrix clock — brightness mode (Manual/Auto) |
+| `sensor.clock_awtrix_illuminance` | Awtrix clock — ambient light sensor (lx) |
+| `sensor.clock_awtrix_temperature` | Awtrix clock — internal temperature (°C) |
+| `sensor.clock_awtrix_humidity` | Awtrix clock — internal humidity (%) |
 
 ### Awtrix Clock
 - MQTT prefix: `awtrix_6f0891c`

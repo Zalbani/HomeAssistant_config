@@ -1,0 +1,17 @@
+id: '1774836000015'
+alias: Awtrix - Power On - Center Button
+description: >-
+  Turns on the Awtrix matrix when the center button is pressed while the display is off.
+  Applies the current time-of-day brightness.
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.clock_awtrix_button_select
+    to: "on"
+conditions:
+  - alias: Matrix is off
+    condition: state
+    entity_id: light.clock_awtrix_matrix
+    state: "off"
+actions:
+  - action: script.awtrix_apply_time_brightness
+mode: single
