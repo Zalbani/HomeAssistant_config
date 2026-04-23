@@ -109,6 +109,43 @@ Priority order (automation `heating_profile_resolver`):
 - `input_boolean.collective_heating`
 - `timer.heating_boost`
 
+## Adaptive Lighting
+
+Integration: `custom_components/adaptive_lighting` (v1.30.1)
+Configured via UI (Settings → Devices & Services), not YAML.
+
+### Instances
+
+| Instance | Lights | Min/Max brightness | Min/Max color temp |
+|----------|--------|--------------------|--------------------|
+| Bedroom | `light.bedroom_ceiling_lamp_bulb`, `light.bedroom_bed_led_strip` | 1% / 80% | 2000K / 4000K |
+| Office | `light.office_ceiling_lamp_bulb` | 10% / 100% | 2000K / 5500K |
+| Living Room | `light.living_room_ceiling_lamp_bulb`, `light.living_room_streetlight_bulb`, `light.living_room_mushroom_lamp_bulb` | 1% / 100% | 2000K / 5500K |
+
+Common settings on all instances: `initial_transition: 3s`, `take_over_control: true`, `adapt_only_on_bare_turn_on: true`, `sunrise_offset: +3600s`, `sunset_offset: -3600s`
+
+Bedroom sleep settings: `sleep_brightness: 1%`, `sleep_color_temp: 1000K`
+
+### Sleep Mode
+
+Single source of truth: `input_boolean.sleep_mode` (defined in `configuration.yaml`)
+
+**Detection ON** (`automations/Lights/sleep_mode_detection_on.yaml`):
+All lights off for 30 min + all shutters closed + person home → `input_boolean.sleep_mode` ON
+
+**Detection OFF — Primary** (`automations/Shutters/wake_up_time_bedroom.yaml`, `wake_up_phone_global.yaml`):
+Wake-up automations turn off `input_boolean.sleep_mode` directly.
+
+**Detection OFF — Backoff** (`automations/Lights/sleep_mode_detection_off.yaml`):
+Bedroom sunshade opens manually while sleep mode is still ON → `input_boolean.sleep_mode` OFF
+
+**Apply** (`automations/Lights/sleep_mode_apply.yaml`):
+Reacts to `input_boolean.sleep_mode` state change:
+- ON → activates sleep mode on all 3 AL instances + turns off Awtrix
+- OFF → deactivates sleep mode on all 3 AL instances + turns on Awtrix (`script.awtrix_apply_time_brightness`)
+
+**Dashboard**: chip `dashboard/chips/sleep_mode.yaml` (visible on home page when active), toggle button in `maintenance/misc.yaml`
+
 ## Remote Control Mappings
 
 Remotes have numbered buttons (1, 2, 3, 4, 5, 6, 9):

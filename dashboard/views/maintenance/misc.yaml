@@ -4,6 +4,13 @@ cards:
     name: Lights
     icon: mdi:lightbulb
 
+  - type: custom:mushroom-entity-card
+    entity: input_boolean.sleep_mode
+    name: Sleep mode
+    icon: mdi:sleep
+    tap_action:
+      action: toggle
+
   - type: custom:mushroom-template-card
     primary: Resync bypass bulbs
     secondary: Bedroom · Living Room · Office

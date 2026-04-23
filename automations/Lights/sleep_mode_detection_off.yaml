@@ -1,0 +1,18 @@
+id: '1772300000002'
+alias: Sleep Mode - Detection OFF - Backoff
+description: >-
+  Fallback: turns off sleep mode if bedroom shutter is opened manually
+  and sleep mode is still active.
+triggers:
+  - trigger: state
+    entity_id: cover.bedroom_sunshade
+    to: open
+conditions:
+  - condition: state
+    entity_id: input_boolean.sleep_mode
+    state: "on"
+actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.sleep_mode
+mode: single

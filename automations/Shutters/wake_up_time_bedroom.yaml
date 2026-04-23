@@ -41,4 +41,7 @@ actions:
     target:
       area_id:
         - bedroom
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.sleep_mode
 mode: single

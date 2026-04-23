@@ -1,0 +1,32 @@
+id: '1772300000001'
+alias: Sleep Mode - Detection ON
+description: >-
+  Turns on sleep mode helper when all lights have been off for 30 minutes,
+  all shutters are closed and person is home.
+triggers:
+  - trigger: template
+    value_template: >-
+      {{ states('light.living_room_ceiling_lamp_bulb') == 'off'
+         and states('light.living_room_streetlight_bulb') == 'off'
+         and states('light.living_room_mushroom_lamp_bulb') == 'off'
+         and states('switch.living_room_outlet_switch') == 'off'
+         and states('light.office_ceiling_lamp_bulb') == 'off'
+         and states('light.bedroom_ceiling_lamp_bulb') == 'off'
+         and states('light.bedroom_bed_led_strip') == 'off' }}
+    for: "00:30:00"
+conditions:
+  - condition: state
+    entity_id: person.alban_pierson
+    state: home
+  - condition: template
+    value_template: >-
+      {{ states('cover.living_room_shutter') == 'closed'
+         and states('cover.living_room_sunshade') == 'closed'
+         and states('cover.office_sunshade') == 'closed'
+         and states('cover.bedroom_sunshade') == 'closed'
+         and states('cover.kitchen_shutter') == 'closed' }}
+actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.sleep_mode
+mode: single
