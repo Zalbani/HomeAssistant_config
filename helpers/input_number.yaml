@@ -1,0 +1,31 @@
+heating_global_min:
+  name: "Heating Global - Min"
+  icon: mdi:thermometer-low
+  min: 0
+  max: 30
+  step: 1
+  mode: box
+
+heating_global_max:
+  name: "Heating Global - Max"
+  icon: mdi:thermometer-high
+  min: 0
+  max: 30
+  step: 1
+  mode: box
+
+heating_outdoor_threshold:
+  name: "Heating Outdoor Threshold"
+  icon: mdi:thermometer-alert
+  min: 10
+  max: 30
+  step: 1
+  mode: slider
+
+heating_boost_duration:
+  name: "Heating Boost Duration"
+  icon: mdi:clock-edit-outline
+  min: 20
+  max: 120
+  step: 5
+  mode: slider

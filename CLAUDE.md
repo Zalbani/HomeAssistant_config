@@ -26,7 +26,14 @@ _HomeAssistant_Config/
 │       └── <room>/
 │           ├── overview_card.yaml  # Summary card used in home.yaml
 │           └── controls.yaml       # Bubble cards (lights, shutters, vacuum…)
+├── helpers/              # All helpers defined in YAML (loaded via configuration.yaml)
+│   ├── input_boolean.yaml   # Booleans: sleep_mode, guest_mode, wind, heating, vacuum selects
+│   ├── input_number.yaml    # Numbers: heating global min/max, outdoor threshold, boost duration
+│   ├── input_select.yaml    # Selects: heating_profile
+│   ├── input_datetime.yaml  # Datetimes: collective heating season start/end
+│   └── timer.yaml           # Timers: heating_boost
 ├── mappings/
+│   ├── helpers.yaml      # Central index of all helper entity IDs (importable via !include)
 │   ├── heaters/          # Profiles, thermostats, valves, window sensors
 │   ├── lights/           # Light/switch mappings (remote toggles, bypass switches)
 │   └── shutters/         # Remote → shutter entities mapping
@@ -128,7 +135,7 @@ Bedroom sleep settings: `sleep_brightness: 1%`, `sleep_color_temp: 1000K`
 
 ### Sleep Mode
 
-Single source of truth: `input_boolean.sleep_mode` (defined in `configuration.yaml`)
+Single source of truth: `input_boolean.sleep_mode` (defined in `helpers/input_boolean.yaml`)
 
 **Detection ON** (`automations/Lights/sleep_mode_detection_on.yaml`):
 All lights off for 30 min + all shutters closed + person home → `input_boolean.sleep_mode` ON
@@ -145,6 +152,68 @@ Reacts to `input_boolean.sleep_mode` state change:
 - OFF → deactivates sleep mode on all 3 AL instances + turns on Awtrix (`script.awtrix_apply_time_brightness`)
 
 **Dashboard**: chip `dashboard/chips/sleep_mode.yaml` (visible on home page when active), toggle button in `maintenance/misc.yaml`
+
+## Helpers
+
+All helpers are defined in YAML under `helpers/` and loaded in `configuration.yaml`. **Never create helpers via the UI** — add them to the appropriate file and reload HA.
+
+| File | Integration key | Reload via |
+|------|----------------|------------|
+| `helpers/input_boolean.yaml` | `input_boolean` | Developer Tools → YAML → Input Boolean |
+| `helpers/input_number.yaml` | `input_number` | Developer Tools → YAML → Input Number |
+| `helpers/input_select.yaml` | `input_select` | Developer Tools → YAML → Input Select |
+| `helpers/input_datetime.yaml` | `input_datetime` | Developer Tools → YAML → Input Datetime |
+| `helpers/timer.yaml` | `timer` | Developer Tools → YAML → Timer |
+
+### Complete helper inventory
+
+| Entity | File | Purpose |
+|--------|------|---------|
+| `input_boolean.sleep_mode` | `input_boolean.yaml` | Sleep mode active |
+| `input_boolean.guest_mode` | `input_boolean.yaml` | Guest mode active (Awtrix, heating, shutters) |
+| `input_boolean.wind_protection_active` | `input_boolean.yaml` | Wind protection lock on shutters |
+| `input_boolean.collective_heating` | `input_boolean.yaml` | Season master switch |
+| `input_boolean.heating_manual_bathroom` | `input_boolean.yaml` | Manual override — bathroom |
+| `input_boolean.heating_manual_bedroom` | `input_boolean.yaml` | Manual override — bedroom |
+| `input_boolean.heating_manual_living_room` | `input_boolean.yaml` | Manual override — living room |
+| `input_boolean.heating_manual_office` | `input_boolean.yaml` | Manual override — office |
+| `input_boolean.vacuum_select_*` | `input_boolean.yaml` | Per-room vacuum selection (7 rooms) |
+| `input_number.heating_global_min` | `input_number.yaml` | Global heating min (°C) |
+| `input_number.heating_global_max` | `input_number.yaml` | Global heating max (°C) |
+| `input_number.heating_outdoor_threshold` | `input_number.yaml` | Outdoor temp → eco profile (°C) |
+| `input_number.heating_boost_duration` | `input_number.yaml` | Boost duration (min) |
+| `input_select.heating_profile` | `input_select.yaml` | Active profile: comfort/eco/night/boost/off |
+| `input_datetime.collective_heating_start_date` | `input_datetime.yaml` | Season start date |
+| `input_datetime.collective_heating_end_date` | `input_datetime.yaml` | Season end date |
+| `timer.heating_boost` | `timer.yaml` | Boost countdown timer |
+
+### Using helpers in automations and scripts
+
+Prefer direct entity references for simple single-entity use:
+```yaml
+condition:
+  - condition: state
+    entity_id: input_boolean.sleep_mode
+    state: "on"
+```
+
+For bulk operations or dynamic room-keyed lookups, use `mappings/helpers.yaml` via `!include`:
+```yaml
+variables:
+  helpers: !include ../../mappings/helpers.yaml   # from automations/
+  helpers: !include ../mappings/helpers.yaml      # from scripts/
+
+# Then in Jinja:
+# {{ helpers.heating.profile }}
+# {{ helpers.heating.manual_overrides[room] }}
+# {{ helpers.vacuum.room_selects[room_id] }}
+```
+
+### Adding a new helper
+
+1. Add the entry to the relevant file in `helpers/`
+2. Add it to `mappings/helpers.yaml` under the appropriate group
+3. Reload via Developer Tools (no full restart needed)
 
 ## Remote Control Mappings
 

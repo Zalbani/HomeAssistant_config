@@ -1,0 +1,67 @@
+# --- Sleep / Presence ---
+
+sleep_mode:
+  name: "Sleep Mode"
+  icon: mdi:moon-waning-crescent
+
+guest_mode:
+  name: "Guest Mode"
+  icon: mdi:account-group
+
+# --- Wind Protection ---
+
+wind_protection_active:
+  name: "Wind Protection Active"
+  icon: mdi:weather-windy-variant
+
+# --- Heating ---
+
+collective_heating:
+  name: "Collective Heating"
+  icon: mdi:radiator
+
+heating_manual_bathroom:
+  name: "Heating Manual - Bathroom"
+  icon: mdi:bathtub-outline
+
+heating_manual_bedroom:
+  name: "Heating Manual - Bedroom"
+  icon: mdi:bed-outline
+
+heating_manual_living_room:
+  name: "Heating Manual - Living Room"
+  icon: mdi:sofa-outline
+
+heating_manual_office:
+  name: "Heating Manual - Office"
+  icon: mdi:microsoft-office
+
+# --- Vacuum room selection ---
+
+vacuum_select_living_room:
+  name: "Vacuum Select: Living Room"
+  icon: mdi:sofa-outline
+
+vacuum_select_office:
+  name: "Vacuum Select: Office"
+  icon: mdi:microsoft-office
+
+vacuum_select_bedroom:
+  name: "Vacuum Select: Bedroom"
+  icon: mdi:bed-outline
+
+vacuum_select_kitchen:
+  name: "Vacuum Select: Kitchen"
+  icon: mdi:coffee-maker-outline
+
+vacuum_select_bathroom:
+  name: "Vacuum Select: Bathroom"
+  icon: mdi:bathtub-outline
+
+vacuum_select_restroom:
+  name: "Vacuum Select: Restroom"
+  icon: mdi:paper-roll-outline
+
+vacuum_select_entry:
+  name: "Vacuum Select: Entry"
+  icon: mdi:door-open

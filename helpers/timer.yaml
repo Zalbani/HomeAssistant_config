@@ -1,0 +1,4 @@
+heating_boost:
+  name: "Heating Boost"
+  icon: mdi:clock-fast
+  duration: "00:00:00"

@@ -1,0 +1,55 @@
+# Central reference for all helper entity IDs
+#
+# Usage in automations/scripts:
+#   variables:
+#     helpers: !include ../../mappings/helpers.yaml   # from automations/
+#     helpers: !include ../mappings/helpers.yaml      # from scripts/
+#
+# Then access via Jinja: {{ helpers.heating.profile }}
+#                        {{ helpers.heating.manual_overrides[room] }}
+
+# --- Presence & Modes ---
+
+sleep_mode: input_boolean.sleep_mode
+guest_mode: input_boolean.guest_mode
+wind_protection_active: input_boolean.wind_protection_active
+
+# --- Heating ---
+
+heating:
+  # Active profile (comfort / eco / night / boost / off)
+  profile: input_select.heating_profile
+
+  # Season master switch
+  collective: input_boolean.collective_heating
+  season_start: input_datetime.collective_heating_start_date
+  season_end: input_datetime.collective_heating_end_date
+
+  # Global temperature bounds (°C)
+  global_min: input_number.heating_global_min
+  global_max: input_number.heating_global_max
+  outdoor_threshold: input_number.heating_outdoor_threshold
+
+  # Boost
+  boost_timer: timer.heating_boost
+  boost_duration: input_number.heating_boost_duration
+
+  # Per-room manual override flags
+  manual_overrides:
+    bathroom: input_boolean.heating_manual_bathroom
+    bedroom: input_boolean.heating_manual_bedroom
+    living_room: input_boolean.heating_manual_living_room
+    office: input_boolean.heating_manual_office
+
+# --- Vacuum ---
+
+vacuum:
+  # Per-room selection toggles (used to build the segment list)
+  room_selects:
+    living_room: input_boolean.vacuum_select_living_room
+    office: input_boolean.vacuum_select_office
+    bedroom: input_boolean.vacuum_select_bedroom
+    kitchen: input_boolean.vacuum_select_kitchen
+    bathroom: input_boolean.vacuum_select_bathroom
+    restroom: input_boolean.vacuum_select_restroom
+    entry: input_boolean.vacuum_select_entry

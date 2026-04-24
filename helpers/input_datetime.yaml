@@ -1,0 +1,11 @@
+collective_heating_start_date:
+  name: "Collective Heating Start Date"
+  icon: mdi:calendar-start
+  has_date: true
+  has_time: false
+
+collective_heating_end_date:
+  name: "Collective Heating End Date"
+  icon: mdi:calendar-end
+  has_date: true
+  has_time: false

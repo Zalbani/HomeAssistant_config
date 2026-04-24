@@ -1,0 +1,9 @@
+heating_profile:
+  name: "Heating Profile"
+  icon: mdi:thermostat-auto
+  options:
+    - comfort
+    - eco
+    - night
+    - boost
+    - "off"
