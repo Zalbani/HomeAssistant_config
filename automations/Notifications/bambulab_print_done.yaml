@@ -5,10 +5,10 @@ triggers:
   - trigger: state
     entity_id: sensor.bambu_farm_printer_print_status
     to: finish
-    not_from:
-      - finish
-      - unavailable
-      - unknown
+    from:
+      - running
+      - pause
+      - prepare
 actions:
   - action: notify.mobile_app_pixel_9_pro
     data:
