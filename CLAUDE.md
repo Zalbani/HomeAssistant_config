@@ -338,8 +338,9 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `sun.sun` | Sunrise / sunset |
 | `sensor.pixel_9_pro_next_alarm` | Phone alarm |
 | `switch.alban_pc_fixe` | Desktop PC power |
-| `button.hass_pc_fixe_shutdown` | Desktop PC shutdown |
-| `sensor.hass_pc_fixe_cpuload` | Desktop PC CPU load |
+| `button.pc_shutdown` | Desktop PC shutdown |
+| `sensor.pc_cpuload` | Desktop PC CPU load |
+| `sensor.pc_gpuload` | Desktop PC GPU load |
 | `button.clock_awtrix_dismiss_notification` | Awtrix clock — dismiss notification (command) |
 | `button.clock_awtrix_next_app` | Awtrix clock — next app (command) |
 | `button.clock_awtrix_previous_app` | Awtrix clock — previous app (command) |

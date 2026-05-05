@@ -44,7 +44,7 @@ actions:
     then:
       - action: button.press
         target:
-          entity_id: button.hass_pc_fixe_shutdown
+          entity_id: button.pc_shutdown
   - alias: Notify if french window is open
     if:
       - condition: state

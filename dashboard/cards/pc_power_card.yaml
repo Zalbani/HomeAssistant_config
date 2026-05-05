@@ -1,5 +1,5 @@
 type: custom:button-card
-entity: switch.alban_pc_fixe
+entity: binary_sensor.pc_online
 show_name: false
 show_icon: false
 show_state: false
@@ -38,9 +38,12 @@ custom_fields:
   info: |
     [[[
       const isOn = entity.state === 'on';
-      const cpu = states['sensor.hass_pc_fixe_cpuload']?.state;
-      const status = isOn && cpu && !['unavailable','unknown'].includes(cpu)
-        ? `Online (${Math.round(parseFloat(cpu))}% CPU)`
+      const cpu = states['sensor.pc_cpuload']?.state;
+      const gpu = states['sensor.pc_gpuload']?.state;
+      const cpuOk = cpu && !['unavailable','unknown'].includes(cpu);
+      const gpuOk = gpu && !['unavailable','unknown'].includes(gpu);
+      const status = isOn && cpuOk
+        ? `Online — CPU ${Math.round(parseFloat(cpu))}%${gpuOk ? ` · GPU ${Math.round(parseFloat(gpu))}%` : ''}`
         : 'Offline';
       return `<div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
         <span style="font-size:12px;font-weight:600;color:var(--primary-text-color);">Desktop PC</span>
