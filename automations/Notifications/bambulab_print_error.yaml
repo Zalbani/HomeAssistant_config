@@ -5,9 +5,15 @@ triggers:
   - trigger: state
     entity_id: binary_sensor.bambu_farm_printer_hms_errors
     to: 'on'
+    not_from:
+      - unknown
+      - unavailable
   - trigger: state
     entity_id: binary_sensor.bambu_farm_printer_print_error
     to: 'on'
+    not_from:
+      - unknown
+      - unavailable
 actions:
   - action: notify.mobile_app_pixel_9_pro
     data:

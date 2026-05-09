@@ -1,0 +1,21 @@
+- platform: rest
+  name: "VPN IP"
+  resource: "http://192.168.1.100:8000/v1/publicip/ip"
+  username: !secret gluetun_username
+  password: !secret gluetun_password
+  authentication: basic
+  scan_interval: 120
+  value_template: "{{ value_json.public_ip }}"
+  json_attributes:
+    - city
+    - country
+    - organization
+
+- platform: rest
+  name: "VPN Status"
+  resource: "http://192.168.1.100:8000/v1/vpn/status"
+  username: !secret gluetun_username
+  password: !secret gluetun_password
+  authentication: basic
+  scan_interval: 30
+  value_template: "{{ value_json.status }}"

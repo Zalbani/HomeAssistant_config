@@ -1,0 +1,61 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Seerr
+    icon: mdi:movie-search-outline
+
+  - type: custom:mushroom-template-card
+    primary: Seerr
+    entity: binary_sensor.seerr
+    secondary: >-
+      {% if is_state(entity, 'on') %}
+        {% if states('sensor.seerr_version') not in ['unknown', 'unavailable'] %}v{{ states('sensor.seerr_version') }} — {% endif %}{% if is_state('binary_sensor.seerr_update', 'on') %}Update available — {% endif %}{{ states('sensor.seerr_requests') }} requests
+      {% else %}Offline{% endif %}
+    icon: mdi:movie-search-outline
+    icon_color: >-
+      {% if not is_state(entity, 'on') %}red
+      {% elif is_state('binary_sensor.seerr_update', 'on') %}orange
+      {% else %}green{% endif %}
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:5055
+
+  - type: custom:mushroom-template-card
+    primary: Pending
+    entity: sensor.seerr_requests
+    secondary: "{{ state_attr(entity, 'pending') }} awaiting approval"
+    icon: mdi:timer-sand
+    icon_color: "{% if state_attr(entity, 'pending') | int > 0 %}red{% else %}grey{% endif %}"
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:5055/requests?filter=pending
+
+  - type: custom:mushroom-template-card
+    primary: Completed
+    entity: sensor.seerr_requests
+    secondary: "{{ state_attr(entity, 'completed') }} available"
+    icon: mdi:check-circle-outline
+    icon_color: green
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:5055/requests?filter=available
+
+  - type: custom:mushroom-template-card
+    primary: Processing
+    entity: sensor.seerr_requests
+    secondary: "{{ state_attr(entity, 'processing') }} in progress"
+    icon: mdi:clock-outline
+    icon_color: orange
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:5055/requests?filter=processing
+
+  - type: custom:mushroom-template-card
+    primary: Declined
+    entity: sensor.seerr_requests
+    secondary: "{{ state_attr(entity, 'declined') }} declined"
+    icon: mdi:close-circle-outline
+    icon_color: "{% if state_attr(entity, 'declined') | int > 0 %}red{% else %}grey{% endif %}"
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:5055/requests?filter=declined

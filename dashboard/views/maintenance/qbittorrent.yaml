@@ -1,0 +1,69 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: qBittorrent
+    icon: mdi:cloud-download-outline
+
+  - type: custom:mushroom-template-card
+    primary: qBittorrent
+    entity: sensor.qbittorrent_connection_status
+    secondary: >-
+      {{ states('sensor.qbittorrent_status') | capitalize }} —
+      {{ states('sensor.qbittorrent_active_torrents') }} active /
+      {{ states('sensor.qbittorrent_all_torrents') }} total
+    icon: mdi:cloud-download-outline
+    icon_color: >-
+      {% if states(entity) in ['connected', 'firewalled'] %}green{% else %}red{% endif %}
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:8080
+
+  - type: custom:mushroom-template-card
+    primary: Ratio
+    entity: sensor.qbittorrent_all_time_upload
+    secondary: >-
+      {% set up = states('sensor.qbittorrent_all_time_upload') | float(0) %}
+      {% set down = states('sensor.qbittorrent_all_time_download') | float(1) %}
+      {{ (up / down) | round(2) }}
+    icon: mdi:swap-vertical
+    icon_color: >-
+      {% set up = states('sensor.qbittorrent_all_time_upload') | float(0) %}
+      {% set down = states('sensor.qbittorrent_all_time_download') | float(1) %}
+      {% set ratio = up / down %}
+      {% if ratio >= 1 %}green{% elif ratio >= 0.5 %}orange{% else %}red{% endif %}
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.qbittorrent_download_speed
+    name: Download
+    icon: mdi:download-network
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.qbittorrent_upload_speed
+    name: Upload
+    icon: mdi:upload-network
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.qbittorrent_all_time_download
+    name: Total Download
+    icon: mdi:download-network
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.qbittorrent_all_time_upload
+    name: Total Upload
+    icon: mdi:upload-network
+    fill_container: true
+
+  - type: custom:mushroom-template-card
+    primary: Errored
+    entity: sensor.qbittorrent_errored_torrents
+    secondary: "{{ states(entity) }} torrents in error"
+    icon: mdi:alert-circle-outline
+    icon_color: "{% if states(entity) | int(0) > 0 %}red{% else %}grey{% endif %}"
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:8080

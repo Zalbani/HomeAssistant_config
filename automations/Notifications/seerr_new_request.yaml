@@ -1,0 +1,35 @@
+id: '1746748800005'
+alias: Seerr - New Request
+description: >-
+  Notifies when the total request count on Seerr increases.
+triggers:
+  - trigger: state
+    entity_id: sensor.seerr_requests
+    not_from:
+      - unavailable
+      - unknown
+    not_to:
+      - unavailable
+      - unknown
+conditions:
+  - condition: template
+    value_template: >-
+      {{ trigger.to_state.state | int > trigger.from_state.state | int }}
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "New Seerr request"
+      message: >-
+        {{ trigger.to_state.state }} total
+        ({{ state_attr('sensor.seerr_requests', 'movie') }} movies,
+        {{ state_attr('sensor.seerr_requests', 'tv') }} series)
+        — {{ state_attr('sensor.seerr_requests', 'processing') }} processing,
+        {{ state_attr('sensor.seerr_requests', 'pending') }} pending.
+      data:
+        url: http://192.168.1.100:5055/requests
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: >-
+        {"text": "Seerr — {{ trigger.to_state.state }} requests ({{ state_attr('sensor.seerr_requests', 'movie') }} movies, {{ state_attr('sensor.seerr_requests', 'tv') }} series)", "icon": "6776", "color": "#E5A00D", "duration": 15}
+mode: single

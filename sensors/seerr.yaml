@@ -1,0 +1,16 @@
+- platform: rest
+  name: "Seerr Requests"
+  resource: "http://192.168.1.100:5055/api/v1/request/count"
+  headers:
+    X-Api-Key: !secret seerr_api_key
+  scan_interval: 60
+  value_template: "{{ value_json.total }}"
+  json_attributes:
+    - movie
+    - tv
+    - pending
+    - approved
+    - declined
+    - processing
+    - available
+    - completed

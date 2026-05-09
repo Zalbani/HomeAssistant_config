@@ -1,0 +1,42 @@
+- platform: rest
+  name: "Prowlarr Version"
+  resource: "http://192.168.1.100:9696/api/v1/update"
+  headers:
+    X-Api-Key: !secret prowlarr_api_key
+  scan_interval: 86400
+  value_template: >-
+    {{ (value_json | selectattr('installed', 'equalto', true) | list | first).version }}
+
+- platform: rest
+  name: "Sonarr Version"
+  resource: "http://192.168.1.100:8989/api/v3/update"
+  headers:
+    X-Api-Key: !secret sonarr_api_key
+  scan_interval: 86400
+  value_template: >-
+    {{ (value_json | selectattr('installed', 'equalto', true) | list | first).version }}
+
+- platform: rest
+  name: "Radarr Version"
+  resource: "http://192.168.1.100:7878/api/v3/update"
+  headers:
+    X-Api-Key: !secret radarr_api_key
+  scan_interval: 86400
+  value_template: >-
+    {{ (value_json | selectattr('installed', 'equalto', true) | list | first).version }}
+
+- platform: rest
+  name: "Seerr Version"
+  resource: "http://192.168.1.100:5055/api/v1/status"
+  headers:
+    X-Api-Key: !secret seerr_api_key
+  scan_interval: 86400
+  value_template: "{{ value_json.version }}"
+
+- platform: rest
+  name: "Bazarr Version"
+  resource: "http://192.168.1.100:6767/api/system/status"
+  headers:
+    X-API-KEY: !secret bazarr_api_key
+  scan_interval: 86400
+  value_template: "{{ value_json.data.bazarr_version }}"

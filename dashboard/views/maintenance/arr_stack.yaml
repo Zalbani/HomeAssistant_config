@@ -1,0 +1,91 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Stack Arr
+    icon: mdi:download-network
+
+  - type: custom:mushroom-template-card
+    primary: Gluetun VPN
+    entity: sensor.vpn_status
+    secondary: "{% if states(entity) == 'running' %}Running{% else %}{{ states(entity) | capitalize }}{% endif %}"
+    icon: mdi:shield-lock-outline
+    icon_color: "{% if states(entity) == 'running' %}green{% else %}red{% endif %}"
+    tap_action:
+      action: url
+      url_path: https://account.protonvpn.com/dashboardV2
+
+  - type: custom:mushroom-template-card
+    primary: VPN IP
+    entity: sensor.vpn_ip
+    secondary: >-
+      {{ states(entity) }}
+      {%- if state_attr(entity, 'city') %} — {{ state_attr(entity, 'city') }}, {{ state_attr(entity, 'country') }}{% endif %}
+    icon: mdi:ip-network-outline
+    icon_color: blue
+    tap_action:
+      action: url
+      url_path: https://account.protonvpn.com/dashboardV2
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Services
+    icon: mdi:server-network
+
+  - type: custom:mushroom-template-card
+    primary: Prowlarr
+    entity: binary_sensor.prowlarr
+    secondary: >-
+      {% if is_state(entity, 'on') %}
+        {% if states('sensor.prowlarr_version') not in ['unknown', 'unavailable'] %}v{{ states('sensor.prowlarr_version') }}{% endif %}{% if is_state('binary_sensor.prowlarr_update', 'on') %} — Update available{% endif %}
+      {% else %}Offline{% endif %}
+    icon: mdi:magnify
+    icon_color: >-
+      {% if not is_state(entity, 'on') %}red
+      {% elif is_state('binary_sensor.prowlarr_update', 'on') %}orange
+      {% else %}green{% endif %}
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:9696
+
+  - type: custom:mushroom-template-card
+    primary: Sonarr
+    entity: binary_sensor.sonarr
+    secondary: >-
+      {% if is_state(entity, 'on') %}
+        {% if states('sensor.sonarr_version') not in ['unknown', 'unavailable'] %}v{{ states('sensor.sonarr_version') }}{% endif %}{% if is_state('binary_sensor.sonarr_update', 'on') %} — Update available{% endif %}
+      {% else %}Offline{% endif %}
+    icon: mdi:television-play
+    icon_color: >-
+      {% if not is_state(entity, 'on') %}red
+      {% elif is_state('binary_sensor.sonarr_update', 'on') %}orange
+      {% else %}green{% endif %}
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:8989
+
+  - type: custom:mushroom-template-card
+    primary: Radarr
+    entity: binary_sensor.radarr
+    secondary: >-
+      {% if is_state(entity, 'on') %}
+        {% if states('sensor.radarr_version') not in ['unknown', 'unavailable'] %}v{{ states('sensor.radarr_version') }}{% endif %}{% if is_state('binary_sensor.radarr_update', 'on') %} — Update available{% endif %}
+      {% else %}Offline{% endif %}
+    icon: mdi:movie-open-outline
+    icon_color: >-
+      {% if not is_state(entity, 'on') %}red
+      {% elif is_state('binary_sensor.radarr_update', 'on') %}orange
+      {% else %}green{% endif %}
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:7878
+
+  - type: custom:mushroom-template-card
+    primary: Bazarr
+    entity: binary_sensor.bazarr
+    secondary: >-
+      {% if is_state(entity, 'on') %}{% if states('sensor.bazarr_version') not in ['unknown', 'unavailable'] %}v{{ states('sensor.bazarr_version') }}{% endif %}{% else %}Offline{% endif %}
+    icon: mdi:subtitles-outline
+    icon_color: "{% if is_state(entity, 'on') %}green{% else %}red{% endif %}"
+    tap_action:
+      action: url
+      url_path: http://192.168.1.100:6767

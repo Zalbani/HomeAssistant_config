@@ -1,0 +1,25 @@
+id: '1746748800007'
+alias: Arr Stack - qBittorrent Connection Lost
+description: >-
+  Notifies when qBittorrent loses connectivity to the BitTorrent network for more than 3 minutes.
+  Covers both 'disconnected' (service up but no BT network) and 'unavailable' (service down).
+triggers:
+  - trigger: state
+    entity_id: sensor.qbittorrent_connection_status
+    to:
+      - disconnected
+      - unavailable
+    not_from:
+      - disconnected
+      - unavailable
+    for: "00:03:00"
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "qBittorrent — Connection Lost"
+      message: >-
+        qBittorrent {{ states('sensor.qbittorrent_connection_status') }} for
+        {{ ((now() - trigger.to_state.last_changed).total_seconds() / 60) | int }} min.
+      data:
+        url: http://192.168.1.100:8080
+mode: single

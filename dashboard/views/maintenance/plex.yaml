@@ -1,0 +1,28 @@
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Plex
+    icon: mdi:plex
+
+  - type: custom:mushroom-update-card
+    entity: update.plex_update
+    name: Plex Update
+    collapsible_controls: false
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.backward_library_films
+    name: Films
+    icon: mdi:movie
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.backward_library_series
+    name: Séries
+    icon: mdi:television-play
+    fill_container: true
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.backward_library_anim
+    name: Anim'
+    icon: mdi:animation-play
+    fill_container: true

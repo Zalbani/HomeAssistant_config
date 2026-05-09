@@ -1,0 +1,13 @@
+type: conditional
+conditions:
+  - condition: template
+    value_template: "{{ state_attr('sensor.seerr_requests', 'pending') | int(0) > 0 }}"
+chip:
+  type: template
+  entity: sensor.seerr_requests
+  icon: mdi:movie-search-outline
+  icon_color: red
+  content: "{{ state_attr(entity, 'pending') }} pending"
+  tap_action:
+    action: url
+    url_path: https://seerr.zalbani.dev/requests?filter=pending

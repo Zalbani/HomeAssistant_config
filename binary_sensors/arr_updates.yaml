@@ -1,0 +1,38 @@
+- platform: rest
+  name: "Prowlarr Update"
+  resource: "http://192.168.1.100:9696/api/v1/update"
+  headers:
+    X-Api-Key: !secret prowlarr_api_key
+  scan_interval: 86400
+  value_template: >-
+    {{ value_json | selectattr('installed', 'equalto', false) | list | count > 0 }}
+  device_class: update
+
+- platform: rest
+  name: "Sonarr Update"
+  resource: "http://192.168.1.100:8989/api/v3/update"
+  headers:
+    X-Api-Key: !secret sonarr_api_key
+  scan_interval: 86400
+  value_template: >-
+    {{ value_json | selectattr('installed', 'equalto', false) | list | count > 0 }}
+  device_class: update
+
+- platform: rest
+  name: "Radarr Update"
+  resource: "http://192.168.1.100:7878/api/v3/update"
+  headers:
+    X-Api-Key: !secret radarr_api_key
+  scan_interval: 86400
+  value_template: >-
+    {{ value_json | selectattr('installed', 'equalto', false) | list | count > 0 }}
+  device_class: update
+
+- platform: rest
+  name: "Seerr Update"
+  resource: "http://192.168.1.100:5055/api/v1/status"
+  headers:
+    X-Api-Key: !secret seerr_api_key
+  scan_interval: 86400
+  value_template: "{{ value_json.updateAvailable }}"
+  device_class: update

@@ -1,0 +1,23 @@
+id: '1746748800002'
+alias: Arr Stack - VPN IP Changed
+description: >-
+  Notifies when the VPN public IP changes, which may indicate a server reconnection.
+  Filters out transitions from/to unavailable or unknown states.
+triggers:
+  - trigger: state
+    entity_id: sensor.vpn_ip
+conditions:
+  - condition: template
+    value_template: >-
+      {{ trigger.from_state.state not in ['unavailable', 'unknown', 'none']
+         and trigger.to_state.state not in ['unavailable', 'unknown', 'none'] }}
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "VPN IP Changed"
+      message: >-
+        {{ trigger.from_state.state }} → {{ trigger.to_state.state }}
+        {%- if trigger.to_state.attributes.city %}
+        ({{ trigger.to_state.attributes.city }}, {{ trigger.to_state.attributes.country }})
+        {%- endif %}
+mode: single

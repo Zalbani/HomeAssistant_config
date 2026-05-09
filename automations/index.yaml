@@ -58,4 +58,12 @@
 - !include Notifications/bambulab_print_done.yaml
 - !include Notifications/bambulab_print_error.yaml
 - !include Notifications/toothbrush_battery_low.yaml
+- !include Notifications/seerr_new_request.yaml
+- !include Notifications/qbittorrent_errored.yaml
+- !include Notifications/qbittorrent_connection.yaml
+- !include Notifications/qbittorrent_reconnected.yaml
+- !include Notifications/arr_vpn_down.yaml
+- !include Notifications/arr_vpn_ip_changed.yaml
+- !include Notifications/arr_service_down.yaml
+- !include Notifications/arr_service_restored.yaml
 - !include Vacuum/vacuum_deselect_rooms.yaml

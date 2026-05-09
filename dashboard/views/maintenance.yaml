@@ -16,6 +16,10 @@ sections:
   - !include maintenance/misc.yaml
   - !include maintenance/system.yaml
   - !include maintenance/roborock.yaml
-  - !include maintenance/bambulab.yaml
   - !include maintenance/livebox.yaml
   - !include maintenance/adguard.yaml
+  - !include maintenance/plex.yaml
+  - !include maintenance/seerr.yaml
+  - !include maintenance/arr_stack.yaml
+  - !include maintenance/qbittorrent.yaml
+  - !include maintenance/bambulab.yaml

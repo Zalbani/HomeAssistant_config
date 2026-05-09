@@ -1,0 +1,28 @@
+id: '1746748800003'
+alias: Arr Stack - Service Down Alert
+description: >-
+  Notifies when any Arr stack service has been unreachable for more than 3 minutes.
+triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.seerr
+      - binary_sensor.prowlarr
+      - binary_sensor.sonarr
+      - binary_sensor.radarr
+      - binary_sensor.bazarr
+    to:
+      - 'off'
+      - 'unavailable'
+    not_from:
+      - 'off'
+      - 'unavailable'
+    for: "00:03:00"
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Arr Stack — Service Down"
+      message: >-
+        {{ trigger.to_state.attributes.friendly_name }} has been unreachable for
+        {{ ((now() - trigger.to_state.last_changed).total_seconds() / 60) | int }} min.
+mode: parallel
+max: 5

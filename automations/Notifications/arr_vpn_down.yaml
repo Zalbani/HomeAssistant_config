@@ -1,0 +1,24 @@
+id: '1746748800001'
+alias: Arr Stack - VPN Down Alert
+description: >-
+  Notifies when VPN status has not been 'running' for more than 2 minutes.
+  A delay avoids false positives during Gluetun restarts.
+triggers:
+  - trigger: state
+    entity_id: sensor.vpn_status
+    not_from:
+      - unknown
+      - unavailable
+    not_to:
+      - running
+      - unknown
+    for: "00:02:00"
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "VPN Down"
+      message: >-
+        Gluetun is {{ states('sensor.vpn_status') }} for
+        {{ ((now() - trigger.to_state.last_changed).total_seconds() / 60) | int }} min.
+        qBittorrent traffic is unprotected.
+mode: single

@@ -1,0 +1,23 @@
+id: '1746748800008'
+alias: Arr Stack - qBittorrent Reconnected
+description: >-
+  Notifies when qBittorrent comes back online after being disconnected or unavailable.
+triggers:
+  - trigger: state
+    entity_id: sensor.qbittorrent_connection_status
+    from:
+      - disconnected
+      - unavailable
+    to:
+      - connected
+      - firewalled
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "qBittorrent — Reconnected"
+      message: >-
+        qBittorrent is back {{ states('sensor.qbittorrent_connection_status') }}
+        (was down for {{ ((now() - trigger.from_state.last_changed).total_seconds() / 60) | int }} min).
+      data:
+        url: http://192.168.1.100:8080
+mode: single

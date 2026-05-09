@@ -10,15 +10,20 @@ triggers:
     entity_id: media_player.spotify_zalbani
   - trigger: time_pattern
     minutes: "/1"
+  - trigger: state
+    entity_id: person.alban_pierson
 conditions:
-  - alias: Skip time_pattern refresh when Spotify is not active
+  - alias: Skip time_pattern refresh when Spotify is not active or user is away
     condition: template
     value_template: >-
-      {{ trigger.platform != 'time_pattern' or is_state('media_player.spotify_zalbani', ['playing', 'paused']) }}
+      {{ trigger.platform != 'time_pattern' or (is_state('media_player.spotify_zalbani', ['playing', 'paused']) and is_state('person.alban_pierson', 'home')) }}
 actions:
   - choose:
-      - alias: Spotify playing or paused — show track with progress
+      - alias: Spotify playing or paused and user is home — show track with progress
         conditions:
+          - condition: state
+            entity_id: person.alban_pierson
+            state: home
           - condition: state
             entity_id: media_player.spotify_zalbani
             state:

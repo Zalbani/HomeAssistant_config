@@ -1,0 +1,19 @@
+id: '1746748800006'
+alias: Arr Stack - qBittorrent Errored Torrents
+description: >-
+  Notifies when one or more torrents have been in error state for more than 5 minutes.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.qbittorrent_errored_torrents
+    above: 0
+    for: "00:05:00"
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "qBittorrent — Errored Torrents"
+      message: >-
+        {{ states('sensor.qbittorrent_errored_torrents') }} torrent(s) in error
+        for more than 5 minutes.
+      data:
+        url: http://192.168.1.100:8080
+mode: single

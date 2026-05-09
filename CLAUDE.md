@@ -14,6 +14,13 @@ _HomeAssistant_Config/
 │   ├── Notifications/    # Notification automations — named <subject>.yaml (e.g. heating_profile.yaml, window_open.yaml)
 │   ├── Vacuum/           # Vacuum automations
 │   └── index.yaml        # Flat !include list (HA does not auto-merge subdirs here)
+├── binary_sensors/       # REST/TCP binary sensors (auto-merged via !include_dir_merge_list)
+│   ├── arr_stack.yaml    # Seerr, Prowlarr, Sonarr, Radarr, Bazarr — authenticated REST health checks
+│   └── arr_updates.yaml  # Prowlarr, Sonarr, Radarr, Seerr — update detection (device_class: update, 24h poll)
+├── sensors/              # REST sensors (auto-merged via !include_dir_merge_list)
+│   ├── arr_stack.yaml    # VPN IP + VPN Status (Gluetun, basic auth)
+│   ├── arr_versions.yaml # Prowlarr/Sonarr/Radarr/Seerr/Bazarr versions (24h poll)
+│   └── seerr.yaml        # Seerr request counts with breakdown attributes (movie/tv/pending/processing…)
 ├── dashboard/
 │   ├── main.yaml         # Dashboard entry point (includes templates/ + views/)
 │   ├── templates/        # Reusable button-card templates (auto-merged via !include_dir_merge_named)
@@ -21,6 +28,7 @@ _HomeAssistant_Config/
 │   │   ├── vacuum_card_templates.yaml     # vacuum_room_card, vacuum_btn
 │   │   └── awtrix_card_templates.yaml     # awtrix_card, awtrix_btn
 │   ├── views/            # One file per dashboard page
+│   │   └── maintenance/  # Maintenance subview sections (each file = one section)
 │   └── rooms/            # Per-room cards, included from views
 │       ├── config.yaml   # Centralized room metadata (name, icon, color, segment_id) keyed by room_id
 │       └── <room>/
@@ -50,7 +58,7 @@ _HomeAssistant_Config/
 - `home` — Home: weather, heating profile, summary cards for all rooms
 - `living_room`, `office`, `bedroom`, `kitchen`, `bathroom`, `restroom`, `balcony` — Per-room views
 - `heating` — Centralized heating control
-- `maintenance` — Batteries, PC, calendar
+- `maintenance` — Batteries, PC, NAS, Livebox, AdGuard, Stack Arr (VPN + services), Seerr, qBittorrent, BambuLab
 
 ### Adding a New Room
 1. Create `dashboard/rooms/<room_id>/overview_card.yaml` using the `room_card` template
