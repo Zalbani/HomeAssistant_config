@@ -1,8 +1,7 @@
 id: '1774836000008'
 alias: Awtrix - Power - Guest Mode
 description: >-
-  Turns on the Awtrix and disables Adaptive Lighting when guest mode is enabled.
-  Re-enables Adaptive Lighting when guest mode is disabled.
+  Turns on the Awtrix when guest mode is enabled.
   Turns off Awtrix when guest mode is disabled and the owner is away.
 triggers:
   - alias: Guest mode turned on
@@ -13,73 +12,24 @@ triggers:
     trigger: state
     entity_id: input_boolean.guest_mode
     to: "off"
+  - alias: HA started — restore Awtrix state based on guest mode
+    trigger: homeassistant
+    event: start
 actions:
   - choose:
-      - alias: Guest mode on — turn on Awtrix, disable AL, set living room lights
+      - alias: Guest mode on — turn on Awtrix
         conditions:
           - condition: state
             entity_id: input_boolean.guest_mode
             state: "on"
         sequence:
           - action: script.awtrix_apply_time_brightness
-          - action: switch.turn_off
-            target:
-              entity_id:
-                - switch.bedroom_adaptative_lights_adaptive_lighting_bedroom
-                - switch.living_room_adaptative_lightning_adaptive_lighting_living_room
-                - switch.office_adaptative_lights_adaptive_lighting_office_adaptative_lights
-          - variables:
-              ceiling_was_on: "{{ is_state('light.living_room_ceiling_lamp_bulb', 'on') }}"
-              streetlight_was_on: "{{ is_state('light.living_room_streetlight_bulb', 'on') }}"
-              mushroom_was_on: "{{ is_state('light.living_room_mushroom_lamp_bulb', 'on') }}"
-          - action: light.turn_on
-            target:
-              entity_id: light.living_room_ceiling_lamp_bulb
-            data:
-              brightness_pct: 100
-              color_temp_kelvin: 3500
-          - action: light.turn_on
-            target:
-              entity_id:
-                - light.living_room_streetlight_bulb
-                - light.living_room_mushroom_lamp_bulb
-            data:
-              brightness_pct: 80
-              rgb_color: [255, 140, 30]
-          - delay: "00:00:01"
-          - if:
-              - condition: template
-                value_template: "{{ not ceiling_was_on }}"
-            then:
-              - action: light.turn_off
-                target:
-                  entity_id: light.living_room_ceiling_lamp_bulb
-          - if:
-              - condition: template
-                value_template: "{{ not streetlight_was_on }}"
-            then:
-              - action: light.turn_off
-                target:
-                  entity_id: light.living_room_streetlight_bulb
-          - if:
-              - condition: template
-                value_template: "{{ not mushroom_was_on }}"
-            then:
-              - action: light.turn_off
-                target:
-                  entity_id: light.living_room_mushroom_lamp_bulb
-      - alias: Guest mode off — re-enable AL, turn off Awtrix if owner away
+      - alias: Guest mode off — turn off Awtrix if owner away
         conditions:
           - condition: state
             entity_id: input_boolean.guest_mode
             state: "off"
         sequence:
-          - action: switch.turn_on
-            target:
-              entity_id:
-                - switch.bedroom_adaptative_lights_adaptive_lighting_bedroom
-                - switch.living_room_adaptative_lightning_adaptive_lighting_living_room
-                - switch.office_adaptative_lights_adaptive_lighting_office_adaptative_lights
           - if:
               - condition: not
                 conditions:

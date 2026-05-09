@@ -7,7 +7,7 @@ chip:
   type: template
   icon: mdi:water-alert
   icon_color: orange
-  content: "AMS {{ states('sensor.office_thermometer_ams_humidity') | round(0) }}%"
+  content: "AMS {{ states('sensor.office_thermometer_ams_humidity') | float(0) | round(0) }}%"
   tap_action:
     action: navigate
     navigation_path: /overview-dashboard/maintenance

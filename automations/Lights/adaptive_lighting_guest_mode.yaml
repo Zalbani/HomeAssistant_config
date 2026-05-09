@@ -1,0 +1,100 @@
+id: '1774836000009'
+alias: Lights - Adaptive Lighting - Guest Mode
+description: >-
+  Disables Adaptive Lighting and sets a living room guest preset when guest mode is enabled.
+  Re-enables Adaptive Lighting when guest mode is disabled.
+  Also runs on HA start to restore correct AL state.
+triggers:
+  - alias: Guest mode turned on
+    trigger: state
+    entity_id: input_boolean.guest_mode
+    to: "on"
+  - alias: Guest mode turned off
+    trigger: state
+    entity_id: input_boolean.guest_mode
+    to: "off"
+  - alias: HA started — restore AL state based on guest mode
+    trigger: homeassistant
+    event: start
+actions:
+  - choose:
+      - alias: Guest mode on — disable AL, set living room guest preset
+        conditions:
+          - condition: state
+            entity_id: input_boolean.guest_mode
+            state: "on"
+        sequence:
+          - action: switch.turn_off
+            target:
+              entity_id:
+                - switch.bedroom_adaptative_lights_adaptive_lighting_bedroom
+                - switch.living_room_adaptative_lightning_adaptive_lighting_living_room
+                - switch.office_adaptative_lights_adaptive_lighting_office_adaptative_lights
+          - variables:
+              ceiling_was_on: "{{ is_state('light.living_room_ceiling_lamp_bulb', 'on') }}"
+              streetlight_was_on: "{{ is_state('light.living_room_streetlight_bulb', 'on') }}"
+              mushroom_was_on: "{{ is_state('light.living_room_mushroom_lamp_bulb', 'on') }}"
+          - action: light.turn_on
+            target:
+              entity_id: light.living_room_ceiling_lamp_bulb
+            data:
+              brightness_pct: 100
+              color_temp_kelvin: 3500
+          - action: light.turn_on
+            target:
+              entity_id:
+                - light.living_room_streetlight_bulb
+                - light.living_room_mushroom_lamp_bulb
+            data:
+              brightness_pct: 80
+              rgb_color: [255, 140, 30]
+          - delay: "00:00:01"
+          - if:
+              - condition: template
+                value_template: "{{ not ceiling_was_on }}"
+            then:
+              - action: light.turn_off
+                target:
+                  entity_id: light.living_room_ceiling_lamp_bulb
+          - if:
+              - condition: template
+                value_template: "{{ not streetlight_was_on }}"
+            then:
+              - action: light.turn_off
+                target:
+                  entity_id: light.living_room_streetlight_bulb
+          - if:
+              - condition: template
+                value_template: "{{ not mushroom_was_on }}"
+            then:
+              - action: light.turn_off
+                target:
+                  entity_id: light.living_room_mushroom_lamp_bulb
+      - alias: Guest mode off — re-enable AL and apply current values
+        conditions:
+          - condition: state
+            entity_id: input_boolean.guest_mode
+            state: "off"
+        sequence:
+          - action: switch.turn_on
+            target:
+              entity_id:
+                - switch.bedroom_adaptative_lights_adaptive_lighting_bedroom
+                - switch.living_room_adaptative_lightning_adaptive_lighting_living_room
+                - switch.office_adaptative_lights_adaptive_lighting_office_adaptative_lights
+          - action: adaptive_lighting.set_manual_control
+            data:
+              entity_id:
+                - switch.bedroom_adaptative_lights_adaptive_lighting_bedroom
+                - switch.living_room_adaptative_lightning_adaptive_lighting_living_room
+                - switch.office_adaptative_lights_adaptive_lighting_office_adaptative_lights
+              manual_control: false
+          - action: adaptive_lighting.apply
+            data:
+              entity_id:
+                - switch.bedroom_adaptative_lights_adaptive_lighting_bedroom
+                - switch.living_room_adaptative_lightning_adaptive_lighting_living_room
+                - switch.office_adaptative_lights_adaptive_lighting_office_adaptative_lights
+              adapt_color: true
+              adapt_brightness: true
+mode: restart
