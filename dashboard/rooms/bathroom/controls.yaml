@@ -74,3 +74,22 @@ cards:
       - entity: sensor.bathroom_thermometer_humidity
         name: Humidity
     hours_to_show: 24
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Scale
+    icon: mdi:scale-bathroom
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_weight
+    name: Weight
+    icon: mdi:scale-bathroom
+    tap_action:
+      action: more-info
+
+  - type: history-graph
+    entities:
+      - entity: sensor.scale_weight
+        name: Weight
+    hours_to_show: 720
+    title: Weight (30 days)
