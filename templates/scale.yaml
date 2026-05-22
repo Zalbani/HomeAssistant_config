@@ -1,0 +1,88 @@
+# Body composition template sensors
+# Segal formula pre-computed for: male, 28 y/o, 173 cm
+# FFM = 25.730 - 0.02117*Z + 0.62854*W
+- sensor:
+    - name: "Scale BMI"
+      unique_id: scale_bmi
+      unit_of_measurement: "kg/m²"
+      state_class: measurement
+      icon: mdi:human-male
+      availability: "{{ states('sensor.scale_weight') | is_number }}"
+      state: >
+        {% set W = states('sensor.scale_weight') | float %}
+        {{ (W / (1.73 ** 2)) | round(1) }}
+
+    - name: "Scale Body Fat"
+      unique_id: scale_body_fat
+      unit_of_measurement: "%"
+      state_class: measurement
+      icon: mdi:percent
+      availability: >
+        {{ states('sensor.scale_weight') | is_number
+           and states('sensor.scale_impedance') | is_number }}
+      state: >
+        {% set W = states('sensor.scale_weight') | float %}
+        {% set Z = states('sensor.scale_impedance') | float %}
+        {% set ffm = 25.730 - (0.02117 * Z) + (0.62854 * W) %}
+        {{ ([5, [((W - ffm) / W * 100), 75] | min] | max) | round(1) }}
+
+    - name: "Scale Fat Mass"
+      unique_id: scale_fat_mass
+      unit_of_measurement: "kg"
+      state_class: measurement
+      icon: mdi:human
+      availability: >
+        {{ states('sensor.scale_weight') | is_number
+           and states('sensor.scale_impedance') | is_number }}
+      state: >
+        {% set W = states('sensor.scale_weight') | float %}
+        {% set Z = states('sensor.scale_impedance') | float %}
+        {% set ffm = 25.730 - (0.02117 * Z) + (0.62854 * W) %}
+        {{ (W - ffm) | round(1) }}
+
+    - name: "Scale Lean Mass"
+      unique_id: scale_lean_mass
+      unit_of_measurement: "kg"
+      state_class: measurement
+      icon: mdi:arm-flex
+      availability: >
+        {{ states('sensor.scale_weight') | is_number
+           and states('sensor.scale_impedance') | is_number }}
+      state: >
+        {% set W = states('sensor.scale_weight') | float %}
+        {% set Z = states('sensor.scale_impedance') | float %}
+        {{ (25.730 - (0.02117 * Z) + (0.62854 * W)) | round(1) }}
+
+    - name: "Scale Body Water"
+      unique_id: scale_body_water
+      unit_of_measurement: "%"
+      state_class: measurement
+      icon: mdi:water-percent
+      availability: >
+        {{ states('sensor.scale_weight') | is_number
+           and states('sensor.scale_impedance') | is_number }}
+      state: >
+        {% set W = states('sensor.scale_weight') | float %}
+        {% set Z = states('sensor.scale_impedance') | float %}
+        {% set ffm = 25.730 - (0.02117 * Z) + (0.62854 * W) %}
+        {{ (0.732 * ffm / W * 100) | round(1) }}
+
+    - name: "Scale Bone Mass"
+      unique_id: scale_bone_mass
+      unit_of_measurement: "kg"
+      state_class: measurement
+      icon: mdi:bone
+      availability: "{{ states('sensor.scale_weight') | is_number }}"
+      state: >
+        {% set W = states('sensor.scale_weight') | float %}
+        {{ (W * 0.03 + 0.9) | round(1) }}
+
+    - name: "Scale BMR"
+      unique_id: scale_bmr
+      unit_of_measurement: "kcal"
+      state_class: measurement
+      icon: mdi:fire
+      availability: "{{ states('sensor.scale_weight') | is_number }}"
+      state: >
+        {% set W = states('sensor.scale_weight') | float %}
+        {{ ((10 * W) + 946.25) | round(0) | int }}

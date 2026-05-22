@@ -45,6 +45,9 @@ _HomeAssistant_Config/
 │   ├── heaters/          # Profiles, thermostats, valves, window sensors
 │   ├── lights/           # Light/switch mappings (remote toggles, bypass switches)
 │   └── shutters/         # Remote → shutter entities mapping
+├── templates/            # Template sensors/binary_sensors (auto-merged via !include_dir_merge_list)
+│   ├── system.yaml       # binary_sensor: PC Online, TV Media Active
+│   └── scale.yaml        # sensor: body composition (Segal formula — male, 28 y/o, 173 cm)
 ├── scripts/              # Scripts organized by domain (auto-merged via !include_dir_merge_named)
 │   ├── vacuum.yaml       # Roborock segment cleaning scripts
 │   ├── heating.yaml      # Heating profile helpers
@@ -59,6 +62,19 @@ _HomeAssistant_Config/
 - `living_room`, `office`, `bedroom`, `kitchen`, `bathroom`, `restroom`, `balcony` — Per-room views
 - `heating` — Centralized heating control
 - `maintenance` — Batteries, PC, NAS, Livebox, AdGuard, Stack Arr (VPN + services), Seerr, qBittorrent, BambuLab
+
+### Standalone Cards (`dashboard/cards/`)
+Reusable single-card definitions (start with `type:`). Included as items inside a section's `cards:` list, or as the sole card of a dedicated section.
+
+| File | Used in | Description |
+|------|---------|-------------|
+| `scale_card.yaml` | `views/bathroom.yaml` (dedicated section) | Scale + body composition — `type: vertical-stack` |
+| `heating_overview_card.yaml` | `views/home.yaml` | Heating profile + room temps |
+| `bambulab_card.yaml` | `views/maintenance/` | BambuLab printer status |
+| `nas_card.yaml` | `views/maintenance/system.yaml` | NAS status |
+| `pc_power_card.yaml` | `views/maintenance/system.yaml` | PC power control |
+| `weather_card.yaml` | `views/home.yaml` | Weather summary |
+| `balcony_weather_card.yaml` | `views/balcony.yaml` | Balcony weather |
 
 ### Adding a New Room
 1. Create `dashboard/rooms/<room_id>/overview_card.yaml` using the `room_card` template
@@ -305,6 +321,17 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `sensor.bathroom_thermostatic_valve_hvac_action` | HVAC action |
 | `input_boolean.heating_manual_bathroom` | Manual heating override |
 | `binary_sensor.bathroom_water_leak_sensor_water_leak` | Water leak sensor |
+| `sensor.scale_weight` | Scale — body weight (kg) |
+| `sensor.scale_impedance` | Scale — body impedance (Ω) |
+| `sensor.scale_impedance_low` | Scale — body impedance low frequency (Ω) |
+| `sensor.scale_heart_rate` | Scale — heart rate (bpm) |
+| `sensor.scale_body_fat` | Scale — body fat % (computed, `templates/scale.yaml`) |
+| `sensor.scale_fat_mass` | Scale — fat mass kg (computed) |
+| `sensor.scale_lean_mass` | Scale — lean mass kg (computed) |
+| `sensor.scale_body_water` | Scale — body water % (computed) |
+| `sensor.scale_bmi` | Scale — BMI kg/m² (computed) |
+| `sensor.scale_bmr` | Scale — basal metabolic rate kcal (computed) |
+| `sensor.scale_bone_mass` | Scale — bone mass kg (computed) |
 
 ### Restroom
 | Entity | Description |
@@ -411,6 +438,46 @@ To add vacuum to a new room: add `segment_id` in `rooms/config.yaml` and add the
 - `sensor.roborock_qrevo_edge_series_current_room` (options: Entry, Office, Restroom, Bathroom, Kitchen, Living room, Bedroom)
 - `sensor.roborock_qrevo_edge_series_vacuum_error`
 - `select.roborock_qrevo_edge_series_mop_intensity`
+
+## Template Sensors
+
+Template sensors and binary sensors are defined in `templates/` and loaded via:
+```yaml
+# configuration.yaml
+template: !include_dir_merge_list _HomeAssistant_Config/templates/
+```
+
+Each file is a **list of template blocks**. Format:
+```yaml
+- sensor:
+    - name: "My Sensor"
+      unique_id: my_sensor
+      unit_of_measurement: "kg"
+      state_class: measurement
+      availability: "{{ states('sensor.source') | is_number }}"
+      state: >
+        {% set val = states('sensor.source') | float %}
+        {{ val | round(1) }}
+
+- binary_sensor:
+    - name: "My Binary"
+      unique_id: my_binary
+      state: "{{ ... }}"
+```
+
+To add a new template sensor: add to the appropriate file in `templates/` (or create a new file), then reload via **Developer Tools → YAML → Template Entities**.
+
+### Computed scale sensors (`templates/scale.yaml`)
+
+Segal formula pre-computed for male, 28 y/o, 173 cm — update constants if profile changes.
+
+| Constant | Value | Origin |
+|----------|-------|--------|
+| `25.730` | `0.00066360×173² - 0.12380×28 + 9.33285` | Height + age offset |
+| `0.02117` | Impedance coefficient | Segal 1988 |
+| `0.62854` | Weight coefficient | Segal 1988 |
+
+Formula: `FFM = 25.730 - 0.02117×Z + 0.62854×W`
 
 ## Scripts
 

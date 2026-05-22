@@ -1,0 +1,102 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Scale
+    icon: mdi:scale-bathroom
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_weight
+    name: Weight
+    icon: mdi:scale-bathroom
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_impedance
+    name: Impedance
+    icon: mdi:sine-wave
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_impedance_low
+    name: Impedance (Low)
+    icon: mdi:sine-wave
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_heart_rate
+    name: Heart Rate
+    icon: mdi:heart-pulse
+    tap_action:
+      action: more-info
+
+  - type: history-graph
+    entities:
+      - entity: sensor.scale_weight
+        name: Weight
+    hours_to_show: 720
+    title: Weight (30 days)
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Body Composition
+    icon: mdi:human-male
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_body_fat
+    name: Body Fat
+    icon: mdi:percent
+    tap_action:
+      action: more-info
+
+  - type: history-graph
+    entities:
+      - entity: sensor.scale_body_fat
+        name: Body Fat
+    hours_to_show: 720
+    title: Body Fat (30 days)
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_lean_mass
+    name: Lean Mass
+    icon: mdi:arm-flex
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_fat_mass
+    name: Fat Mass
+    icon: mdi:human
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_body_water
+    name: Body Water
+    icon: mdi:water-percent
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_bmi
+    name: BMI
+    icon: mdi:human-male
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_bmr
+    name: BMR
+    icon: mdi:fire
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.scale_bone_mass
+    name: Bone Mass
+    icon: mdi:bone
+    tap_action:
+      action: more-info

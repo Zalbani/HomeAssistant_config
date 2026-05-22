@@ -18,3 +18,5 @@ header:
 
 sections:
   - !include ../rooms/bathroom/controls.yaml
+  - cards:
+      - !include ../cards/scale_card.yaml

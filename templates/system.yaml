@@ -1,0 +1,14 @@
+- binary_sensor:
+    - name: PC Online
+      unique_id: pc_online
+      device_class: connectivity
+      state: >-
+        {{ states('sensor.pc_cpuload') not in ['unavailable', 'unknown', 'none', ''] }}
+
+    - name: TV Media Active
+      unique_id: tv_media_active
+      state: >-
+        {{ not is_state('media_player.tv', 'off') and (
+             (not is_state('media_player.playstation_5', ['off', 'standby', 'unavailable', 'unknown']))
+             or state_attr('media_player.tv', 'source') in ['Plex', 'YouTube', 'Twitch']
+           ) }}
