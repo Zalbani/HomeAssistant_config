@@ -41,6 +41,12 @@ heating:
     living_room: input_boolean.heating_manual_living_room
     office: input_boolean.heating_manual_office
 
+# --- Sun Protection ---
+
+sun_protection:
+  # Outdoor temp above which west-facade sun exposure triggers shading (°C)
+  outdoor_threshold: input_number.sun_protection_outdoor_threshold
+
 # --- Vacuum ---
 
 vacuum:

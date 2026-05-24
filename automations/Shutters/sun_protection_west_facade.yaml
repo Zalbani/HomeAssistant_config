@@ -5,9 +5,7 @@ description: >-
   tilt when the west facade is in direct sunlight (binary_sensor.west_facade_sun_exposure
   ON), and raises them back to 100% when shade returns. Skips living-room
   sunshade if the french window is open (re-armed via window_cover_control when
-  it closes again). Skips closing entirely if wind protection is active. The
-  raise-back step is gated on being at least 1h before sunset so close_global
-  retains evening ownership and avoids a short raise re-closed at sunset+30.
+  it closes again). Skips closing entirely if wind protection is active.
 triggers:
   - alias: West facade enters direct sun
     trigger: state
@@ -62,10 +60,6 @@ actions:
       - conditions:
           - condition: trigger
             id: open
-          - alias: At least 1h before sunset — avoids a brief raise that close_global would re-close at sunset+30
-            condition: sun
-            before: sunset
-            before_offset: "-01:00:00"
         sequence:
           - action: cover.set_cover_position
             data:

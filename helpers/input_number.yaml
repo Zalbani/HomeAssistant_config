@@ -29,3 +29,12 @@ heating_boost_duration:
   max: 120
   step: 5
   mode: slider
+
+sun_protection_outdoor_threshold:
+  name: "Sun Protection Outdoor Threshold"
+  icon: mdi:weather-sunny-alert
+  min: 10
+  max: 35
+  step: 1
+  initial: 22
+  mode: slider

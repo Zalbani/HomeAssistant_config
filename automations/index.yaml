@@ -10,7 +10,7 @@
 - !include Heaters/heating_manual_override_detector.yaml
 - !include Heaters/heating_boost_manager.yaml
 - !include Shutters/close_global.yaml
-- !include Shutters/close_living_room_media.yaml
+- !include Shutters/living_room_media_shutter.yaml
 - !include Shutters/wake_up_time_bedroom.yaml
 - !include Shutters/wake_up_sun_office_living_kitchen.yaml
 - !include Shutters/wake_up_phone_global.yaml
@@ -22,7 +22,6 @@
 - !include Lights/bedroom_switch_light_toggle.yaml
 - !include Lights/switch_light_bypass_global.yaml
 - !include Lights/switch_bypass_resync_on_start.yaml
-- !include Lights/ceiling_lamps_off_on_start.yaml
 - !include Lights/balcony_light_french_window.yaml
 - !include Lights/streetlight_mushroom_sync.yaml
 - !include Lights/sleep_mode_detection_on.yaml

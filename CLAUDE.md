@@ -207,6 +207,7 @@ All helpers are defined in YAML under `helpers/` and loaded in `configuration.ya
 | `input_number.heating_global_max` | `input_number.yaml` | Global heating max (°C) |
 | `input_number.heating_outdoor_threshold` | `input_number.yaml` | Outdoor temp → eco profile (°C) |
 | `input_number.heating_boost_duration` | `input_number.yaml` | Boost duration (min) |
+| `input_number.sun_protection_outdoor_threshold` | `input_number.yaml` | Outdoor temp above which west-facade sun protection triggers (°C) |
 | `input_select.heating_profile` | `input_select.yaml` | Active profile: comfort/eco/night/boost/off |
 | `input_datetime.collective_heating_start_date` | `input_datetime.yaml` | Season start date |
 | `input_datetime.collective_heating_end_date` | `input_datetime.yaml` | Season end date |

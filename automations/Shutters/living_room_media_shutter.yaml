@@ -1,0 +1,58 @@
+id: '1774836000012'
+alias: Shutters - Living Room - Media Sync
+description: >-
+  Mirrors the living room shutter to TV media activity.
+  - TV media becomes active → lower shutter (if not already closed).
+  - TV media becomes inactive → raise shutter back to 100, only if we're still
+    before sunset+30 (otherwise close_global owns the night).
+  Both transitions debounce 30s to absorb brief play/pause flicker.
+triggers:
+  - alias: TV media becomes active
+    trigger: state
+    entity_id: binary_sensor.tv_media_active
+    from: "off"
+    to: "on"
+    for: "00:00:30"
+    id: close
+  - alias: TV media becomes inactive
+    trigger: state
+    entity_id: binary_sensor.tv_media_active
+    from: "on"
+    to: "off"
+    for: "00:00:30"
+    id: open
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: close
+          - alias: Living room shutter is not already closed
+            condition: numeric_state
+            entity_id: cover.living_room_shutter
+            attribute: current_position
+            above: 0
+        sequence:
+          - action: cover.set_cover_position
+            target:
+              entity_id: cover.living_room_shutter
+            data:
+              position: 0
+      - conditions:
+          - condition: trigger
+            id: open
+          - alias: Before sunset+30 — after that, close_global retains evening ownership
+            condition: sun
+            before: sunset
+            before_offset: "00:30:00"
+          - alias: Living room shutter is not already fully open
+            condition: numeric_state
+            entity_id: cover.living_room_shutter
+            attribute: current_position
+            below: 100
+        sequence:
+          - action: cover.set_cover_position
+            target:
+              entity_id: cover.living_room_shutter
+            data:
+              position: 100
+mode: single
