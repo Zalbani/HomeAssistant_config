@@ -30,9 +30,22 @@ actions:
           {% endif %}
         {% endfor %}
         {{ ns.entities }}
+      sunshades_to_reset: >-
+        {{ covers_to_close | select('search', 'sunshade') | list }}
   - action: cover.set_cover_position
     data:
       position: 0
     target:
       entity_id: "{{ covers_to_close }}"
+  - if:
+      - alias: There is at least one sunshade to reset
+        condition: template
+        value_template: "{{ sunshades_to_reset | length > 0 }}"
+    then:
+      - alias: Close sunshade tilt for night (100 = lames fermées; clears any daylight tilt from sun-protection)
+        action: cover.set_cover_tilt_position
+        data:
+          tilt_position: 100
+        target:
+          entity_id: "{{ sunshades_to_reset }}"
 mode: single

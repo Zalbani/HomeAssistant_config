@@ -1,0 +1,26 @@
+- binary_sensor:
+    - name: West Facade Sun Exposure
+      unique_id: west_facade_sun_exposure
+      icon: mdi:weather-sunny
+      # ON when the sun is geometrically hitting the west facade AND outdoor
+      # conditions justify shading (clear sky + warm enough). Used by
+      # automation "Shutters - West Facade Sun Protection".
+      # Azimuth 240°-300° + elevation ≥ 8° calibrated for Lyon, 3rd floor,
+      # unobstructed horizon — covers ~17h30 onwards in late May.
+      # delay_off: filters out short cloud passages so sunshades don't yo-yo.
+      delay_off: "00:10:00"
+      state: >-
+        {% set azimuth = state_attr('sun.sun', 'azimuth') | float(0) %}
+        {% set elevation = state_attr('sun.sun', 'elevation') | float(0) %}
+        {% set weather = states('weather.forecast_home') %}
+        {% set outdoor_temp = state_attr('weather.forecast_home', 'temperature') | float(0) %}
+        {% set threshold = states('input_number.heating_outdoor_threshold') | float(22) %}
+        {% set overcast = weather in [
+             'cloudy', 'fog', 'hail', 'lightning', 'lightning-rainy',
+             'pouring', 'rainy', 'snowy', 'snowy-rainy'
+           ] %}
+        {{ is_state('sun.sun', 'above_horizon')
+           and 240 <= azimuth <= 300
+           and elevation >= 8
+           and not overcast
+           and outdoor_temp > threshold }}

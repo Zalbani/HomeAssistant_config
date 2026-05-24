@@ -3,7 +3,8 @@
       unique_id: pc_online
       device_class: connectivity
       state: >-
-        {{ states('sensor.pc_cpuload') not in ['unavailable', 'unknown', 'none', ''] }}
+        {{ states('sensor.pc_cpuload') not in ['unavailable', 'unknown', 'none', '']
+           and (now() - states.sensor.pc_cpuload.last_updated).total_seconds() < 120 }}
 
     - name: TV Media Active
       unique_id: tv_media_active

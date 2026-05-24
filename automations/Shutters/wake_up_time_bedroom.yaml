@@ -14,19 +14,27 @@ triggers:
     at: '11:00:00'
     id: weekend
 conditions:
-  - alias: Phone alarm is more than 5 hours away
-    condition: template
-    value_template: >-
-      {{ states('sensor.pixel_9_pro_next_alarm') not in ['unknown', 'unavailable']
-         and now() <= (states('sensor.pixel_9_pro_next_alarm') | as_datetime - timedelta(hours=5)) }}
   - alias: Match trigger to day type
     condition: or
     conditions:
-      - condition: time
-        weekday: [mon, tue, wed, thu, fri]
-      - condition: time
-        weekday: [sat, sun]
-        after: '11:00:00'
+      - alias: Weekday - sunrise trigger, alarm must be 5h+ away
+        condition: and
+        conditions:
+          - condition: trigger
+            id: weekday
+          - condition: time
+            weekday: [mon, tue, wed, thu, fri]
+          - condition: template
+            value_template: >-
+              {{ states('sensor.pixel_9_pro_next_alarm') not in ['unknown', 'unavailable']
+                 and now() <= (states('sensor.pixel_9_pro_next_alarm') | as_datetime - timedelta(hours=5)) }}
+      - alias: Weekend - 11:00 trigger on Sat/Sun
+        condition: and
+        conditions:
+          - condition: trigger
+            id: weekend
+          - condition: time
+            weekday: [sat, sun]
 actions:
   - alias: Stop any ongoing cover movement
     action: cover.stop_cover

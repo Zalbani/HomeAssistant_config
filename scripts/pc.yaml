@@ -7,9 +7,13 @@ toggle_on_off_pc_fix:
           entity_id: binary_sensor.pc_online
           state: 'off'
       then:
-        - action: switch.turn_on
-          target:
-            entity_id: switch.alban_pc_fixe
+        - repeat:
+            count: 3
+            sequence:
+              - action: switch.turn_on
+                target:
+                  entity_id: switch.alban_pc_fixe
+              - delay: { seconds: 2 }
       else:
         - action: button.press
           target:

@@ -9,6 +9,7 @@ triggers:
     entity_id: binary_sensor.tv_media_active
     from: "off"
     to: "on"
+    for: "00:00:30"
 conditions:
   - alias: Living room shutter is not already closed
     condition: numeric_state

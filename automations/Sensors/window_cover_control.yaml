@@ -27,6 +27,7 @@ variables:
   cover_entity: "{{ cover_config.cover }}"
   open_position: "{{ cover_config.open_position | default(70) }}"
   close_at_night: "{{ cover_config.get('close_at_night', false) }}"
+  close_during_west_sun: "{{ cover_config.get('close_during_west_sun', false) }}"
 actions:
   - choose:
       - alias: "Window opened: raise cover if it was down"
@@ -60,4 +61,26 @@ actions:
               entity_id: "{{ cover_entity }}"
             data:
               position: 0
+      - alias: "Window closed during west sun: lower cover with daylight tilt"
+        conditions:
+          - condition: trigger
+            id: closing
+          - condition: template
+            value_template: "{{ close_during_west_sun }}"
+          - condition: state
+            entity_id: binary_sensor.west_facade_sun_exposure
+            state: "on"
+        sequence:
+          - alias: Lower cover fully
+            action: cover.set_cover_position
+            target:
+              entity_id: "{{ cover_entity }}"
+            data:
+              position: 0
+          - alias: Apply daylight tilt
+            action: cover.set_cover_tilt_position
+            target:
+              entity_id: "{{ cover_entity }}"
+            data:
+              tilt_position: 50
 mode: restart

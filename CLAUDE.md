@@ -47,7 +47,8 @@ _HomeAssistant_Config/
 │   └── shutters/         # Remote → shutter entities mapping
 ├── templates/            # Template sensors/binary_sensors (auto-merged via !include_dir_merge_list)
 │   ├── system.yaml       # binary_sensor: PC Online, TV Media Active
-│   └── scale.yaml        # sensor: body composition (Segal formula — male, 28 y/o, 173 cm)
+│   ├── scale.yaml        # sensor: body composition (Segal formula — male, 28 y/o, 173 cm)
+│   └── sun_exposure.yaml # binary_sensor: West Facade Sun Exposure (sun azimuth/elevation + weather + outdoor temp)
 ├── scripts/              # Scripts organized by domain (auto-merged via !include_dir_merge_named)
 │   ├── vacuum.yaml       # Roborock segment cleaning scripts
 │   ├── heating.yaml      # Heating profile helpers

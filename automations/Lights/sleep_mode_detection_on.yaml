@@ -6,13 +6,13 @@ description: >-
 triggers:
   - trigger: template
     value_template: >-
-      {{ states('light.living_room_ceiling_lamp_bulb') == 'off'
-         and states('light.living_room_streetlight_bulb') == 'off'
-         and states('light.living_room_mushroom_lamp_bulb') == 'off'
-         and states('switch.living_room_outlet_switch') == 'off'
-         and states('light.office_ceiling_lamp_bulb') == 'off'
-         and states('light.bedroom_ceiling_lamp_bulb') == 'off'
-         and states('light.bedroom_bed_led_strip') == 'off' }}
+      {{ states('light.living_room_ceiling_lamp_bulb') != 'on'
+         and states('light.living_room_streetlight_bulb') != 'on'
+         and states('light.living_room_mushroom_lamp_bulb') != 'on'
+         and states('switch.living_room_outlet_switch') != 'on'
+         and states('light.office_ceiling_lamp_bulb') != 'on'
+         and states('light.bedroom_ceiling_lamp_bulb') != 'on'
+         and states('light.bedroom_bed_led_strip') != 'on' }}
     for: "00:30:00"
 conditions:
   - condition: state

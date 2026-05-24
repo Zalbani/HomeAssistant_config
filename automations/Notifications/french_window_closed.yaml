@@ -1,0 +1,26 @@
+id: '1772000000002'
+alias: Sensors - French Window Closed After 30min
+description: >-
+  Sends a notification when the living room French window is closed after being open
+  for more than 30 minutes.
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.living_room_french_window
+    from: 'on'
+    to: 'off'
+conditions:
+  - condition: template
+    value_template: >-
+      {{ (now() - trigger.from_state.last_changed).total_seconds() >= 1800 }}
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "French window closed"
+      message: >
+        Closed after {{ ((now() - trigger.from_state.last_changed).total_seconds() / 60) | int }} minutes open.
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: >-
+        {"text": "French window closed", "icon": "555", "color": "#4CAF50", "duration": 10}
+mode: single
