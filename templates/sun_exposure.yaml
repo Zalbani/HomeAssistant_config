@@ -5,8 +5,8 @@
       # ON when the sun is geometrically hitting the west facade AND outdoor
       # conditions justify shading (clear sky + warm enough). Used by
       # automation "Shutters - West Facade Sun Protection".
-      # Azimuth 240°-285° + elevation ≥ 8° calibrated for Lyon, 3rd floor,
-      # unobstructed horizon — covers ~17h30 to ~20h in late May.
+      # Azimuth 240°-295° + elevation ≥ 5° calibrated for Lyon, 3rd floor,
+      # unobstructed horizon — covers ~17h30 to ~20h40 in late May.
       # delay_off: filters out short cloud passages so sunshades don't yo-yo.
       delay_off: "00:10:00"
       state: >-
@@ -20,7 +20,7 @@
              'pouring', 'rainy', 'snowy', 'snowy-rainy'
            ] %}
         {{ is_state('sun.sun', 'above_horizon')
-           and 240 <= azimuth <= 285
-           and elevation >= 8
+           and 240 <= azimuth <= 295
+           and elevation >= 5
            and not overcast
            and outdoor_temp > threshold }}
