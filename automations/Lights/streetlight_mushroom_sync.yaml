@@ -1,13 +1,19 @@
 id: '1771400000005'
-alias: Lights - Streetlight ↔ Mushroom sync
-description: Syncs the mushroom lamp with the streetlight (on/off).
+alias: Lights - Streetlight ↔ Mushroom ↔ Donut sync
+description: >-
+  Syncs the mushroom lamp and the donut lamp when the streetlight is toggled,
+  and syncs the donut when the mushroom is toggled independently.
 triggers:
   - trigger: state
-    entity_id: switch.living_room_outlet_switch
+    entity_id:
+      - switch.living_room_outlet_switch
+      - light.living_room_mushroom_lamp_bulb
     to: "on"
     id: turn_on
   - trigger: state
-    entity_id: switch.living_room_outlet_switch
+    entity_id:
+      - switch.living_room_outlet_switch
+      - light.living_room_mushroom_lamp_bulb
     to: "off"
     id: turn_off
 actions:
@@ -18,8 +24,14 @@ actions:
       - action: light.turn_on
         target:
           entity_id: light.living_room_mushroom_lamp_bulb
+      - action: switch.turn_on
+        target:
+          entity_id: switch.living_room_wall_outlet_switch_2
     else:
       - action: light.turn_off
         target:
           entity_id: light.living_room_mushroom_lamp_bulb
+      - action: switch.turn_off
+        target:
+          entity_id: switch.living_room_wall_outlet_switch_2
 mode: single

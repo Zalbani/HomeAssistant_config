@@ -7,6 +7,7 @@ variables:
   light_entity:
     - light.living_room_ceiling_lamp_bulb
     - switch.living_room_outlet_switch
+    - switch.living_room_wall_outlet_switch_2
   sub_state: >
     [[[
       const temp = states['sensor.living_room_thermometer_temperature']?.state;
@@ -30,6 +31,14 @@ variables:
           entity: light.living_room_streetlight_bulb
       - entity: light.living_room_mushroom_lamp_bulb
         icon: mdi:mushroom-outline
+        tap_action:
+          action: toggle
+        hold_action:
+          action: more-info
+      - entity: switch.living_room_wall_outlet_switch_2
+        icon: mdi:circle-double
+        variables:
+          fixed_color: "#FF9800"
         tap_action:
           action: toggle
         hold_action:

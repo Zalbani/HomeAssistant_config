@@ -267,6 +267,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `switch.living_room_outlet_switch` | Outlet switch (floor lamp) |
 | `light.living_room_streetlight_bulb` | Streetlight bulb (smart, color temp) |
 | `light.living_room_mushroom_lamp_bulb` | Mushroom lamp (smart, color temp) |
+| `switch.living_room_wall_outlet_switch_2` | Wall outlet switch — IKEA donut lamp |
 | `cover.living_room_shutter` | Window shutter |
 | `cover.living_room_sunshade` | Sunshade |
 | `binary_sensor.living_room_french_window` | French window sensor |
@@ -407,6 +408,8 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 |--------------------------|-------------------------------|
 | Ceiling lamp (all rooms) | `mdi:ceiling-light-outline`   |
 | Streetlight (living room)| `mdi:floor-lamp-torchiere`    |
+| Mushroom lamp (living room) | `mdi:mushroom-outline`     |
+| Donut lamp (living room) | `mdi:circle-double`           |
 | Balcony outside lamp     | `mdi:coach-lamp-variant`      |
 | Under cabinet (kitchen)  | `mdi:dome-light`              |
 

@@ -10,6 +10,7 @@ triggers:
          and states('light.living_room_streetlight_bulb') != 'on'
          and states('light.living_room_mushroom_lamp_bulb') != 'on'
          and states('switch.living_room_outlet_switch') != 'on'
+         and states('switch.living_room_wall_outlet_switch_2') != 'on'
          and states('light.office_ceiling_lamp_bulb') != 'on'
          and states('light.bedroom_ceiling_lamp_bulb') != 'on'
          and states('light.bedroom_bed_led_strip') != 'on' }}

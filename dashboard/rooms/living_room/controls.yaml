@@ -31,6 +31,13 @@ cards:
     show_brightness_control: true
     collapsible_controls: false
 
+  - type: custom:mushroom-entity-card
+    entity: switch.living_room_wall_outlet_switch_2
+    name: Donut lamp
+    icon: mdi:circle-double
+    tap_action:
+      action: toggle
+
   - type: custom:bubble-card
     card_type: separator
     name: Covers

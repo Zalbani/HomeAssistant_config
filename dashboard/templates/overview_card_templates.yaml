@@ -36,6 +36,10 @@ room_card_action:
               const rgb = states[variables.rgb_entity]?.attributes?.rgb_color;
               if (rgb) return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
             }
+            if (variables.fixed_color) {
+              if (!entity || entity.state !== 'on') return 'rgba(255,255,255,0.4)';
+              return variables.fixed_color;
+            }
             return entity && entity.state === 'on' ? '#f1c40f' : 'rgba(255,255,255,0.4)';
           ]]]
   extra_styles: |
