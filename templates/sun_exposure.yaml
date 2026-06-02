@@ -14,7 +14,7 @@
         {% set elevation = state_attr('sun.sun', 'elevation') | float(0) %}
         {% set weather = states('weather.forecast_home') %}
         {% set outdoor_temp = state_attr('weather.forecast_home', 'temperature') | float(0) %}
-        {% set threshold = states('input_number.sun_protection_outdoor_threshold') | float(22) %}
+        {% set threshold = states('input_number.sun_protection_outdoor_threshold') | float(26) %}
         {% set overcast = weather in [
              'cloudy', 'fog', 'hail', 'lightning', 'lightning-rainy',
              'pouring', 'rainy', 'snowy', 'snowy-rainy'

@@ -36,5 +36,5 @@ sun_protection_outdoor_threshold:
   min: 10
   max: 35
   step: 1
-  initial: 22
+  initial: 26
   mode: slider
