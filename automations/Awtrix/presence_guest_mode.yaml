@@ -1,43 +1,21 @@
 id: '1774836000008'
-alias: Awtrix - Power - Guest Mode
+alias: Awtrix - Power On - Guest Mode
 description: >-
-  Turns on the Awtrix when guest mode is enabled.
-  Turns off Awtrix when guest mode is disabled and the owner is away.
+  Turns on the Awtrix when guest mode is enabled, or on HA start if guest mode
+  is already on. Does not turn Awtrix off — that is handled by presence_off and
+  power_off_lights_out.
 triggers:
   - alias: Guest mode turned on
     trigger: state
     entity_id: input_boolean.guest_mode
     to: "on"
-  - alias: Guest mode turned off
-    trigger: state
-    entity_id: input_boolean.guest_mode
-    to: "off"
-  - alias: HA started — restore Awtrix state based on guest mode
+  - alias: HA started — turn on Awtrix if guest mode is on
     trigger: homeassistant
     event: start
+conditions:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: "on"
 actions:
-  - choose:
-      - alias: Guest mode on — turn on Awtrix
-        conditions:
-          - condition: state
-            entity_id: input_boolean.guest_mode
-            state: "on"
-        sequence:
-          - action: script.awtrix_apply_time_brightness
-      - alias: Guest mode off — turn off Awtrix if owner away
-        conditions:
-          - condition: state
-            entity_id: input_boolean.guest_mode
-            state: "off"
-        sequence:
-          - if:
-              - condition: not
-                conditions:
-                  - condition: state
-                    entity_id: person.alban_pierson
-                    state: home
-            then:
-              - action: light.turn_off
-                target:
-                  entity_id: light.clock_awtrix_matrix
+  - action: script.awtrix_apply_time_brightness
 mode: restart
