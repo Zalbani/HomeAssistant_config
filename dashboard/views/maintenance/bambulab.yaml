@@ -60,10 +60,21 @@ cards:
     icon: mdi:cube-outline
     fill_container: true
 
-  - type: custom:mushroom-light-card
+  - type: custom:mushroom-entity-card
     entity: light.bambu_farm_printer_chamber_light
     name: Chamber light
+    icon: mdi:led-strip-variant
     fill_container: true
+    tap_action:
+      action: call-service
+      service: light.toggle
+      service_data:
+        entity_id: light.bambu_farm_printer_chamber_light
+    icon_tap_action:
+      action: call-service
+      service: light.toggle
+      service_data:
+        entity_id: light.bambu_farm_printer_chamber_light
 
   - type: custom:mushroom-update-card
     entity: update.bambu_lab_update

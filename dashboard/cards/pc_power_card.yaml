@@ -9,6 +9,30 @@ tap_action:
   haptic: light
 hold_action:
   action: more-info
+update_timer: 2
+variables:
+  s: |
+    [[[
+      const pcOn       = states['binary_sensor.pc_online']?.state === 'on';
+      const pcChanged  = states['binary_sensor.pc_online']?.last_changed;
+      const scriptLast = states['script.toggle_on_off_pc_fix']?.attributes?.last_triggered;
+      const secsSince  = scriptLast ? (Date.now() - new Date(scriptLast).getTime()) / 1000 : Infinity;
+      const transitioning = scriptLast && pcChanged && secsSince < 180
+        && new Date(scriptLast) > new Date(pcChanged);
+      const mode = transitioning
+        ? (pcOn ? 'shutdown' : 'startup')
+        : (pcOn ? 'online'   : 'offline');
+      return { mode };
+    ]]]
+extra_styles: |
+  @keyframes pc-pulse {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1;    }
+  }
+  @keyframes pc-pulse-ring {
+    0%   { transform: scale(0.85); opacity: 0.7; }
+    100% { transform: scale(1.4);  opacity: 0;   }
+  }
 styles:
   card:
     - padding: 8px 12px
@@ -29,32 +53,69 @@ styles:
     power_btn:
       - align-self: center
       - justify-self: center
+      - overflow: visible
 custom_fields:
   pc_icon: |
     [[[
-      const color = entity.state === 'on' ? '#2196F3' : 'rgba(255,255,255,0.4)';
+      let color;
+      switch (variables.s.mode) {
+        case 'shutdown': color = '#E74C3C'; break;
+        case 'startup':  color = '#FF9800'; break;
+        case 'online':   color = '#2196F3'; break;
+        default:         color = 'rgba(255,255,255,0.4)';
+      }
       return `<ha-icon icon="mdi:desktop-tower" style="width:28px;height:28px;color:${color};"></ha-icon>`;
     ]]]
   info: |
     [[[
-      const isOn = entity.state === 'on';
       const cpu = states['sensor.pc_cpuload']?.state;
       const gpu = states['sensor.pc_gpuload']?.state;
       const cpuOk = cpu && !['unavailable','unknown'].includes(cpu);
       const gpuOk = gpu && !['unavailable','unknown'].includes(gpu);
-      const status = isOn && cpuOk
-        ? `Online — CPU ${Math.round(parseFloat(cpu))}%${gpuOk ? ` · GPU ${Math.round(parseFloat(gpu))}%` : ''}`
-        : 'Offline';
+      let status, statusColor = 'var(--primary-text-color)', statusOpacity = 0.6;
+      switch (variables.s.mode) {
+        case 'shutdown':
+          status = 'Shutting down…';
+          statusColor = '#E74C3C';
+          statusOpacity = 1;
+          break;
+        case 'startup':
+          status = 'Powering on…';
+          statusColor = '#FF9800';
+          statusOpacity = 1;
+          break;
+        case 'online':
+          status = cpuOk
+            ? `Online — CPU ${Math.round(parseFloat(cpu))}%${gpuOk ? ` · GPU ${Math.round(parseFloat(gpu))}%` : ''}`
+            : 'Offline';
+          break;
+        default:
+          status = 'Offline';
+      }
       return `<div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
         <span style="font-size:12px;font-weight:600;color:var(--primary-text-color);">Desktop PC</span>
-        <span style="font-size:11px;opacity:0.6;color:var(--primary-text-color);">${status}</span>
+        <span style="font-size:11px;opacity:${statusOpacity};color:${statusColor};">${status}</span>
       </div>`;
     ]]]
   power_btn: |
     [[[
-      const isOn = entity.state === 'on';
+      const mode = variables.s.mode;
+      let rgb = null;
+      switch (mode) {
+        case 'shutdown': rgb = '231,76,60'; break;
+        case 'startup':  rgb = '255,152,0'; break;
+      }
+      if (rgb) {
+        return `<div style="position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;">
+          <div style="position:absolute;inset:0;border-radius:50%;background:rgba(${rgb},0.45);animation:pc-pulse-ring 1.4s ease-out infinite;"></div>
+          <div style="position:relative;width:34px;height:34px;border-radius:50%;background:rgba(${rgb},0.2);display:flex;align-items:center;justify-content:center;animation:pc-pulse 1.4s ease-in-out infinite;">
+            <ha-icon icon="mdi:power" style="width:18px;color:rgb(${rgb});"></ha-icon>
+          </div>
+        </div>`;
+      }
+      const isOn = mode === 'online';
       const color = isOn ? '#4CAF50' : 'rgba(255,255,255,0.3)';
-      const bg = isOn ? 'rgba(76,175,80,0.15)' : 'rgba(255,255,255,0.05)';
+      const bg    = isOn ? 'rgba(76,175,80,0.15)' : 'rgba(255,255,255,0.05)';
       return `<div style="width:34px;height:34px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;">
         <ha-icon icon="mdi:power" style="width:18px;color:${color};"></ha-icon>
       </div>`;
