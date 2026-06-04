@@ -322,6 +322,75 @@ cards:
           </div>`;
         ]]]
 
+  - type: custom:bubble-card
+    card_type: separator
+    name: External Spool
+    icon: mdi:printer-3d-nozzle
+
+  - type: custom:button-card
+    entity: sensor.bambu_farm_external_spool_external_spool
+    show_name: false
+    show_icon: false
+    show_state: false
+    tap_action:
+      action: more-info
+    styles:
+      card:
+        - padding: 8px 12px
+        - height: auto
+      grid:
+        - grid-template-areas: '"spool_icon info active_btn"'
+        - grid-template-columns: min-content 1fr min-content
+        - grid-template-rows: auto
+        - align-items: center
+        - column-gap: 10px
+      custom_fields:
+        spool_icon:
+          - align-self: center
+          - justify-self: center
+        info:
+          - align-self: center
+          - justify-self: start
+        active_btn:
+          - align-self: center
+          - justify-self: center
+    custom_fields:
+      spool_icon: |
+        [[[
+          const empty = entity.attributes.empty;
+          const color = entity.attributes.color || 'rgba(255,255,255,0.4)';
+          const c = empty ? 'rgba(255,255,255,0.1)' : color.slice(0, 7);
+          const border = empty ? '2px dashed rgba(255,255,255,0.2)' : '2px solid rgba(255,255,255,0.15)';
+          return `<div style="width:28px;height:28px;border-radius:50%;background:${c};border:${border};flex-shrink:0;"></div>`;
+        ]]]
+      info: |
+        [[[
+          const empty = entity.attributes.empty;
+          const name = empty ? 'Empty' : (entity.state || 'Unknown');
+          const type = entity.attributes.type || '';
+          const remain = entity.attributes.remain;
+          const remainEnabled = entity.attributes.remain_enabled;
+          const sub = empty ? 'No filament' : [type, remainEnabled && remain != null ? `${remain}%` : null].filter(Boolean).join(' · ');
+          return `<div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
+            <span style="font-size:12px;font-weight:600;color:var(--primary-text-color);">External</span>
+            <span style="font-size:11px;opacity:0.6;color:var(--primary-text-color);">${sub || name}</span>
+          </div>`;
+        ]]]
+      active_btn: |
+        [[[
+          const active = entity.attributes.active;
+          const color = active ? '#4CAF50' : 'rgba(255,255,255,0.3)';
+          const bg = active ? 'rgba(76,175,80,0.15)' : 'rgba(255,255,255,0.05)';
+          return `<div style="width:34px;height:34px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;">
+            <ha-icon icon="mdi:printer-3d-nozzle" style="width:18px;color:${color};"></ha-icon>
+          </div>`;
+        ]]]
+
+  - type: custom:bubble-card
+    card_type: separator
+    name: Environment
+    icon: mdi:thermometer
+
   - type: custom:mushroom-entity-card
     entity: sensor.bambu_farm_ams_temperature
     name: Temperature
