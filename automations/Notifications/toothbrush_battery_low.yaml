@@ -1,4 +1,4 @@
-id: '1772000000007'
+id: '1779568000005'
 alias: Sensors - Toothbrush Battery Low
 description: Sends a notification when the toothbrush battery drops below 10%.
 triggers:

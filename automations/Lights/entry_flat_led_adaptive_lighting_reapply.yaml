@@ -1,0 +1,31 @@
+id: '1779568000002'
+alias: Light - Entry flat LED adaptive lighting re-apply
+description: >-
+  Re-applies Adaptive Lighting on the entry flat LED after the telecontrol
+  relay turns back on. ZHA can take minutes to mark the bulb unavailable,
+  so triggering on the bulb state alone is unreliable. Triggering on the
+  telecontrol relay catches every case: bulb stayed on in HA, bulb went
+  unavailable, or bulb came back on after a long outage. The wait_template
+  handles the variable Zigbee reconnect delay.
+triggers:
+  - alias: Telecontrol relay turned on
+    trigger: state
+    entity_id: light.entry_telecontrol_switch
+    from: "off"
+    to: "on"
+actions:
+  - alias: Wait for the flat LED to be reachable and on
+    wait_template: "{{ states('light.entry_ceiling_lamp_flat_led') == 'on' }}"
+    timeout: "00:01:00"
+    continue_on_timeout: false
+  - alias: Small settling delay so the bulb finishes reporting its state
+    delay: "00:00:02"
+  - alias: Force Adaptive Lighting to adapt brightness and color
+    action: adaptive_lighting.apply
+    data:
+      entity_id: switch.entry_adaptive_lighting_entry
+      lights: light.entry_ceiling_lamp_flat_led
+      transition: 3
+      adapt_brightness: true
+      adapt_color: true
+mode: single
