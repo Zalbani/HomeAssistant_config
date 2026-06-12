@@ -61,7 +61,7 @@
 | Office — ceiling | `light.office_ceiling_lamp_bulb` | _(to be filled)_ | Zigbee | _(E27/GU10)_ | Color temperature |
 | Bedroom — ceiling | `light.bedroom_ceiling_lamp_bulb` | _(to be filled)_ | Zigbee | _(E27/GU10)_ | Color temperature |
 | Bedroom — LED strip | `light.bedroom_bed_led_strip` | _(to be filled)_ | Zigbee | — | _(color / white)_ |
-| Entry | `light.entry_telecontrol_switch` | _(to be filled)_ | Zigbee | _(E27/GU10)_ | _(to be filled)_ |
+| Entry — ceiling flat LED | `light.entry_ceiling_lamp_flat_led` | _(to be filled)_ | Zigbee | Integrated LED | Color temperature (no bypass — depends on `light.entry_telecontrol_switch`) |
 
 ---
 
@@ -78,6 +78,7 @@
 | Bathroom — mirror | `switch.bathroom_mirror_switch` | _(to be filled)_ | Zigbee | Wall switch |
 | Restroom | `switch.restroom_ceiling_lamp_switch` | _(to be filled)_ | Zigbee | Wall switch |
 | Balcony | `switch.balcony_outside_lamp` | _(to be filled)_ | Zigbee | Wall switch |
+| Entry — telecontrol (both ceiling fixtures) | `light.entry_telecontrol_switch` | NodOn 4.1.20 | Zigbee | DIN impulse relay (télérupteur) in electrical panel |
 | Desktop PC | `switch.alban_pc_fixe` + `button.hass_pc_fixe_shutdown` | Wake-on-LAN | Network | — |
 
 ---

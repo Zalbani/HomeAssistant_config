@@ -153,6 +153,7 @@ Configured via UI (Settings → Devices & Services), not YAML.
 | Bedroom | `light.bedroom_ceiling_lamp_bulb`, `light.bedroom_bed_led_strip` | 1% / 80% | 2000K / 4000K |
 | Office | `light.office_ceiling_lamp_bulb` | 10% / 100% | 2000K / 5500K |
 | Living Room | `light.living_room_ceiling_lamp_bulb`, `light.living_room_streetlight_bulb`, `light.living_room_mushroom_lamp_bulb` | 1% / 100% | 2000K / 5500K |
+| Entry | `light.entry_ceiling_lamp_flat_led` | 10% / 100% | 2000K / 5500K |
 
 Common settings on all instances: `initial_transition: 3s`, `take_over_control: true`, `adapt_only_on_bare_turn_on: true`, `sunrise_offset: +3600s`, `sunset_offset: -3600s`
 
@@ -350,7 +351,8 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 ### Entry
 | Entity | Description |
 |--------|-------------|
-| `light.entry_telecontrol_switch` | Entry light (smart) |
+| `light.entry_telecontrol_switch` | NodOn 4.1.20 impulse relay (télérupteur, DIN module in electrical panel) — master switch for both ceiling fixtures |
+| `light.entry_ceiling_lamp_flat_led` | Ceiling flat LED lamp (Zigbee, color temp) — **no bypass**: goes `unavailable` when telecontrol is off |
 
 ## System & Global Entities
 

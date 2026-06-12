@@ -30,7 +30,6 @@
 | Office — ceiling | `light.office_ceiling_lamp_bulb` | IKEA KAJPLATS E27 | Ceiling fixture |
 | Bedroom — ceiling | `light.bedroom_ceiling_lamp_bulb` | IKEA KAJPLATS E27 | Ceiling fixture |
 | Bedroom — LED strip | `light.bedroom_bed_led_strip` | _(to be filled)_ | _(under bed / behind headboard)_ |
-| Entry | `light.entry_telecontrol_switch` | IKEA KAJPLATS E27 | ceiling fixture |
 
 **Rooms with Shelly bypass** (bulb always powered — wall switch safe to toggle):
 
@@ -46,7 +45,7 @@ The bypass automation (`Lights/switch_light_bypass_global.yaml`) intercepts the 
 
 ## Important — Wall Switches
 
-For bulbs **without** a Shelly bypass (Entry, streetlight, mushroom): if the wall switch is turned **off physically**, the bulb loses power and **cannot be controlled from HA**. Always keep those switches in the ON position.
+For bulbs **without** a Shelly bypass (streetlight, mushroom): if the wall switch is turned **off physically**, the bulb loses power and **cannot be controlled from HA**. Always keep those switches in the ON position.
 
 ---
 

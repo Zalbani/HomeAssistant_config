@@ -9,3 +9,6 @@ variables:
   actions_columns:
     - - entity: light.entry_telecontrol_switch
         icon: mdi:ceiling-light-outline
+        hold_action:
+          action: more-info
+          entity: light.entry_ceiling_lamp_flat_led

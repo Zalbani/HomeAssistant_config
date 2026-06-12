@@ -12,6 +12,13 @@ cards:
     icon: mdi:ceiling-light-outline
 
   - type: custom:bubble-card
+    card_type: button
+    button_type: slider
+    entity: light.entry_ceiling_lamp_flat_led
+    name: Ceiling flat LED
+    icon: mdi:ceiling-light-outline
+
+  - type: custom:bubble-card
     card_type: separator
     name: Vacuum
     icon: mdi:robot-vacuum
