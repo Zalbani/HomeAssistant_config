@@ -47,6 +47,15 @@ sun_protection:
   # Outdoor temp above which west-facade sun exposure triggers shading (°C)
   outdoor_threshold: input_number.sun_protection_outdoor_threshold
 
+# --- Cooling ---
+
+cooling:
+  # Per-room AC active flags. When ON, sun-protection and global-close
+  # automations must NOT lower that room's sunshade (avoids trapping heat
+  # against the closed shade and choking the AC airflow).
+  ac_active:
+    bedroom: input_boolean.bedroom_ac_active
+
 # --- Vacuum ---
 
 vacuum:

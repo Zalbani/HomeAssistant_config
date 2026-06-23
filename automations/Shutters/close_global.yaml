@@ -2,7 +2,8 @@ id: '1765721688168'
 alias: Shutters and Sunshade - Close - Global
 description: >-
   Close all shutters at sunset. Excludes covers whose window sensor is open
-  (mapping in mappings/shutters/cover_window_sensors.yaml).
+  (mapping in mappings/shutters/cover_window_sensors.yaml). Also excludes
+  bedroom sunshade when bedroom AC is active.
 triggers:
   - alias: 30 min after sunset
     trigger: sun
@@ -25,7 +26,9 @@ actions:
         {% for cover, sensor in cover_window_sensors.items() %}
           {% if not sensor or not is_state(sensor, 'on') %}
             {% if not ('sunshade' in cover and is_state('input_boolean.wind_protection_active', 'on')) %}
-              {% set ns.entities = ns.entities + [cover] %}
+              {% if not (cover == 'cover.bedroom_sunshade' and is_state('input_boolean.bedroom_ac_active', 'on')) %}
+                {% set ns.entities = ns.entities + [cover] %}
+              {% endif %}
             {% endif %}
           {% endif %}
         {% endfor %}

@@ -9,6 +9,11 @@ triggers:
       - unavailable
       - unknown
 conditions:
+  - alias: Event must be a fresh press (rejects state restoration on Matter restart)
+    condition: template
+    value_template: >-
+      {{ trigger.to_state.state not in ['unavailable', 'unknown', 'none']
+         and (now() - (trigger.to_state.state | as_datetime)) < timedelta(seconds=5) }}
   - alias: Double press only
     condition: template
     value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_2' }}"

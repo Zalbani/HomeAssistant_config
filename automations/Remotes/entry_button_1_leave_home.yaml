@@ -9,6 +9,12 @@ triggers:
     not_from:
       - unavailable
       - unknown
+conditions:
+  - alias: Event must be a fresh press (rejects state restoration on Matter restart)
+    condition: template
+    value_template: >-
+      {{ trigger.to_state.state not in ['unavailable', 'unknown', 'none']
+         and (now() - (trigger.to_state.state | as_datetime)) < timedelta(seconds=5) }}
 actions:
   - alias: Turn off all lights
     action: light.turn_off

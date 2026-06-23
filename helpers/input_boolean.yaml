@@ -14,6 +14,12 @@ wind_protection_active:
   name: "Wind Protection Active"
   icon: mdi:weather-windy-variant
 
+# --- Cooling ---
+
+bedroom_ac_active:
+  name: "Bedroom AC Active"
+  icon: mdi:air-conditioner
+
 # --- Heating ---
 
 collective_heating:

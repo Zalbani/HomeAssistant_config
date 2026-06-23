@@ -30,13 +30,13 @@ variables:
   close_during_west_sun: "{{ cover_config.get('close_during_west_sun', false) }}"
 actions:
   - choose:
-      - alias: "Window opened: raise cover if it was down"
+      - alias: "Window opened: raise cover to open_position (safety: prevents lock-out if cover was descending)"
         conditions:
           - condition: trigger
             id: opening
           - condition: template
             value_template: >
-              {{ state_attr(cover_entity, 'current_position') | int(100) < 10 }}
+              {{ state_attr(cover_entity, 'current_position') | int(100) < open_position }}
         sequence:
           - alias: Raise cover to configured position
             action: cover.set_cover_position
