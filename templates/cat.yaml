@@ -1,0 +1,43 @@
+- trigger:
+    - platform: state
+      entity_id: sensor.oni_last_weight_measurement
+  condition:
+    - condition: template
+      value_template: "{{ trigger.to_state.state | float(0) > 1 }}"
+  sensor:
+    - name: "Oni Weight"
+      unique_id: oni_weight
+      unit_of_measurement: "kg"
+      device_class: weight
+      state_class: measurement
+      icon: mdi:scale
+      state: "{{ trigger.to_state.state | float | round(2) }}"
+
+- trigger:
+    - platform: state
+      entity_id: sensor.oni_last_use_duration
+  condition:
+    - condition: template
+      value_template: >
+        {{ trigger.to_state.state not in ['unknown', 'unavailable', 'none']
+           and trigger.to_state.state | float(0) > 0 }}
+  sensor:
+    - name: "Oni Use Duration"
+      unique_id: oni_use_duration
+      unit_of_measurement: "s"
+      device_class: duration
+      icon: mdi:timer-outline
+      state: "{{ trigger.to_state.state | int }}"
+
+- trigger:
+    - platform: state
+      entity_id: sensor.oni_last_use_date
+  condition:
+    - condition: template
+      value_template: >
+        {{ trigger.to_state.state not in ['unknown', 'unavailable', 'Unknown', 'none', ''] }}
+  sensor:
+    - name: "Oni Last Use"
+      unique_id: oni_last_use
+      icon: mdi:calendar-clock
+      state: "{{ trigger.to_state.state }}"

@@ -71,3 +71,6 @@
 - !include Notifications/arr_service_down.yaml
 - !include Notifications/arr_service_restored.yaml
 - !include Vacuum/vacuum_deselect_rooms.yaml
+- !include Litter/uses_counter_increment.yaml
+- !include Litter/uses_counter_reset.yaml
+- !include Notifications/cat_used_litter.yaml

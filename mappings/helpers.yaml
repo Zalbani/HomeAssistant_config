@@ -68,3 +68,11 @@ vacuum:
     bathroom: input_boolean.vacuum_select_bathroom
     restroom: input_boolean.vacuum_select_restroom
     entry: input_boolean.vacuum_select_entry
+
+# --- Litter (Petkit Pura MAX) ---
+
+litter:
+  # Uses since the wastebin was last emptied (driven by automations)
+  uses_since_empty: input_number.litter_uses_since_empty
+  # Estimated full capacity in number of uses (configurable)
+  wastebin_capacity: input_number.litter_wastebin_capacity

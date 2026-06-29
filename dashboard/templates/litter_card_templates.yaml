@@ -1,0 +1,239 @@
+litter_card:
+  entity: sensor.auto_litter_state
+  show_name: false
+  show_state: false
+  show_icon: false
+  tap_action:
+    action: more-info
+  update_timer: 2
+  variables:
+    vs: |
+      [[[
+        const state            = states['sensor.auto_litter_state']?.state || 'unknown';
+        const error            = states['sensor.auto_litter_error']?.state;
+        const litterLevel      = Number(states['sensor.auto_litter_litter_level']?.state || 0);
+        const timesUsed        = Number(states['sensor.auto_litter_times_used']?.state || 0);
+        const lastUsedBy       = states['sensor.auto_litter_last_used_by']?.state || '';
+        const n50Days          = Number(states['sensor.auto_litter_odor_eliminator_n50_left_days']?.state || 99);
+
+        const sandLack         = states['binary_sensor.auto_litter_sand_lack']?.state === 'on';
+        const wastebinFilled   = states['binary_sensor.auto_litter_wastebin_filled']?.state === 'on';
+        // wastebin_presence is a PROBLEM device_class: on = bin missing, off = present.
+        const wastebinPresence = states['binary_sensor.auto_litter_wastebin_presence']?.state === 'off';
+        const toiletOccupied   = states['binary_sensor.auto_litter_toilet_occupied']?.state === 'on';
+
+        const errLower = (error || '').toLowerCase().trim();
+        const hasError = errLower && !['no error','no_error','none','unknown',''].includes(errLower);
+
+        const isCleaning    = state.startsWith('cleaning')    && !state.includes('paused');
+        const isDumping     = state.startsWith('dumping')     && !state.includes('paused');
+        const isLeveling    = state === 'leveling';
+        const isResetting   = state.startsWith('resetting');
+        const isCalibrating = state === 'calibrating';
+        const isMaintenance = state === 'maintenance';
+        const isPaused      = state.includes('paused');
+        const isActive      = isCleaning || isDumping || isLeveling || isResetting || isCalibrating || isMaintenance;
+        const isIdle        = state === 'idle' || state === 'unknown';
+
+        let ui;
+        if (hasError)             ui = 'error';
+        else if (isPaused)        ui = 'paused';
+        else if (isActive)        ui = 'active';
+        else if (toiletOccupied)  ui = 'occupied';
+        else                      ui = 'idle';
+
+        let opName = '';
+        if (isCleaning)         opName = 'Cleaning';
+        else if (isDumping)      opName = 'Emptying';
+        else if (isLeveling)     opName = 'Leveling';
+        else if (isResetting)    opName = 'Resetting';
+        else if (isCalibrating)  opName = 'Calibrating';
+        else if (isMaintenance)  opName = 'Maintenance';
+
+        let pauseReason = '';
+        if (isPaused) {
+          if (state.includes('pet_using'))         pauseReason = 'pet using';
+          else if (state.includes('pet_entered'))  pauseReason = 'pet entered';
+          else if (state.includes('pet_approach')) pauseReason = 'pet near';
+          else if (state.includes('cover'))        pauseReason = 'cover open';
+          else if (state.includes('system_error')) pauseReason = 'system error';
+        }
+
+        let warning = '';
+        if (!wastebinPresence)    warning = 'Wastebin missing';
+        else if (wastebinFilled)  warning = 'Wastebin full';
+        else if (sandLack)        warning = 'Litter low';
+        else if (n50Days < 5)     warning = `Odor cartridge: ${n50Days}d left`;
+
+        const levelColor = litterLevel >= 50 ? '#4CAF50'
+                         : litterLevel >= 20 ? '#FF9800'
+                         : '#e74c3c';
+
+        const usesSinceEmpty = Number(states['input_number.litter_uses_since_empty']?.state || 0);
+        const capacity       = Number(states['input_number.litter_wastebin_capacity']?.state || 60);
+        let wastePct;
+        if (!wastebinPresence)   wastePct = 0;
+        else if (wastebinFilled) wastePct = 100;
+        else                     wastePct = Math.min(100, Math.round((usesSinceEmpty / Math.max(capacity, 1)) * 100));
+        const wasteColor = wastePct >= 90 ? '#e74c3c'
+                         : wastePct >= 70 ? '#FF9800'
+                         : '#4CAF50';
+
+        return { state, ui, hasError, error, opName, pauseReason, warning,
+                 litterLevel, levelColor, timesUsed, lastUsedBy,
+                 wastePct, wasteColor, usesSinceEmpty, capacity, wastebinPresence,
+                 toiletOccupied };
+      ]]]
+  extra_styles: |
+    @keyframes litter-sweep {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(400%); }
+    }
+  styles:
+    card:
+      - border-radius: 16px
+      - padding: 12px
+      - background: rgba(var(--rgb-card-background-color), 0.4)
+      - border: 1px solid rgba(255, 255, 255, 0.08)
+      - box-shadow: none
+    grid:
+      - grid-template-areas: '"header" "progress" "actions"'
+      - grid-template-rows: min-content min-content min-content
+      - gap: 8px
+    custom_fields:
+      header:
+        - display: flex
+        - align-items: center
+        - justify-content: space-between
+      progress:
+        - width: 100%
+        - display: block
+        - box-sizing: border-box
+  custom_fields:
+    header: >
+      [[[
+        const v = variables.vs;
+
+        let mainIcon, mainColor, statusText, statusColor;
+        if (v.hasError) {
+          mainIcon    = 'mdi:alert-circle-outline';
+          mainColor   = '#e74c3c';
+          statusText  = (v.error || '').replace(/_/g,' ');
+          statusColor = '#e74c3c';
+        } else if (v.ui === 'paused') {
+          mainIcon    = 'mdi:pause-circle-outline';
+          mainColor   = '#FF9800';
+          statusText  = v.pauseReason ? `Paused · ${v.pauseReason}` : 'Paused';
+          statusColor = '#FF9800';
+        } else if (v.ui === 'active') {
+          const opIcons = {
+            'Cleaning':    'mdi:broom',
+            'Emptying':    'mdi:delete-empty-outline',
+            'Leveling':    'mdi:layers-outline',
+            'Resetting':   'mdi:restart',
+            'Calibrating': 'mdi:tune-vertical',
+            'Maintenance': 'mdi:wrench-outline',
+          };
+          mainIcon    = opIcons[v.opName] || 'mdi:cog-outline';
+          mainColor   = '#4CAF50';
+          statusText  = v.opName + '…';
+          statusColor = '#4CAF50';
+        } else if (v.ui === 'occupied') {
+          mainIcon    = 'mdi:cat';
+          mainColor   = '#42A5F5';
+          statusText  = v.lastUsedBy ? `Cat inside · ${v.lastUsedBy}` : 'Cat inside';
+          statusColor = '#42A5F5';
+        } else if (v.warning) {
+          const warnIcons = {
+            'Wastebin missing': 'mdi:delete-off-outline',
+            'Wastebin full':    'mdi:delete-alert-outline',
+            'Litter low':       'mdi:hourglass-empty',
+          };
+          mainIcon    = warnIcons[v.warning] || 'mdi:scent-off';
+          mainColor   = '#FF9800';
+          statusText  = v.warning;
+          statusColor = '#FF9800';
+        } else {
+          mainIcon    = 'mdi:paw-outline';
+          mainColor   = 'rgba(255,255,255,0.85)';
+          statusText  = `Idle · ${v.timesUsed} use${v.timesUsed === 1 ? '' : 's'} today`;
+          statusColor = 'rgba(255,255,255,0.45)';
+        }
+
+        return `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <ha-icon icon="${mainIcon}" style="width:18px;color:${mainColor}"></ha-icon>
+            <span style="font-size:14px;font-weight:600;color:${mainColor}">Litter Box</span>
+          </div>
+          <span style="font-size:12px;color:${statusColor};text-align:right;">${statusText}</span>`;
+      ]]]
+    progress: >
+      [[[
+        const v = variables.vs;
+        const sweep = (color, label) => {
+          let html = `<div style="background:rgba(255,255,255,0.12);border-radius:6px;height:12px;overflow:hidden;position:relative;">
+              <div style="position:absolute;top:0;left:0;width:25%;height:100%;background:${color};border-radius:6px;animation:litter-sweep 1.2s ease-in-out infinite;"></div>
+            </div>`;
+          if (label) html += `<div style="font-size:12px;font-weight:600;color:${label.color};margin-top:5px;text-align:center;">${label.text}</div>`;
+          return html;
+        };
+        if (v.ui === 'active') {
+          return sweep('rgba(76,175,80,0.7)', { text: v.opName + '…', color: 'rgba(76,175,80,0.8)' });
+        }
+        if (v.ui === 'paused') {
+          return sweep('rgba(255,152,0,0.6)', { text: 'Paused', color: 'rgba(255,152,0,0.8)' });
+        }
+        const bar = (label, pct, color, sub) => `
+          <div style="margin-top:6px;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.55);display:flex;justify-content:space-between;margin-bottom:3px;">
+              <span>${label}</span><span>${sub}</span>
+            </div>
+            <div style="background:rgba(255,255,255,0.12);border-radius:5px;height:10px;overflow:hidden;">
+              <div style="width:${pct}%;background:${color};height:100%;border-radius:5px;transition:width 0.5s ease;"></div>
+            </div>
+          </div>`;
+        const wasteSub = !v.wastebinPresence
+          ? 'no bin'
+          : `${v.usesSinceEmpty}/${v.capacity} · ${v.wastePct}%`;
+        return bar('Litter level', v.litterLevel, v.levelColor, `${v.litterLevel}%`)
+             + bar('Waste bin',    v.wastePct,    v.wasteColor, wasteSub);
+      ]]]
+    actions:
+      card:
+        type: horizontal-stack
+        cards: |
+          [[[
+            const v = variables.vs;
+            const mkBtn = (icon, name, service, entity_id, confirm) => ({
+              type: 'custom:button-card',
+              template: 'vacuum_btn',
+              entity: entity_id,
+              icon,
+              name,
+              tap_action: {
+                action: 'call-service',
+                service,
+                service_data: { entity_id },
+                haptic: confirm ? 'medium' : 'light',
+                ...(confirm ? { confirmation: { text: `${name}?` } } : {}),
+              },
+            });
+
+            if (v.ui === 'active') {
+              return [
+                mkBtn('mdi:pause', 'Pause', 'button.press', 'button.auto_litter_action_pause'),
+                mkBtn('mdi:stop',  'Stop',  'button.press', 'button.auto_litter_action_reset', true),
+              ];
+            }
+            if (v.ui === 'paused') {
+              return [
+                mkBtn('mdi:play', 'Resume', 'button.press', 'button.auto_litter_action_continue'),
+                mkBtn('mdi:stop', 'Stop',   'button.press', 'button.auto_litter_action_reset', true),
+              ];
+            }
+            return [
+              mkBtn('mdi:broom',         'Scoop', 'button.press', 'button.auto_litter_scoop'),
+              mkBtn('mdi:layers-outline','Level', 'button.press', 'button.auto_litter_level_litter'),
+              mkBtn('mdi:delete-empty',  'Empty', 'button.press', 'button.auto_litter_dump_litter', true),
+            ];
+          ]]]

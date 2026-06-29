@@ -1,0 +1,19 @@
+id: '1779568000020'
+alias: Notifications - Cat Used Litter Box
+description: Sends a notification when the cat exits the Petkit Pura MAX.
+triggers:
+  - trigger: state
+    entity_id: sensor.auto_litter_last_event
+    to: pet_out
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Litter used"
+      message: >-
+        {% set who = states('sensor.auto_litter_last_used_by') %}
+        {% if who in ['', 'unknown', 'unavailable', 'none'] %}
+        A cat just used the litter box.
+        {% else %}
+        {{ who }} just used the litter box.
+        {% endif %}
+mode: single

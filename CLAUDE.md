@@ -13,6 +13,7 @@ _HomeAssistant_Config/
 │   ├── Awtrix/           # Awtrix clock automations
 │   ├── Notifications/    # Notification automations — named <subject>.yaml (e.g. heating_profile.yaml, window_open.yaml)
 │   ├── Vacuum/           # Vacuum automations
+│   ├── Litter/           # Petkit litter box (waste-bin uses counter increment/reset)
 │   └── index.yaml        # Flat !include list (HA does not auto-merge subdirs here)
 ├── binary_sensors/       # REST/TCP binary sensors (auto-merged via !include_dir_merge_list)
 │   ├── arr_stack.yaml    # Seerr, Prowlarr, Sonarr, Radarr, Bazarr — authenticated REST health checks
@@ -26,6 +27,7 @@ _HomeAssistant_Config/
 │   ├── templates/        # Reusable button-card templates (auto-merged via !include_dir_merge_named)
 │   │   ├── overview_card_templates.yaml   # room_card, room_card_action
 │   │   ├── vacuum_card_templates.yaml     # vacuum_room_card, vacuum_btn
+│   │   ├── litter_card_templates.yaml     # litter_card (Petkit Pura MAX)
 │   │   └── awtrix_card_templates.yaml     # awtrix_card, awtrix_btn
 │   ├── views/            # One file per dashboard page
 │   │   └── maintenance/  # Maintenance subview sections (each file = one section)
@@ -48,6 +50,7 @@ _HomeAssistant_Config/
 ├── templates/            # Template sensors/binary_sensors (auto-merged via !include_dir_merge_list)
 │   ├── system.yaml       # binary_sensor: PC Online, TV Media Active
 │   ├── scale.yaml        # sensor: body composition (Segal formula — male, 28 y/o, 173 cm)
+│   ├── cat.yaml          # sensor: Oni filtered weight / use duration / last use date (Petkit Pura MAX)
 │   └── sun_exposure.yaml # binary_sensor: West Facade Sun Exposure (sun azimuth/elevation + weather + outdoor temp)
 ├── scripts/              # Scripts organized by domain (auto-merged via !include_dir_merge_named)
 │   ├── vacuum.yaml       # Roborock segment cleaning scripts
@@ -70,6 +73,7 @@ Reusable single-card definitions (start with `type:`). Included as items inside 
 | File | Used in | Description |
 |------|---------|-------------|
 | `scale_card.yaml` | `views/bathroom.yaml` (dedicated section) | Scale + body composition — `type: vertical-stack` |
+| `oni_card.yaml` | `views/restroom.yaml` (dedicated section) | Cat (Oni) — weight, last use duration/date + 30-day weight history |
 | `heating_overview_card.yaml` | `views/home.yaml` | Heating profile + room temps |
 | `bambulab_card.yaml` | `views/maintenance/` | BambuLab printer status |
 | `nas_card.yaml` | `views/maintenance/system.yaml` | NAS status |
@@ -205,6 +209,8 @@ All helpers are defined in YAML under `helpers/` and loaded in `configuration.ya
 | `input_boolean.heating_manual_living_room` | `input_boolean.yaml` | Manual override — living room |
 | `input_boolean.heating_manual_office` | `input_boolean.yaml` | Manual override — office |
 | `input_boolean.vacuum_select_*` | `input_boolean.yaml` | Per-room vacuum selection (7 rooms) |
+| `input_number.litter_uses_since_empty` | `input_number.yaml` | Petkit waste-bin uses counter (driven by `automations/Litter/`) |
+| `input_number.litter_wastebin_capacity` | `input_number.yaml` | Estimated waste-bin capacity in uses (drives the fill bar) |
 | `input_number.heating_global_min` | `input_number.yaml` | Global heating min (°C) |
 | `input_number.heating_global_max` | `input_number.yaml` | Global heating max (°C) |
 | `input_number.heating_outdoor_threshold` | `input_number.yaml` | Outdoor temp → eco profile (°C) |
@@ -343,6 +349,20 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 |--------|-------------|
 | `switch.restroom_ceiling_lamp_switch` | Ceiling lamp switch |
 | `binary_sensor.restroom_water_leak_sensor_water_leak` | Water leak sensor |
+| `sensor.auto_litter_state` | Petkit Pura MAX — operating state (idle/cleaning/dumping/paused/…) |
+| `sensor.auto_litter_litter_level` | Litter level (%) |
+| `sensor.auto_litter_times_used` | Times used today |
+| `sensor.auto_litter_last_used_by` | Cat that last used it |
+| `binary_sensor.auto_litter_toilet_occupied` | Cat currently inside |
+| `binary_sensor.auto_litter_sand_lack` / `_wastebin_filled` / `_wastebin_presence` | Litter/wastebin warnings |
+| `button.auto_litter_scoop` / `_level_litter` / `_dump_litter` | Manual actions |
+| `button.auto_litter_action_pause` / `_action_continue` / `_action_reset` | Pause/resume/stop running operation |
+| `sensor.oni_last_weight_measurement` | Oni — raw last weight measurement (kg) — may report 0 on bad measurement |
+| `sensor.oni_last_use_duration` | Oni — raw last use duration — may report unknown/0 |
+| `sensor.oni_last_use_date` | Oni — raw last use date — may report "Unknown" |
+| `sensor.oni_weight` | Oni — filtered weight (`templates/cat.yaml`) — only updates when source > 1 kg |
+| `sensor.oni_use_duration` | Oni — filtered last use duration (`templates/cat.yaml`) — drops unknown/0 |
+| `sensor.oni_last_use` | Oni — filtered last use date (`templates/cat.yaml`) — drops "Unknown" |
 
 ### Balcony
 | Entity | Description |
@@ -446,6 +466,33 @@ To add vacuum to a new room: add `segment_id` in `rooms/config.yaml` and add the
 - `sensor.roborock_qrevo_edge_series_current_room` (options: Entry, Office, Restroom, Bathroom, Kitchen, Living room, Bedroom)
 - `sensor.roborock_qrevo_edge_series_vacuum_error`
 - `select.roborock_qrevo_edge_series_mop_intensity`
+
+## Litter Box (Petkit Pura MAX — `auto_litter`)
+
+Integration: `custom_components/petkit` (Jezza34000 fork, MQTT push)
+
+### `litter_card` Template
+Defined in `dashboard/templates/litter_card_templates.yaml`. Mirrors the visual style of `vacuum_status_card` (header + bar + 3-button row).
+
+UI states (computed from `sensor.auto_litter_state` + binary sensors):
+- `error` → red header, error message
+- `paused` → orange, shows pause reason (pet using/entered/near, cover, system error)
+- `active` → green, sweep animation + op name (Cleaning/Emptying/Leveling/Resetting/Calibrating/Maintenance)
+- `occupied` → blue, "Cat inside · <name>"
+- `idle` → grey, shows litter level bar + "X uses today"; warnings (wastebin missing/full, low litter, N50 cartridge <5d) take over the status line
+
+Button rows (contextual, reuse `vacuum_btn` style):
+- IDLE → Scoop / Level / Empty (Empty asks confirmation)
+- ACTIVE → Pause / Stop (Stop asks confirmation)
+- PAUSED → Resume / Stop
+
+Usage in any room's `controls.yaml`:
+```yaml
+- type: custom:button-card
+  template: litter_card
+```
+
+Currently placed in `dashboard/rooms/restroom/controls.yaml`.
 
 ## Template Sensors
 

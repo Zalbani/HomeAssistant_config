@@ -1,0 +1,34 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: separator
+    name: Oni
+    icon: mdi:cat
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.oni_weight
+    name: Weight
+    icon: mdi:scale
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.oni_use_duration
+    name: Last Use Duration
+    icon: mdi:timer-outline
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.oni_last_use
+    name: Last Use
+    icon: mdi:calendar-clock
+    tap_action:
+      action: more-info
+
+  - type: history-graph
+    entities:
+      - entity: sensor.oni_weight
+        name: Weight
+    hours_to_show: 720
+    title: Weight (30 days)

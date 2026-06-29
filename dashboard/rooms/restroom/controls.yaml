@@ -25,6 +25,14 @@ cards:
 
   - type: custom:bubble-card
     card_type: separator
+    name: Litter Box
+    icon: mdi:paw-outline
+
+  - type: custom:button-card
+    template: litter_card
+
+  - type: custom:bubble-card
+    card_type: separator
     name: Vacuum
     icon: mdi:robot-vacuum
 

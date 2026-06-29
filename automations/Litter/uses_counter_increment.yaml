@@ -1,0 +1,14 @@
+id: '1779568000021'
+alias: Litter - Uses Counter Increment
+description: Increments the wastebin usage counter every time the cat exits the litter box.
+triggers:
+  - trigger: state
+    entity_id: sensor.auto_litter_last_event
+    to: pet_out
+actions:
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.litter_uses_since_empty
+    data:
+      value: "{{ (states('input_number.litter_uses_since_empty') | int(0)) + 1 }}"
+mode: single

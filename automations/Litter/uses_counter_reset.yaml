@@ -1,0 +1,17 @@
+id: '1779568000022'
+alias: Litter - Uses Counter Reset
+description: >-
+  Resets the wastebin usage counter back to 0 when the wastebin is re-inserted
+  (presence sensor goes off → on), which assumes the bin was just emptied.
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.auto_litter_wastebin_presence
+    from: 'off'
+    to: 'on'
+actions:
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.litter_uses_since_empty
+    data:
+      value: 0
+mode: single

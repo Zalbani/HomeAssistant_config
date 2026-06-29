@@ -2,7 +2,7 @@ title: Restroom
 icon: mdi:paper-roll-outline
 path: restroom
 type: sections
-max_columns: 1
+max_columns: 2
 subview: true
 header:
   card:
@@ -13,3 +13,5 @@ header:
 
 sections:
   - !include ../rooms/restroom/controls.yaml
+  - cards:
+      - !include ../cards/oni_card.yaml
