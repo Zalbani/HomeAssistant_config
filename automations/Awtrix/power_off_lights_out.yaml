@@ -12,9 +12,10 @@ triggers:
     to: "off"
     for: "00:30:00"
 conditions:
-  - alias: Only after sunset
-    condition: sun
-    after: sunset
+  - alias: Only when sun is below horizon
+    condition: state
+    entity_id: sun.sun
+    state: below_horizon
   - alias: All lights are off
     condition: template
     value_template: >-

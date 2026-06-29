@@ -24,8 +24,10 @@ triggers:
 actions:
   - choose:
       - conditions:
-          - condition: trigger
-            id: close
+          - alias: West facade currently in direct sun
+            condition: state
+            entity_id: binary_sensor.west_facade_sun_exposure
+            state: "on"
           - alias: Wind protection not active
             condition: state
             entity_id: input_boolean.wind_protection_active
@@ -62,8 +64,10 @@ actions:
             target:
               entity_id: "{{ covers_to_close }}"
       - conditions:
-          - condition: trigger
-            id: open
+          - alias: West facade no longer in direct sun
+            condition: state
+            entity_id: binary_sensor.west_facade_sun_exposure
+            state: "off"
         sequence:
           - variables:
               covers_to_open: >-

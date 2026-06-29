@@ -44,8 +44,9 @@ actions:
       - conditions:
           - condition: trigger
             id: open
-          - alias: Before sunset+30 — after that, close_global retains evening ownership
+          - alias: Between sunrise and sunset+30 — outside that window, close_global retains night ownership
             condition: sun
+            after: sunrise
             before: sunset
             before_offset: "00:30:00"
           - alias: Living room shutter is not already fully open

@@ -57,10 +57,14 @@ actions:
             id: closing
           - condition: template
             value_template: "{{ close_at_night }}"
-          - condition: sun
-            after: sunset
-            after_offset: "+00:30:00"
-            before: sunrise
+          - alias: Nighttime (after sunset+30 or before sunrise) — split as OR because HA's sun condition compares against today's events, so combining both bounds in one block is always false
+            condition: or
+            conditions:
+              - condition: sun
+                after: sunset
+                after_offset: "+00:30:00"
+              - condition: sun
+                before: sunrise
         sequence:
           - alias: Close cover fully
             action: cover.set_cover_position

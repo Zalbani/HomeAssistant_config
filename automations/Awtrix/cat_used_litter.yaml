@@ -1,0 +1,22 @@
+id: '1779568000030'
+alias: Awtrix - Cat Used Litter
+description: >-
+  Shows a one-shot notification on the Awtrix clock when a cat exits the
+  Petkit Pura MAX.
+triggers:
+  - trigger: state
+    entity_id: sensor.auto_litter_last_event
+    to: pet_out
+actions:
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: >-
+        {% set who = states('sensor.auto_litter_last_used_by') %}
+        {% if who in ['', 'unknown', 'unavailable', 'none'] %}
+          {% set text = 'Litter used' %}
+        {% else %}
+          {% set text = who ~ ' used litter' %}
+        {% endif %}
+        {"text": "{{ text }}", "icon": "12199", "color": "#8B5A2B", "duration": 10}
+mode: single
