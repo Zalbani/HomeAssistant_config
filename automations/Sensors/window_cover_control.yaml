@@ -30,20 +30,27 @@ variables:
   close_during_west_sun: "{{ cover_config.get('close_during_west_sun', false) }}"
 actions:
   - choose:
-      - alias: "Window opened: raise cover to open_position (safety: prevents lock-out if cover was descending)"
+      - alias: "Window opened: stop any ongoing movement then raise cover to open_position if currently below"
         conditions:
           - condition: trigger
             id: opening
-          - condition: template
-            value_template: >
-              {{ state_attr(cover_entity, 'current_position') | int(100) < open_position }}
         sequence:
-          - alias: Raise cover to configured position
-            action: cover.set_cover_position
+          - alias: "Stop any cover movement in progress (interrupts a closing triggered just before, e.g. from a slam)"
+            action: cover.stop_cover
             target:
               entity_id: "{{ cover_entity }}"
-            data:
-              position: "{{ open_position }}"
+          - delay: { seconds: 1 }
+          - alias: Raise cover to configured position if currently below
+            if:
+              - condition: template
+                value_template: >
+                  {{ state_attr(cover_entity, 'current_position') | int(100) < open_position }}
+            then:
+              - action: cover.set_cover_position
+                target:
+                  entity_id: "{{ cover_entity }}"
+                data:
+                  position: "{{ open_position }}"
       - alias: "Window closed at night: lower cover"
         conditions:
           - condition: trigger
