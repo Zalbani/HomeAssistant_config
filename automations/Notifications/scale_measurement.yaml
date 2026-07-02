@@ -1,0 +1,28 @@
+id: '1779568000040'
+alias: Notifications - Scale Measurement
+description: Sends a phone notification with the weight when a new scale measurement is taken.
+triggers:
+  - trigger: state
+    entity_id: sensor.scale_weight
+    not_to:
+      - unknown
+      - unavailable
+      - "none"
+conditions:
+  - condition: template
+    value_template: "{{ trigger.to_state.state | is_number }}"
+  - condition: template
+    value_template: "{{ trigger.from_state is not none and trigger.from_state.state != trigger.to_state.state }}"
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Scale measurement"
+      message: >-
+        Weight: {{ states('sensor.scale_weight') | float | round(1) }} kg
+        {% if states('sensor.scale_body_fat') | is_number %}
+        · Body fat: {{ states('sensor.scale_body_fat') | float | round(1) }}%
+        {% endif %}
+        {% if states('sensor.scale_bmi') | is_number %}
+        · BMI: {{ states('sensor.scale_bmi') | float | round(1) }}
+        {% endif %}
+mode: single

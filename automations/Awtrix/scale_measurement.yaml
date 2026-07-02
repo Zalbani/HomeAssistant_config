@@ -1,0 +1,24 @@
+id: '1779568000041'
+alias: Awtrix - Scale Measurement
+description: >-
+  Shows a one-shot notification on the Awtrix clock when a new scale
+  measurement is taken.
+triggers:
+  - trigger: state
+    entity_id: sensor.scale_weight
+    not_to:
+      - unknown
+      - unavailable
+      - "none"
+conditions:
+  - condition: template
+    value_template: "{{ trigger.to_state.state | is_number }}"
+  - condition: template
+    value_template: "{{ trigger.from_state is not none and trigger.from_state.state != trigger.to_state.state }}"
+actions:
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: >-
+        {"text": "{{ states('sensor.scale_weight') | float | round(1) }} kg", "icon": "2766", "duration": 10}
+mode: single

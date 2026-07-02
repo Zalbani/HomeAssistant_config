@@ -46,6 +46,7 @@
 - !include Awtrix/vacuum.yaml
 - !include Awtrix/bambulab_printing.yaml
 - !include Awtrix/cat_used_litter.yaml
+- !include Awtrix/scale_measurement.yaml
 - !include Awtrix/power_off_lights_out.yaml
 - !include Awtrix/power_on_sunrise.yaml
 - !include Awtrix/power_on_button_select.yaml
@@ -75,3 +76,4 @@
 - !include Litter/uses_counter_increment.yaml
 - !include Litter/uses_counter_reset.yaml
 - !include Notifications/cat_used_litter.yaml
+- !include Notifications/scale_measurement.yaml
