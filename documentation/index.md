@@ -61,6 +61,14 @@ Technical documentation index for the home automation installation.
 
 ---
 
+## Litter
+
+| File | Device | Room |
+|------|--------|------|
+| [litter/petkit_pura_max_2_manual.pdf](litter/petkit_pura_max_2_manual.pdf) | PETKIT Pura Max 2 (T4-2) — Self-cleaning cat litter box | Restroom |
+
+---
+
 ## Computers
 
 | File | Device | Room |
