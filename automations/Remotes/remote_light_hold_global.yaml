@@ -1,0 +1,61 @@
+id: '1770912000004'
+alias: Remotes - Global - Button 3 - Light brightness yoyo on hold
+description: On long_press = ramp brightness up/down as a triangle wave between the room's adaptive_lighting min/max (~5s full range). Stops on long_release. Mapping in mappings/lights/hold_mapping.yaml
+triggers:
+  - trigger: state
+    entity_id: !include ../../mappings/lights/hold_triggers.yaml
+    not_from:
+      - unavailable
+      - unknown
+conditions:
+  - alias: Event must be a fresh long_press (rejects state restoration on Matter restart)
+    condition: template
+    value_template: >-
+      {{ trigger.to_state.state not in ['unavailable', 'unknown', 'none']
+         and trigger.to_state.attributes.event_type == 'long_press'
+         and (now() - (trigger.to_state.state | as_datetime)) < timedelta(seconds=5) }}
+actions:
+  - variables:
+      lights: "{{ mapping[trigger.entity_id].lights }}"
+      min_pct: "{{ mapping[trigger.entity_id].min_pct }}"
+      max_pct: "{{ mapping[trigger.entity_id].max_pct }}"
+      step_ms: 200
+      total_ms: 5000
+      steps: "{{ (total_ms / step_ms) | int }}"
+      step_pct: "{{ (max_pct - min_pct) / steps }}"
+      release_entity: "{{ trigger.entity_id }}"
+      ref_light: "{{ lights | first }}"
+      start_raw: "{{ (state_attr(ref_light, 'brightness') | default(0)) / 255 * 100 }}"
+      start_pct: "{{ [min_pct, [max_pct, start_raw] | min] | max }}"
+      direction: "{{ -1 if (start_pct >= (min_pct + max_pct) / 2) else 1 }}"
+      r: "{{ max_pct - min_pct }}"
+      period: "{{ 2 * r }}"
+  - repeat:
+      count: 300
+      sequence:
+        - variables:
+            x: "{{ (start_pct - min_pct) + repeat.index * step_pct * direction }}"
+            x_mod: "{{ x % period }}"
+            new_pct: "{{ (min_pct + (r - (x_mod - r) | abs)) | round(1) }}"
+        - action: light.turn_on
+          target:
+            entity_id: "{{ lights }}"
+          data:
+            brightness_pct: "{{ new_pct }}"
+            transition: 0.2
+        - wait_for_trigger:
+            - trigger: state
+              entity_id: "{{ release_entity }}"
+              attribute: event_type
+              to: long_release
+          timeout:
+            milliseconds: "{{ step_ms }}"
+          continue_on_timeout: true
+        - if:
+            - condition: template
+              value_template: "{{ wait.trigger is not none }}"
+          then:
+            - stop: released
+mode: restart
+variables:
+  mapping: !include ../../mappings/lights/hold_mapping.yaml

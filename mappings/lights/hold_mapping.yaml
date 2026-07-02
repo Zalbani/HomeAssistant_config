@@ -1,0 +1,25 @@
+# Remote button 3 hold - Progressive brightness yoyo
+# Used by automations/Remotes/remote_light_hold_global.yaml
+# Bounds match the adaptive_lighting min/max brightness configured per room.
+#
+bedroom: &bedroom
+  lights:
+    - light.bedroom_ceiling_lamp_bulb
+  min_pct: 1
+  max_pct: 80
+living_room: &living_room
+  lights:
+    - light.living_room_ceiling_lamp_bulb
+  min_pct: 1
+  max_pct: 100
+office: &office
+  lights:
+    - light.office_ceiling_lamp_bulb
+  min_pct: 10
+  max_pct: 100
+#
+# Keys used by the automation (trigger.entity_id)
+#
+event.bedroom_remote_button_3: *bedroom
+event.living_room_remote_button_3: *living_room
+event.office_remote_button_3: *office

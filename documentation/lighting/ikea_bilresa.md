@@ -33,9 +33,11 @@
 | 2 | Brightness + | Button 1&2 – Light scroll wheel |
 | 3 (single) | Toggle room lights | Button 3 – Light toggle |
 | 3 (double) | Turn off all lights | Button 3 – Light toggle |
+| 3 (hold) | Ramp brightness up/down (yoyo between adaptive_lighting min/max, ~5 s full range). Stops on release. | Button 3 – Light brightness yoyo on hold |
 | 4 | Shutter down | Buttons 4&5 – Shutter scroll wheel |
 | 5 | Shutter up | Buttons 4&5 – Shutter scroll wheel |
 | 6 (single) | Toggle shutters (stop if moving / close if open / open if closed) | Button 6 – Shutter toggle |
+| 6 (double) | Open all shutters of the room (skips any cover whose window sensor is open) | Button 6 – Shutter toggle |
 | 6 (hold) | Move shutters (up if all closed, down otherwise) | Button 6 – Shutter hold |
 | 9 (double) | Toggle PC on/off — **office only** | Button 9 – Computer toggle |
 

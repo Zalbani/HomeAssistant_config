@@ -34,6 +34,7 @@
 - !include Remotes/remote_shutter_button_toggle_global.yaml
 - !include Remotes/remote_shutter_hold_global.yaml
 - !include Remotes/remote_light_scroll_wheel_global.yaml
+- !include Remotes/remote_light_hold_global.yaml
 - !include Remotes/office_button_toggle.yaml
 - !include Remotes/entry_button_1_leave_home.yaml
 - !include Remotes/entry_button_2_vacuum.yaml
