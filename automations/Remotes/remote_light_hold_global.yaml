@@ -43,11 +43,7 @@ actions:
           data:
             brightness_pct: "{{ new_pct }}"
             transition: 0.2
-        - wait_for_trigger:
-            - trigger: state
-              entity_id: "{{ release_entity }}"
-              attribute: event_type
-              to: long_release
+        - wait_template: "{{ state_attr(release_entity, 'event_type') == 'long_release' }}"
           timeout:
             milliseconds: "{{ step_ms }}"
           continue_on_timeout: true

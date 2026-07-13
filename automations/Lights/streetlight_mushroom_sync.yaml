@@ -3,6 +3,9 @@ alias: Lights - Streetlight ↔ Mushroom ↔ Donut sync
 description: >-
   Syncs the mushroom lamp and the donut lamp when the streetlight is toggled,
   and syncs the donut when the mushroom is toggled independently.
+  Skipped when the change originates from a UI/dashboard tap so each icon on
+  the card keeps individual control; still fires for physical wall switch and
+  remote/automation-driven toggles (context.user_id is None in those cases).
 triggers:
   - trigger: state
     entity_id:
@@ -16,6 +19,9 @@ triggers:
       - light.living_room_mushroom_lamp_bulb
     to: "off"
     id: turn_off
+conditions:
+  - condition: template
+    value_template: "{{ trigger.to_state.context.user_id is none }}"
 actions:
   - if:
       - condition: trigger
