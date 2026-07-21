@@ -5,9 +5,9 @@
       # ON when the sun is geometrically hitting the west facade AND outdoor
       # conditions justify shading (clear sky + warm enough). Used by
       # automation "Shutters - West Facade Sun Protection".
-      # Azimuth 240°-305° + elevation ≥ 5° calibrated for Lyon, 3rd floor,
-      # unobstructed horizon — covers until sunset at the summer solstice
-      # (sun reaches ~302° at sunset on June 21).
+      # Azimuth 220°-305° + elevation ≥ 3° calibrated for Lyon, 3rd floor,
+      # unobstructed horizon — covers from mid-afternoon direct exposure
+      # until sunset at the summer solstice (sun reaches ~302° at sunset on June 21).
       # delay_off: filters out short cloud passages so sunshades don't yo-yo.
       delay_off: "00:10:00"
       state: >-
@@ -21,7 +21,7 @@
              'pouring', 'rainy', 'snowy', 'snowy-rainy'
            ] %}
         {{ is_state('sun.sun', 'above_horizon')
-           and 240 <= azimuth <= 305
-           and elevation >= 5
+           and 220 <= azimuth <= 305
+           and elevation >= 3
            and not overcast
            and outdoor_temp > threshold }}
