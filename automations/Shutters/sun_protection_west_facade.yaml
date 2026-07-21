@@ -5,9 +5,7 @@ description: >-
   tilt when the west facade is in direct sunlight (binary_sensor.west_facade_sun_exposure
   ON), and raises them back to 100% when shade returns. Skips living-room
   sunshade if the french window is open (re-armed via window_cover_control when
-  it closes again). Skips bedroom sunshade on both close and open transitions
-  when bedroom AC is active (keeps the BSO at whatever position the user set).
-  Skips closing entirely if wind protection is active.
+  it closes again). Skips closing entirely if wind protection is active.
 triggers:
   - alias: West facade enters direct sun
     trigger: state
@@ -35,22 +33,9 @@ actions:
         sequence:
           - variables:
               covers_to_close: >-
-                {% set candidates = [
-                     'cover.bedroom_sunshade',
-                     'cover.office_sunshade',
-                     'cover.living_room_sunshade'
-                   ] %}
-                {% set ns = namespace(items=[]) %}
-                {% for c in candidates %}
-                  {% if c == 'cover.living_room_sunshade'
-                        and is_state('binary_sensor.living_room_french_window', 'on') %}
-                  {% elif c == 'cover.bedroom_sunshade'
-                        and is_state('input_boolean.bedroom_ac_active', 'on') %}
-                  {% else %}
-                    {% set ns.items = ns.items + [c] %}
-                  {% endif %}
-                {% endfor %}
-                {{ ns.items }}
+                {% set base = ['cover.bedroom_sunshade', 'cover.office_sunshade'] %}
+                {{ base if is_state('binary_sensor.living_room_french_window', 'on')
+                   else base + ['cover.living_room_sunshade'] }}
           - alias: Lower sunshades fully
             action: cover.set_cover_position
             data:
@@ -69,25 +54,12 @@ actions:
             entity_id: binary_sensor.west_facade_sun_exposure
             state: "off"
         sequence:
-          - variables:
-              covers_to_open: >-
-                {% set candidates = [
-                     'cover.bedroom_sunshade',
-                     'cover.office_sunshade',
-                     'cover.living_room_sunshade'
-                   ] %}
-                {% set ns = namespace(items=[]) %}
-                {% for c in candidates %}
-                  {% if c == 'cover.bedroom_sunshade'
-                        and is_state('input_boolean.bedroom_ac_active', 'on') %}
-                  {% else %}
-                    {% set ns.items = ns.items + [c] %}
-                  {% endif %}
-                {% endfor %}
-                {{ ns.items }}
           - action: cover.set_cover_position
             data:
               position: 100
             target:
-              entity_id: "{{ covers_to_open }}"
+              entity_id:
+                - cover.bedroom_sunshade
+                - cover.office_sunshade
+                - cover.living_room_sunshade
 mode: single

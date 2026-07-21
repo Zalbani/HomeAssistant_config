@@ -2,8 +2,7 @@ id: '1765745986629'
 alias: Wake Up - Phone alarm - Global
 description: >-
   Opens all shutters 2 minutes before the phone alarm rings.
-  Opens bedroom only if mode_invites is on.
-  Bedroom is always skipped when bedroom AC is active.
+  Opens bedroom only if guest_mode is on.
 triggers:
   - alias: Phone alarm is within 2 minutes
     trigger: template
@@ -12,16 +11,12 @@ triggers:
          and now() >= (states('sensor.pixel_9_pro_next_alarm') | as_datetime - timedelta(minutes=2)) }}
 conditions: []
 actions:
-  - alias: Open shutters (bedroom only if mode_invites; bedroom always skipped if AC on)
+  - alias: Open shutters (bedroom only if guest_mode)
     choose:
       - conditions:
           - condition: state
             entity_id: input_boolean.guest_mode
             state: "on"
-          - alias: Bedroom AC must be off (otherwise nothing to do in this branch)
-            condition: state
-            entity_id: input_boolean.bedroom_ac_active
-            state: "off"
         sequence:
           - alias: Guests present - open bedroom only
             action: cover.set_cover_position
@@ -31,20 +26,16 @@ actions:
               area_id:
                 - bedroom
     default:
-      - variables:
-          areas_to_open: >-
-            {% set base = ['living_room', 'office', 'kitchen'] %}
-            {% if is_state('input_boolean.bedroom_ac_active', 'off') %}
-              {{ base + ['bedroom'] }}
-            {% else %}
-              {{ base }}
-            {% endif %}
-      - alias: Open all shutters (bedroom excluded if AC on)
+      - alias: Open all shutters
         action: cover.set_cover_position
         data:
           position: 100
         target:
-          area_id: "{{ areas_to_open }}"
+          area_id:
+            - living_room
+            - office
+            - kitchen
+            - bedroom
   - action: input_boolean.turn_off
     target:
       entity_id: input_boolean.sleep_mode

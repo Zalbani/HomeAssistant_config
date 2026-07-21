@@ -2,7 +2,7 @@ type: conditional
 conditions:
   - condition: numeric_state
     entity: sensor.office_thermometer_ams_humidity
-    above: 20
+    above: 30
 chip:
   type: template
   icon: mdi:water-alert

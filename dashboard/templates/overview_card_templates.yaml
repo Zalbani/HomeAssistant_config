@@ -12,7 +12,13 @@ room_card_action:
       const isHeating = e && e.attributes && e.attributes.hvac_action === "heating";
       return isHeating ? "mdi:fire" : "mdi:radiator";
     }
-    return variables.default_icon || "mdi:circle";
+    const base = variables.default_icon || "mdi:circle";
+    if (eid.startsWith("cover.")) {
+      const st = states[eid]?.state;
+      const isOpen = st && st !== "closed" && st !== "unavailable";
+      return isOpen && !base.endsWith("-open") ? base + "-open" : base;
+    }
+    return base;
   ]]]'
   styles:
     card:
@@ -30,6 +36,12 @@ room_card_action:
               const e = states[eid];
               const isHeating = e && e.attributes && e.attributes.hvac_action === 'heating';
               return isHeating ? '#F44336' : 'rgba(255,255,255,0.4)';
+            }
+            if (eid.startsWith('cover.')) {
+              const st = states[eid]?.state;
+              if (st === 'closed') return '#64B5F6';
+              if (st === 'opening' || st === 'closing') return '#FFB74D';
+              return 'rgba(255,255,255,0.4)';
             }
             if (variables.rgb_entity) {
               if (!entity || entity.state !== 'on') return 'rgba(255,255,255,0.4)';
@@ -176,7 +188,8 @@ room_card:
         cards: |
           [[[
             const columns = variables.actions_columns ?? [];
-            const all = columns.flat();
+            const heatingOff = states['input_select.heating_profile']?.state === 'off';
+            const all = columns.flat().filter(b => !(heatingOff && (b.entity || '').startsWith('climate.')));
             const pri = (b) => {
               const d = (b.entity || '').split('.')[0];
               if (d === 'light' || d === 'switch') return 0;

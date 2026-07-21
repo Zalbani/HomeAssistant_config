@@ -1,0 +1,14 @@
+id: '1779568000040'
+alias: Notifications - Litter Wastebin Full
+description: Sends a notification when the Petkit Pura MAX wastebin is full.
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.auto_litter_wastebin_filled
+    to: 'on'
+    for: "00:01:00"
+actions:
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "Litter wastebin full"
+      message: "The litter wastebin is full — time to empty it."
+mode: single

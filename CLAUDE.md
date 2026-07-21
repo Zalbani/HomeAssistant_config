@@ -202,7 +202,6 @@ All helpers are defined in YAML under `helpers/` and loaded in `configuration.ya
 | `input_boolean.sleep_mode` | `input_boolean.yaml` | Sleep mode active |
 | `input_boolean.guest_mode` | `input_boolean.yaml` | Guest mode active (Awtrix, heating, shutters) |
 | `input_boolean.wind_protection_active` | `input_boolean.yaml` | Wind protection lock on shutters |
-| `input_boolean.bedroom_ac_active` | `input_boolean.yaml` | Bedroom AC on — freezes `cover.bedroom_sunshade` (blocks auto close *and* open in sun-protection, close_global, wake-up automations). Wind-protection raise still overrides for safety. |
 | `input_boolean.collective_heating` | `input_boolean.yaml` | Season master switch |
 | `input_boolean.heating_manual_bathroom` | `input_boolean.yaml` | Manual override — bathroom |
 | `input_boolean.heating_manual_bedroom` | `input_boolean.yaml` | Manual override — bedroom |

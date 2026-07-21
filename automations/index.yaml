@@ -77,4 +77,6 @@
 - !include Litter/uses_counter_increment.yaml
 - !include Litter/uses_counter_reset.yaml
 - !include Notifications/cat_used_litter.yaml
+- !include Notifications/litter_wastebin_full.yaml
+- !include Awtrix/litter_wastebin_full.yaml
 - !include Notifications/scale_measurement.yaml

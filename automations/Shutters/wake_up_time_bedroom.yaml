@@ -3,7 +3,6 @@ alias: Wake Up - Time - Bedroom
 description: >-
   Opens bedroom shutter at sunrise +30 min on weekdays or 11:00 on weekends,
   only if the phone alarm is more than 5 hours away (avoids conflict with phone wake-up).
-  Skipped entirely when bedroom AC is active.
 triggers:
   - alias: Weekday - sunrise +30 min
     trigger: sun
@@ -15,10 +14,6 @@ triggers:
     at: '11:00:00'
     id: weekend
 conditions:
-  - alias: Bedroom AC must be off
-    condition: state
-    entity_id: input_boolean.bedroom_ac_active
-    state: "off"
   - alias: Match trigger to day type
     condition: or
     conditions:
