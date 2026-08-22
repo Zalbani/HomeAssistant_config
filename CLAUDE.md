@@ -319,6 +319,11 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `switch.kitchen_under_cabinet_lighting_switch` | Under cabinet lighting |
 | `cover.kitchen_shutter` | Window shutter |
 | `binary_sensor.kitchen_water_leak_sensor_water_leak` | Water leak sensor |
+| `switch.kitchen_fridge_outlet` | Fridge outlet (Zigbee smart plug with energy monitoring) |
+| `sensor.kitchen_fridge_outlet_instantaneous_demand` | Fridge outlet — instantaneous power (W) |
+| `sensor.kitchen_fridge_outlet_summation_delivered` | Fridge outlet — cumulative energy (kWh) |
+| `sensor.kitchen_fridge_outlet_voltage` | Fridge outlet — voltage (V) |
+| `sensor.kitchen_fridge_outlet_current` | Fridge outlet — current (A) |
 
 ### Bathroom
 | Entity | Description |
