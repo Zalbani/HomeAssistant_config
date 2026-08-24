@@ -1,0 +1,43 @@
+- binary_sensor:
+    - name: "Office 3D Printer Auto-Off Armed"
+      unique_id: office_3d_printer_auto_off_armed
+      icon: mdi:power-plug-off-outline
+      state: >-
+        {{ is_state('switch.office_3d_printer_outlet', 'on')
+           and states('sensor.bambu_farm_printer_print_status') in ['idle', 'finish', 'failed']
+           and (states('sensor.office_3d_printer_outlet_instantaneous_demand') | float(999)) < 15 }}
+
+- trigger:
+    - trigger: time_pattern
+      minutes: /1
+    - trigger: state
+      entity_id:
+        - binary_sensor.office_3d_printer_auto_off_armed
+  sensor:
+    - name: "Office 3D Printer Auto-Off In"
+      unique_id: office_3d_printer_outlet_auto_off_in
+      icon: mdi:timer-outline
+      state: >-
+        {% if is_state('binary_sensor.office_3d_printer_auto_off_armed', 'on') %}
+          {% set anchor = states.binary_sensor.office_3d_printer_auto_off_armed.last_changed %}
+          {% set remaining = (3 * 3600) - (now() - anchor).total_seconds() %}
+          {% if remaining <= 0 %}
+            Off soon
+          {% else %}
+            {% set h = (remaining // 3600) | int %}
+            {% set m = ((remaining % 3600) // 60) | int %}
+            {% if h > 0 %}{{ h }}h {{ '%02d' % m }}m{% else %}{{ m }}m{% endif %}
+          {% endif %}
+        {% else %}
+          —
+        {% endif %}
+      attributes:
+        armed: >-
+          {{ is_state('binary_sensor.office_3d_printer_auto_off_armed', 'on') }}
+        remaining_seconds: >-
+          {% if is_state('binary_sensor.office_3d_printer_auto_off_armed', 'on') %}
+            {% set anchor = states.binary_sensor.office_3d_printer_auto_off_armed.last_changed %}
+            {{ [(3 * 3600) - (now() - anchor).total_seconds(), 0] | max | int }}
+          {% else %}
+            0
+          {% endif %}

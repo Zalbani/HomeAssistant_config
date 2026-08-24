@@ -14,6 +14,7 @@ _HomeAssistant_Config/
 │   ├── Notifications/    # Notification automations — named <subject>.yaml (e.g. heating_profile.yaml, window_open.yaml)
 │   ├── Vacuum/           # Vacuum automations
 │   ├── Litter/           # Petkit litter box (waste-bin uses counter increment/reset)
+│   ├── Devices/          # Appliance-outlet automations (auto-off when idle, etc.)
 │   └── index.yaml        # Flat !include list (HA does not auto-merge subdirs here)
 ├── binary_sensors/       # REST/TCP binary sensors (auto-merged via !include_dir_merge_list)
 │   ├── arr_stack.yaml    # Seerr, Prowlarr, Sonarr, Radarr, Bazarr — authenticated REST health checks
@@ -51,11 +52,13 @@ _HomeAssistant_Config/
 │   ├── system.yaml       # binary_sensor: PC Online, TV Media Active
 │   ├── scale.yaml        # sensor: body composition (Segal formula — male, 28 y/o, 173 cm)
 │   ├── cat.yaml          # sensor: Oni filtered weight / use duration / last use date (Petkit Pura MAX)
+│   ├── printer.yaml      # binary_sensor: Auto-Off Armed (composite idle definition: outlet on + status idle/finish/failed + demand < 15W) + sensor: Auto-Off In (countdown, trigger-based, 1min tick)
 │   └── sun_exposure.yaml # binary_sensor: West Facade Sun Exposure (sun azimuth/elevation + weather + outdoor temp)
 ├── scripts/              # Scripts organized by domain (auto-merged via !include_dir_merge_named)
 │   ├── vacuum.yaml       # Roborock segment cleaning scripts
 │   ├── heating.yaml      # Heating profile helpers
-│   └── pc.yaml           # PC toggle
+│   ├── pc.yaml           # PC toggle
+│   └── printer.yaml      # 3D printer outlet toggle (with print-in-progress safeguard)
 └── scenes.yaml
 ```
 
@@ -78,6 +81,7 @@ Reusable single-card definitions (start with `type:`). Included as items inside 
 | `bambulab_card.yaml` | `views/maintenance/` | BambuLab printer status |
 | `nas_card.yaml` | `views/maintenance/system.yaml` | NAS status |
 | `pc_power_card.yaml` | `views/maintenance/system.yaml` | PC power control |
+| `printer_outlet_card.yaml` | `rooms/office/controls.yaml` (Devices section, between PC and NAS) | 3D Printer power/energy/auto-off countdown, PC-style pulse animation, tap → `script.toggle_office_3d_printer_outlet` |
 | `weather_card.yaml` | `views/home.yaml` | Weather summary |
 | `balcony_weather_card.yaml` | `views/balcony.yaml` | Balcony weather |
 
@@ -255,7 +259,7 @@ Remotes have numbered buttons (1, 2, 3, 4, 5, 6, 9):
 - Button 3 → toggle lights (`mappings/lights/toggle_mapping.yaml`)
 - Buttons 4/5 → scroll shutters (`mappings/shutters/mapping.yaml`)
 - Button 6 → toggle/hold shutters
-- Button 9 (office) → toggle PC
+- Button 9 (office) → double press = toggle PC · hold = toggle 3D printer outlet (safeguard blocks off while printing)
 
 Triggers are defined in `*_triggers.yaml` files in the same folder.
 
@@ -290,6 +294,11 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 |--------|-------------|
 | `switch.office_ceiling_lamp_switch` | Ceiling lamp switch (SONOFF, Shelly bypass in fixture) |
 | `light.office_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) — always powered, controlled via bypass automation |
+| `switch.office_3d_printer_outlet` | 3D printer outlet (Schneider Wiser smart plug with energy monitoring) |
+| `sensor.office_3d_printer_outlet_instantaneous_demand` | 3D printer outlet — instantaneous power (W) |
+| `sensor.office_3d_printer_outlet_summation_delivered` | 3D printer outlet — cumulative energy (kWh) |
+| `sensor.office_3d_printer_outlet_voltage` | 3D printer outlet — voltage (V) |
+| `sensor.office_3d_printer_outlet_current` | 3D printer outlet — current (A) |
 | `cover.office_sunshade` | Sunshade |
 | `climate.office_thermostatic_valve_thermostat` | Thermostat |
 | `sensor.office_thermometer_temperature` | Temperature sensor |
@@ -352,6 +361,11 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | Entity | Description |
 |--------|-------------|
 | `switch.restroom_ceiling_lamp_switch` | Ceiling lamp switch |
+| `switch.restroom_washing_machine_outlet` | Washing machine outlet (Schneider Wiser smart plug with energy monitoring) |
+| `sensor.restroom_washing_machine_outlet_instantaneous_demand` | Washing machine outlet — instantaneous power (W) |
+| `sensor.restroom_washing_machine_outlet_summation_delivered` | Washing machine outlet — cumulative energy (kWh) |
+| `sensor.restroom_washing_machine_outlet_voltage` | Washing machine outlet — voltage (V) |
+| `sensor.restroom_washing_machine_outlet_current` | Washing machine outlet — current (A) |
 | `binary_sensor.restroom_water_leak_sensor_water_leak` | Water leak sensor |
 | `sensor.auto_litter_state` | Petkit Pura MAX — operating state (idle/cleaning/dumping/paused/…) |
 | `sensor.auto_litter_litter_level` | Litter level (%) |

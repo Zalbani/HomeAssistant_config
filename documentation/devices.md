@@ -77,6 +77,8 @@
 | Bathroom — ceiling | `switch.bathroom_ceiling_lamp_switch` | _(to be filled)_ | Zigbee | Wall switch |
 | Bathroom — mirror | `switch.bathroom_mirror_switch` | _(to be filled)_ | Zigbee | Wall switch |
 | Restroom | `switch.restroom_ceiling_lamp_switch` | _(to be filled)_ | Zigbee | Wall switch |
+| Restroom — washing machine | `switch.restroom_washing_machine_outlet` | Schneider Wiser SOCKET/OUTLET/1 | Zigbee | Smart outlet with energy monitoring |
+| Office — 3D printer | `switch.office_3d_printer_outlet` | Schneider Wiser SOCKET/OUTLET/1 | Zigbee | Smart outlet with energy monitoring |
 | Balcony | `switch.balcony_outside_lamp` | _(to be filled)_ | Zigbee | Wall switch |
 | Entry — telecontrol (both ceiling fixtures) | `light.entry_telecontrol_switch` | NodOn 4.1.20 | Zigbee | DIN impulse relay (télérupteur) in electrical panel |
 | Desktop PC | `switch.alban_pc_fixe` + `button.hass_pc_fixe_shutdown` | Wake-on-LAN | Network | — |

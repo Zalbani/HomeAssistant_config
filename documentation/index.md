@@ -57,7 +57,7 @@ Technical documentation index for the home automation installation.
 | File | Device | Rooms |
 |------|--------|-------|
 | [electrical/nodon_sin4120.md](electrical/nodon_sin4120.md) · [manual](electrical/nodon_sin4120_manual.pdf) | NodOn SIN-4-1-20 — Dry contact / telerupteur | not yet installed |
-| [electrical/schneider_wiser_outlet.md](electrical/schneider_wiser_outlet.md) | SCHNEIDER Wiser — Smart outlet | not yet installed |
+| [electrical/schneider_wiser_outlet.md](electrical/schneider_wiser_outlet.md) | SCHNEIDER Wiser — Smart outlet | Restroom (washing machine), Office (3D printer) |
 
 ---
 

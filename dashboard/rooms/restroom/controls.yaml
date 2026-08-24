@@ -13,6 +13,43 @@ cards:
 
   - type: custom:bubble-card
     card_type: separator
+    name: Washing machine
+    icon: mdi:washing-machine
+
+  - type: custom:mushroom-entity-card
+    entity: switch.restroom_washing_machine_outlet
+    name: Washing machine
+    icon: mdi:washing-machine
+    icon_color: light-blue
+    secondary_info: state
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.restroom_washing_machine_outlet_instantaneous_demand
+    name: Power
+    icon: mdi:flash
+    tap_action:
+      action: more-info
+
+  - type: custom:mushroom-entity-card
+    entity: sensor.restroom_washing_machine_outlet_summation_delivered
+    name: Energy
+    icon: mdi:lightning-bolt
+    tap_action:
+      action: more-info
+
+  - type: history-graph
+    title: Washing machine power
+    entities:
+      - entity: sensor.restroom_washing_machine_outlet_instantaneous_demand
+        name: Power
+    hours_to_show: 24
+
+  - type: custom:bubble-card
+    card_type: separator
     name: Water leak
     icon: mdi:water-alert
 

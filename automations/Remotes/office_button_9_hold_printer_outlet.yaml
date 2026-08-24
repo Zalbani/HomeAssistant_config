@@ -1,0 +1,22 @@
+id: '1787000000002'
+alias: Remotes - Office - Button 9 - Hold toggles 3D printer outlet
+description: Hold = toggle the 3D printer outlet on/off via script.toggle_office_3d_printer_outlet (which carries the print-in-progress safeguard).
+triggers:
+  - alias: Button 9 pressed
+    trigger: state
+    entity_id: event.office_remote_button_9
+    not_from:
+      - unavailable
+      - unknown
+conditions:
+  - alias: Event must be a fresh press (rejects state restoration on Matter restart)
+    condition: template
+    value_template: >-
+      {{ trigger.to_state.state not in ['unavailable', 'unknown', 'none']
+         and (now() - (trigger.to_state.state | as_datetime)) < timedelta(seconds=5) }}
+  - alias: Hold only
+    condition: template
+    value_template: "{{ trigger.to_state.attributes.event_type in ['hold', 'long_press'] }}"
+actions:
+  - action: script.toggle_office_3d_printer_outlet
+mode: single

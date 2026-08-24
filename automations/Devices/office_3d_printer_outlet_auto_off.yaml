@@ -1,0 +1,18 @@
+id: '1787000000001'
+alias: Devices - Office 3D Printer - Outlet auto-off when idle
+description: Turns off the 3D printer outlet after 3h of continuous idleness. Idle = binary_sensor.office_3d_printer_auto_off_armed is on (outlet on + Bambu status in idle/finish/failed + instantaneous demand < 15 W). Any spike above 15 W or a print restart resets the 3h timer.
+triggers:
+  - alias: Auto-off armed for 3h
+    trigger: state
+    entity_id: binary_sensor.office_3d_printer_auto_off_armed
+    to: "on"
+    for: "03:00:00"
+actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.office_3d_printer_outlet
+  - action: notify.mobile_app_pixel_9_pro
+    data:
+      title: "3D Printer"
+      message: "Outlet turned off after 3h of idleness."
+mode: single

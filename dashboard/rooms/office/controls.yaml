@@ -49,6 +49,8 @@ cards:
 
   - !include ../../cards/pc_power_card.yaml
 
+  - !include ../../cards/printer_outlet_card.yaml
+
   - !include ../../cards/nas_card.yaml
 
   - type: custom:bubble-card
@@ -57,6 +59,13 @@ cards:
     icon: mdi:printer-3d
 
   - !include ../../cards/bambulab_card.yaml
+
+  - type: history-graph
+    title: Printer outlet power
+    entities:
+      - entity: sensor.office_3d_printer_outlet_instantaneous_demand
+        name: Power
+    hours_to_show: 24
 
   - type: custom:bubble-card
     card_type: separator

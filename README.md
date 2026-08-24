@@ -174,6 +174,7 @@ Sleep mode: `input_boolean.sleep_mode` — detected automatically, toggleable fr
 | **Button 6 – Shutter hold (Global)** | Hold = move (up if all closed, down otherwise), release = stop. |
 | **Buttons 4 & 5 – Shutter scroll wheel (Global)** | Adjust position (12.5 % per press). |
 | **Button 9 – Computer toggle (Office)** | Double press = toggle PC on/off (Wake-on-LAN or shutdown). |
+| **Button 9 – 3D Printer outlet toggle (Office)** | Hold = toggle printer outlet on/off. Safeguard: refuses to power off while a print is running/paused/preparing. |
 | **Entry – Button 1 – Leave Home** | Single/double/hold = turn off all lights + Awtrix + shutdown PC. Notifies if french window is open. |
 | **Entry – Button 2 – Vacuum** | Single = vac bathroom; double = vac & mop bathroom; hold = vac & mop entire home. |
 
@@ -248,6 +249,14 @@ The Awtrix clock (`light.clock_awtrix_matrix`) displays contextual apps and auto
 | File | Content |
 |------|---------|
 | `room_selects.yaml` | Per-room vacuum selection input_boolean entity list. |
+
+---
+
+### 🔌 Devices
+
+| Automation | Role |
+|------------|------|
+| **3D Printer outlet auto-off** | Turns off `switch.office_3d_printer_outlet` after 3 h of `sensor.bambu_farm_printer_print_status` being `idle`/`finish`/`failed`. Ambiguous statuses (unknown/unavailable) never trigger a shutdown. |
 
 ---
 

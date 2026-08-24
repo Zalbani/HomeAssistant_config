@@ -1,0 +1,45 @@
+toggle_office_3d_printer_outlet:
+  alias: Office 3D Printer - Toggle outlet (with print safeguard)
+  description: Toggles the 3D printer outlet on/off. Refuses to power off while a print is running/paused/preparing OR while instantaneous demand is above 15 W (any consumption above idle draw is treated as an active printer).
+  mode: single
+  sequence:
+    - choose:
+        - alias: Outlet OFF - turn on
+          conditions:
+            - condition: state
+              entity_id: switch.office_3d_printer_outlet
+              state: "off"
+          sequence:
+            - action: switch.turn_on
+              target:
+                entity_id: switch.office_3d_printer_outlet
+        - alias: Outlet ON + print in progress or demand > 15 W - refuse (safeguard)
+          conditions:
+            - condition: state
+              entity_id: switch.office_3d_printer_outlet
+              state: "on"
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: sensor.bambu_farm_printer_print_status
+                  state:
+                    - running
+                    - pause
+                    - prepare
+                - condition: numeric_state
+                  entity_id: sensor.office_3d_printer_outlet_instantaneous_demand
+                  above: 15
+          sequence:
+            - action: notify.mobile_app_pixel_9_pro
+              data:
+                title: "3D Printer"
+                message: "Refused to power off the outlet - the printer looks active."
+        - alias: Outlet ON + printer idle - turn off
+          conditions:
+            - condition: state
+              entity_id: switch.office_3d_printer_outlet
+              state: "on"
+          sequence:
+            - action: switch.turn_off
+              target:
+                entity_id: switch.office_3d_printer_outlet
