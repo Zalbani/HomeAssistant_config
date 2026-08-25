@@ -4,7 +4,7 @@
       icon: mdi:power-plug-off-outline
       state: >-
         {{ is_state('switch.office_3d_printer_outlet', 'on')
-           and states('sensor.bambu_farm_printer_print_status') in ['idle', 'finish', 'failed']
+           and states('sensor.bambu_farm_printer_print_status') in ['idle', 'finish', 'failed', 'offline', 'unavailable', 'unknown']
            and (states('sensor.office_3d_printer_outlet_instantaneous_demand') | float(999)) < 15 }}
 
 - trigger:
