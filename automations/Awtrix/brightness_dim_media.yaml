@@ -1,16 +1,24 @@
 id: '1774836000003'
-alias: Awtrix - Power Off - Media Active
+alias: Awtrix - Brightness Dim - Media Active
 description: >-
-  Turns off the Awtrix matrix when the TV media becomes active
-  (PS5, Plex, YouTube, or Twitch on the TV).
+  Dims the Awtrix matrix to minimum brightness when the TV media becomes active
+  (PS5, Plex, YouTube, or Twitch on the TV). Only applies when the matrix is
+  currently on, so sleep mode / away state is preserved.
 triggers:
   - alias: TV media becomes active
     trigger: state
     entity_id: binary_sensor.tv_media_active
     from: "off"
     to: "on"
+conditions:
+  - alias: Matrix is on
+    condition: state
+    entity_id: light.clock_awtrix_matrix
+    state: "on"
 actions:
-  - action: light.turn_off
+  - action: light.turn_on
     target:
       entity_id: light.clock_awtrix_matrix
+    data:
+      brightness_pct: 5
 mode: single

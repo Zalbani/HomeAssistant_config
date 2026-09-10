@@ -50,7 +50,6 @@
 - !include Awtrix/bambulab_printing.yaml
 - !include Awtrix/cat_used_litter.yaml
 - !include Awtrix/scale_measurement.yaml
-- !include Awtrix/power_off_lights_out.yaml
 - !include Awtrix/power_on_sunrise.yaml
 - !include Awtrix/power_on_button_select.yaml
 - !include Awtrix/brightness_dim_media.yaml

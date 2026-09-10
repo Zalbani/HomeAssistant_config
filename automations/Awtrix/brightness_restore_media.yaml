@@ -9,6 +9,11 @@ triggers:
     entity_id: binary_sensor.tv_media_active
     from: "on"
     to: "off"
+conditions:
+  - alias: Matrix is on
+    condition: state
+    entity_id: light.clock_awtrix_matrix
+    state: "on"
 actions:
   - action: script.awtrix_apply_time_brightness
 mode: single
