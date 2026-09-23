@@ -57,7 +57,7 @@ actions:
         entity_id: binary_sensor.living_room_french_window
         state: "on"
     then:
-      - action: notify.mobile_app_pixel_9_pro
+      - action: notify.phone
         data:
           title: "Window open"
           message: "The living room french window is open."

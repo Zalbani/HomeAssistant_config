@@ -30,7 +30,7 @@ toggle_office_3d_printer_outlet:
                   entity_id: sensor.office_3d_printer_outlet_instantaneous_demand
                   above: 15
           sequence:
-            - action: notify.mobile_app_pixel_9_pro
+            - action: notify.phone
               data:
                 title: "3D Printer"
                 message: "Refused to power off the outlet - the printer looks active."

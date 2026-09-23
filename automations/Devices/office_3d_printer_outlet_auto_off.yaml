@@ -11,7 +11,7 @@ actions:
   - action: switch.turn_off
     target:
       entity_id: switch.office_3d_printer_outlet
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "3D Printer"
       message: "Outlet turned off after 3h of idleness."

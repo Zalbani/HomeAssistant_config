@@ -16,7 +16,7 @@ conditions:
     value_template: >-
       {{ trigger.to_state.state | int > trigger.from_state.state | int }}
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "New Seerr request"
       message: >-

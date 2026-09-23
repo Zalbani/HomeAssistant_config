@@ -1,3 +1,11 @@
+- sensor:
+    - name: Phone Next Alarm
+      unique_id: phone_next_alarm
+      device_class: timestamp
+      state: "{{ states('sensor.pixel_11_pro_next_alarm') }}"
+      availability: >-
+        {{ states('sensor.pixel_11_pro_next_alarm') not in ['unknown', 'unavailable', 'none', ''] }}
+
 - binary_sensor:
     - name: PC Online
       unique_id: pc_online

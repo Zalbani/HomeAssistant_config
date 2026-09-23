@@ -13,7 +13,7 @@ conditions:
     value_template: >-
       {{ (now() - trigger.from_state.last_changed).total_seconds() >= 1800 }}
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "French window closed"
       message: >

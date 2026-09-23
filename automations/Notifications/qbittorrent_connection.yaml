@@ -14,7 +14,7 @@ triggers:
       - unavailable
     for: "00:03:00"
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "qBittorrent — Connection Lost"
       message: >-

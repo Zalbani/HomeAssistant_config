@@ -15,7 +15,7 @@ triggers:
       - 'unavailable'
     to: 'on'
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "Arr Stack — Service Restored"
       message: >-

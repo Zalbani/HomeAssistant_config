@@ -19,7 +19,7 @@ actions:
     action: input_boolean.turn_off
     target:
       entity_id: input_boolean.wind_protection_active
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "Wind protection released"
       message: "Wind dropped below 35 km/h — sunshades can be operated normally again."

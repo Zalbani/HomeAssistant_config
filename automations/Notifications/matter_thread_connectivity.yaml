@@ -10,7 +10,7 @@ triggers:
     to: unavailable
     for: "00:02:00"
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "Device unreachable"
       message: >-

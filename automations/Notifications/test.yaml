@@ -5,7 +5,7 @@ description: >-
   Run from the automation UI or Developer Tools.
 triggers: []
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "Test notification"
       message: "Notifications are working."

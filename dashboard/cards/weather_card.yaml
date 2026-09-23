@@ -84,7 +84,7 @@ custom_fields:
       const sunsetRaw = sunEntity?.attributes?.next_setting;
       const sunrise = sunriseRaw ? new Date(sunriseRaw).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', hour12: false}) : '--:--';
       const sunset = sunsetRaw ? new Date(sunsetRaw).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', hour12: false}) : '--:--';
-      const alarm = states['sensor.pixel_9_pro_next_alarm'];
+      const alarm = states['sensor.phone_next_alarm'];
       const alarmTime = alarm && alarm.state !== 'unknown' && alarm.state !== 'unavailable' 
         ? new Date(alarm.state).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', hour12: false})
         : '--:--';

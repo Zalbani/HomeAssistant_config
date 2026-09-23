@@ -12,7 +12,7 @@ triggers:
       - connected
       - firewalled
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "qBittorrent — Reconnected"
       message: >-

@@ -6,7 +6,7 @@ triggers:
     entity_id: !include ../../mappings/sensors/water_leak_sensors.yaml
     to: 'on'
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "Water leak detected"
       message: "{{ trigger.to_state.attributes.friendly_name }} has detected water."

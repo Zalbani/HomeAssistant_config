@@ -15,7 +15,7 @@ triggers:
       - unknown
       - unavailable
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "Bambu Lab — Print error"
       message: "{{ trigger.to_state.attributes.friendly_name }} detected on the printer."

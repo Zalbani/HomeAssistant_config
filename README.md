@@ -190,7 +190,7 @@ Sleep mode: `input_boolean.sleep_mode` — detected automatically, toggleable fr
 
 ### 🔔 Notifications
 
-All notifications send to `notify.mobile_app_pixel_9_pro`.
+All notifications send to `notify.phone`.
 
 | Automation | Trigger |
 |------------|---------|

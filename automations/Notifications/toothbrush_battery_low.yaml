@@ -6,7 +6,7 @@ triggers:
     entity_id: sensor.o_series_4_9d8a_battery
     below: 10
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "Toothbrush battery low"
       message: "Toothbrush battery is at {{ states('sensor.o_series_4_9d8a_battery') | int }}% — plug it in to charge."

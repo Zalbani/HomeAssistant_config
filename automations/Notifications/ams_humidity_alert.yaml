@@ -7,7 +7,7 @@ triggers:
     above: 30
     for: "00:05:00"
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "AMS humidity too high"
       message: "AMS humidity is at {{ states('sensor.office_thermometer_ams_humidity') | float(0) | round(0) }}% — consider replacing the desiccants."

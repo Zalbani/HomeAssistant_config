@@ -10,7 +10,7 @@ triggers:
       - pause
       - prepare
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "Print complete"
       message: "{{ states('sensor.bambu_farm_printer_task_name') | replace('unknown', 'Your print') }} is done."

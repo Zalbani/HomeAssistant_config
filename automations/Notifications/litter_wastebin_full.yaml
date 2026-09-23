@@ -7,7 +7,7 @@ triggers:
     to: 'on'
     for: "00:01:00"
 actions:
-  - action: notify.mobile_app_pixel_9_pro
+  - action: notify.phone
     data:
       title: "Litter wastebin full"
       message: "The litter wastebin is full — time to empty it."

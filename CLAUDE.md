@@ -415,7 +415,8 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `person.alban_pierson` | Presence detection |
 | `weather.forecast_home` | Weather |
 | `sun.sun` | Sunrise / sunset |
-| `sensor.pixel_9_pro_next_alarm` | Phone alarm |
+| `notify.phone` | Phone notifications (group alias — swap the phone in `configuration.yaml` `notify:` block) |
+| `sensor.phone_next_alarm` | Phone alarm (template alias — swap the source in `templates/system.yaml`) |
 | `switch.alban_pc_fixe` | Desktop PC power |
 | `button.pc_shutdown` | Desktop PC shutdown |
 | `sensor.pc_cpuload` | Desktop PC CPU load |

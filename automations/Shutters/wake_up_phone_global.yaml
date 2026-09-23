@@ -7,8 +7,8 @@ triggers:
   - alias: Phone alarm is within 2 minutes
     trigger: template
     value_template: >-
-      {{ states('sensor.pixel_9_pro_next_alarm') not in ['unknown', 'unavailable']
-         and now() >= (states('sensor.pixel_9_pro_next_alarm') | as_datetime - timedelta(minutes=2)) }}
+      {{ states('sensor.phone_next_alarm') not in ['unknown', 'unavailable']
+         and now() >= (states('sensor.phone_next_alarm') | as_datetime - timedelta(minutes=2)) }}
 conditions: []
 actions:
   - alias: Open shutters (bedroom only if guest_mode)
