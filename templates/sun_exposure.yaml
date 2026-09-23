@@ -5,9 +5,17 @@
       # ON when the sun is geometrically hitting the west facade AND outdoor
       # conditions justify shading (clear sky + warm enough). Used by
       # automation "Shutters - West Facade Sun Protection".
-      # Azimuth 220°-305° + elevation ≥ 3° calibrated for Lyon, 3rd floor,
-      # unobstructed horizon — covers from mid-afternoon direct exposure
-      # until sunset at the summer solstice (sun reaches ~302° at sunset on June 21).
+      # Calibrated for Lyon, 3rd floor, unobstructed horizon.
+      # Azimuth window 220°-305° bounds the western hemisphere (from
+      # south-southwest to sunset at summer solstice, ~302°).
+      # Within that window, the facade is only actually struck when either:
+      #   - the sun is truly aimed west (azimuth ≥ 255°) — covers late
+      #     afternoon → sunset in every season, and
+      #   - or the sun is high (elevation ≥ 40°) — only satisfied around
+      #     the summer solstice, when the SSW sun (az 220°-255°) is high
+      #     enough to still hit the facade.
+      # This filters out shoulder-season triggers when the sun is at low
+      # SSW azimuth but too low in the sky to reach the west windows.
       # delay_off: filters out short cloud passages so sunshades don't yo-yo.
       delay_off: "00:10:00"
       state: >-
@@ -22,6 +30,6 @@
            ] %}
         {{ is_state('sun.sun', 'above_horizon')
            and 220 <= azimuth <= 305
-           and elevation >= 3
+           and (azimuth >= 255 or elevation >= 40)
            and not overcast
            and outdoor_temp > threshold }}
