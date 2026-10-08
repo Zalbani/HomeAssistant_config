@@ -53,6 +53,7 @@ _HomeAssistant_Config/
 │   ├── scale.yaml        # sensor: body composition (Segal formula — male, 28 y/o, 173 cm)
 │   ├── cat.yaml          # sensor: Oni filtered weight / use duration / last use date (Petkit Pura MAX)
 │   ├── printer.yaml      # binary_sensor: Auto-Off Armed (composite idle definition: outlet on + status idle/finish/failed + demand < 15W) + sensor: Auto-Off In (countdown, trigger-based, 1min tick)
+│   ├── washing_machine.yaml # binary_sensor: Restroom Washing Machine Running (outlet demand > 4W, delay_on 1min, delay_off 5min)
 │   └── sun_exposure.yaml # binary_sensor: West Facade Sun Exposure (sun azimuth/elevation + weather + outdoor temp)
 ├── scripts/              # Scripts organized by domain (auto-merged via !include_dir_merge_named)
 │   ├── vacuum.yaml       # Roborock segment cleaning scripts
@@ -366,6 +367,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `sensor.restroom_washing_machine_outlet_summation_delivered` | Washing machine outlet — cumulative energy (kWh) |
 | `sensor.restroom_washing_machine_outlet_voltage` | Washing machine outlet — voltage (V) |
 | `sensor.restroom_washing_machine_outlet_current` | Washing machine outlet — current (A) |
+| `binary_sensor.restroom_washing_machine_running` | Washing machine running (`templates/washing_machine.yaml`) — demand > 4W, delay_on 1min, delay_off 5min; drives the cycle-complete notification |
 | `binary_sensor.restroom_water_leak_sensor_water_leak` | Water leak sensor |
 | `sensor.auto_litter_state` | Petkit Pura MAX — operating state (idle/cleaning/dumping/paused/…) |
 | `sensor.auto_litter_litter_level` | Litter level (%) |

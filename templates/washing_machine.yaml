@@ -1,0 +1,10 @@
+- binary_sensor:
+    - name: "Restroom Washing Machine Running"
+      unique_id: restroom_washing_machine_running
+      icon: mdi:washing-machine
+      device_class: running
+      delay_on: "00:01:00"
+      delay_off: "00:05:00"
+      availability: "{{ states('sensor.restroom_washing_machine_outlet_instantaneous_demand') | is_number }}"
+      state: >-
+        {{ (states('sensor.restroom_washing_machine_outlet_instantaneous_demand') | float) > 4 }}

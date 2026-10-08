@@ -48,6 +48,7 @@
 - !include Awtrix/heating_boost_countdown.yaml
 - !include Awtrix/vacuum.yaml
 - !include Awtrix/bambulab_printing.yaml
+- !include Awtrix/washing_machine_running.yaml
 - !include Awtrix/cat_used_litter.yaml
 - !include Awtrix/scale_measurement.yaml
 - !include Awtrix/power_on_sunrise.yaml
@@ -81,3 +82,4 @@
 - !include Notifications/litter_wastebin_full.yaml
 - !include Awtrix/litter_wastebin_full.yaml
 - !include Notifications/scale_measurement.yaml
+- !include Notifications/washing_machine_done.yaml

@@ -1,0 +1,28 @@
+id: '1791500000002'
+alias: Awtrix - Washing Machine Running
+description: >-
+  Shows a persistent "En marche" app on the Awtrix clock while the washing
+  machine is running. Clears the app when the cycle ends.
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.restroom_washing_machine_running
+  - trigger: homeassistant
+    event: start
+actions:
+  - choose:
+      - alias: Running — show status
+        conditions:
+          - condition: state
+            entity_id: binary_sensor.restroom_washing_machine_running
+            state: "on"
+        sequence:
+          - action: mqtt.publish
+            data:
+              topic: awtrix_6f0891c/custom/washing_machine
+              payload: '{"text": "En marche", "icon": "a16587", "color": "#2196F3"}'
+    default:
+      - action: mqtt.publish
+        data:
+          topic: awtrix_6f0891c/custom/washing_machine
+          payload: ""
+mode: single

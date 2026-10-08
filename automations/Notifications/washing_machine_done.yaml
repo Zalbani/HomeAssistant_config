@@ -1,0 +1,22 @@
+id: '1791500000001'
+alias: Notification - Washing Machine Done
+description: >-
+  Sends a phone notification and Awtrix alert when the washing machine cycle
+  completes. Detected via binary_sensor.restroom_washing_machine_running
+  transitioning on → off (outlet power above 4 W for 1 min, then below 4 W for
+  5 min to survive intra-cycle pauses).
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.restroom_washing_machine_running
+    from: "on"
+    to: "off"
+actions:
+  - action: notify.phone
+    data:
+      title: "Washing machine"
+      message: "Cycle complete."
+  - action: mqtt.publish
+    data:
+      topic: awtrix_6f0891c/notify
+      payload: '{"text": "Laundry done!", "icon": "a16587", "color": "#4CAF50", "duration": 10}'
+mode: single

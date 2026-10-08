@@ -51,12 +51,15 @@ Each thermometer feeds its reading into the associated thermostatic valve via th
 
 ### Factory reset
 
-_(To be filled)_
+1. Open the back cover of the sensor to access the internal reset button
+2. Press and hold the button — a countdown timer appears on the display
+3. Keep holding until the timer finishes
+4. The sensor automatically enters Zigbee pairing mode once reset
 
 ### Zigbee pairing
 
 1. In HA: open ZHA / Z2M → enable pairing mode
-2. On the sensor: _(pairing procedure for TIMMERFLOTTE)_
+2. On the sensor: perform the factory reset above — pairing mode is entered automatically at the end of the countdown
 3. Wait for detection in HA (30–60 s)
 4. Rename entity to match existing convention
 
