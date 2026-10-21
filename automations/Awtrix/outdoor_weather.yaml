@@ -25,12 +25,12 @@ actions:
         sequence:
           - action: mqtt.publish
             data:
-              topic: awtrix_6f0891c/custom/outdoor_weather
-              payload: ""
+              topic: awtrix/cmd/apps/pushed/outdoor_weather
+              payload: "{}"
     default:
       - action: mqtt.publish
         data:
-          topic: awtrix_6f0891c/custom/outdoor_weather
+          topic: awtrix/cmd/apps/pushed/outdoor_weather
           payload: >-
             {% set condition = states('weather.forecast_home') %}
             {% set now_ts = as_timestamp(now()) %}
@@ -44,10 +44,10 @@ actions:
               {% set ns.pct = ((now_ts - today_rise) / (next_set - today_rise) * 100) | round(0) | int %}
               {% set ns.color = "#1565C0" %}
             {% else %}
-              {% set ns.icon = "a18433" %}
+              {% set ns.icon = "18433" %}
               {% set last_set = next_set - 86400 %}
               {% set ns.pct = ((now_ts - last_set) / (next_rise - last_set) * 100) | round(0) | int %}
               {% set ns.color = "#FFB300" %}
             {% endif %}
-            {"text": "{{ temp }}°", "icon": "{{ ns.icon }}", "progress": {{ ns.pct }}, "progressC": "{{ ns.color }}"}
+            {"text": "{{ temp }}°", "icon": "{{ ns.icon }}", "progress": {{ ns.pct }}, "progressColor": "{{ ns.color }}"}
 mode: single

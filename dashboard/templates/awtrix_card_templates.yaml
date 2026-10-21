@@ -36,14 +36,20 @@ awtrix_card:
       - border: 1px solid rgba(255, 255, 255, 0.08)
       - box-shadow: none
     grid:
-      - grid-template-areas: '"header" "actions"'
-      - grid-template-rows: min-content min-content
+      - grid-template-areas: '"header" "status" "actions"'
+      - grid-template-rows: min-content min-content min-content
       - gap: 8px
     custom_fields:
       header:
         - display: flex
         - align-items: center
         - justify-content: space-between
+      status:
+        - display: flex
+        - align-items: center
+        - gap: 14px
+        - font-size: 12px
+        - color: rgba(255,255,255,0.65)
   custom_fields:
     header: >
       [[[
@@ -54,6 +60,25 @@ awtrix_card:
             <span style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.85)">Awtrix</span>
           </div>
           <span style="font-size:12px;color:rgba(255,255,255,0.45)">${currentApp}</span>`;
+      ]]]
+    status: >
+      [[[
+        const matrix = states['light.clock_awtrix_matrix'];
+        const matrixOn = matrix?.state === 'on';
+        const briRaw = matrix?.attributes?.brightness;
+        const briPct = (typeof briRaw === 'number') ? Math.round(briRaw / 255 * 100) : null;
+        const lux = states['sensor.clock_awtrix_illuminance']?.state;
+        const luxVal = (lux && lux !== 'unknown' && lux !== 'unavailable') ? Math.round(parseFloat(lux)) : null;
+        const dim = !matrixOn ? 'opacity:0.4;' : '';
+        return `
+          <span style="display:flex;align-items:center;gap:4px;${dim}">
+            <ha-icon icon="mdi:brightness-6" style="width:14px;color:rgba(255,255,255,0.55)"></ha-icon>
+            ${briPct !== null ? briPct + '%' : '—'}
+          </span>
+          <span style="display:flex;align-items:center;gap:4px;">
+            <ha-icon icon="mdi:brightness-5" style="width:14px;color:rgba(255,255,255,0.55)"></ha-icon>
+            ${luxVal !== null ? luxVal + ' lx' : '—'}
+          </span>`;
       ]]]
     actions:
       card:

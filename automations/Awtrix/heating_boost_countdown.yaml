@@ -25,7 +25,7 @@ actions:
         sequence:
           - action: mqtt.publish
             data:
-              topic: awtrix_6f0891c/custom/heating_boost
+              topic: awtrix/cmd/apps/pushed/heating_boost
               payload: >-
                 {%- set r = state_attr('timer.heating_boost', 'remaining') -%}
                 {%- set d = state_attr('timer.heating_boost', 'duration') -%}
@@ -39,10 +39,10 @@ actions:
                 {%- else -%}
                   {%- set text = r_parts[1] ~ ':' ~ r_parts[2] -%}
                 {%- endif -%}
-                {"text": "{{ text }}", "icon": "a2546", "progress": {{ progress }}, "progressC": "#FF6600"}
+                {"text": "{{ text }}", "icon": "2546", "progress": {{ progress }}, "progressColor": "#FF6600"}
     default:
       - action: mqtt.publish
         data:
-          topic: awtrix_6f0891c/custom/heating_boost
-          payload: ""
+          topic: awtrix/cmd/apps/pushed/heating_boost
+          payload: "{}"
 mode: single

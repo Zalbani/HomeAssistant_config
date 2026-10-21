@@ -28,7 +28,7 @@ actions:
         sequence:
           - action: mqtt.publish
             data:
-              topic: awtrix_6f0891c/custom/vacuum
+              topic: awtrix/cmd/apps/pushed/vacuum
               payload: >-
                 {%- set status = states('sensor.roborock_qrevo_edge_series_status') -%}
                 {%- set room = states('sensor.roborock_qrevo_edge_series_current_room') -%}
@@ -48,10 +48,10 @@ actions:
                   {%- set text = status | replace('_', ' ') -%}
                 {%- endif -%}
                 {%- set color = '#4CAF50' if status in cleaning else '#FF9800' -%}
-                {"text": "{{ text }}", "icon": "a56402", "progress": {{ progress }}, "progressC": "{{ color }}"}
+                {"text": "{{ text }}", "icon": "56402", "progress": {{ progress }}, "progressColor": "{{ color }}"}
     default:
       - action: mqtt.publish
         data:
-          topic: awtrix_6f0891c/custom/vacuum
-          payload: ""
+          topic: awtrix/cmd/apps/pushed/vacuum
+          payload: "{}"
 mode: single

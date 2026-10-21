@@ -11,7 +11,7 @@ triggers:
 actions:
   - action: mqtt.publish
     data:
-      topic: awtrix_6f0891c/notify
+      topic: awtrix/cmd/notify
       payload: >-
-        {"text": "Wastebin full", "icon": "18576", "color": "#FF6B00", "duration": 30}
+        {"text": "Wastebin full", "icon": "18576", "textColor": "#FF6B00", "durationMs": 30000}
 mode: single

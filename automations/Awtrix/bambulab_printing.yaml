@@ -21,7 +21,7 @@ actions:
         sequence:
           - action: mqtt.publish
             data:
-              topic: awtrix_6f0891c/custom/bambulab
+              topic: awtrix/cmd/apps/pushed/bambulab
               payload: >-
                 {%- set status = states('sensor.bambu_farm_printer_print_status') -%}
                 {%- set progress = states('sensor.bambu_farm_printer_print_progress') | int(0) -%}
@@ -46,10 +46,10 @@ actions:
                   {%- set text = progress ~ '%' -%}
                   {%- set color = '#4CAF50' -%}
                 {%- endif -%}
-                {"text": "{{ text }}", "icon": "53694", "progress": {{ progress }}, "progressC": "{{ color }}"}
+                {"text": "{{ text }}", "icon": "53694", "progress": {{ progress }}, "progressColor": "{{ color }}"}
     default:
       - action: mqtt.publish
         data:
-          topic: awtrix_6f0891c/custom/bambulab
-          payload: ""
+          topic: awtrix/cmd/apps/pushed/bambulab
+          payload: "{}"
 mode: single

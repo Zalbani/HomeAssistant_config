@@ -21,12 +21,12 @@ actions:
         sequence:
           - action: mqtt.publish
             data:
-              topic: awtrix_6f0891c/custom/indoor_temp
-              payload: ""
+              topic: awtrix/cmd/apps/pushed/indoor_temp
+              payload: "{}"
     default:
       - action: mqtt.publish
         data:
-          topic: awtrix_6f0891c/custom/indoor_temp
+          topic: awtrix/cmd/apps/pushed/indoor_temp
           payload: >-
             {"text": "{{ states('sensor.living_room_thermometer_temperature') | round(1) }}", "icon": "2056"}
 mode: single

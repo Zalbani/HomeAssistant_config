@@ -106,7 +106,9 @@ room_card:
             const entities = variables.light_entity
               ? (Array.isArray(variables.light_entity) ? variables.light_entity : [variables.light_entity])
               : [];
-            const isAnyOn = entities.some(e => states[e] && states[e].state === 'on');
+            const powerEntity = variables.power_entity;
+            const powerOk = !powerEntity || states[powerEntity]?.state === 'on';
+            const isAnyOn = powerOk && entities.some(e => states[e] && states[e].state === 'on');
             return isAnyOn
               ? 'linear-gradient(145deg, rgba(255, 193, 7, 0.25) 0%, rgba(255, 152, 0, 0.05) 100%)'
               : 'rgba(var(--rgb-card-background-color), 0.4)';

@@ -10,7 +10,7 @@ triggers:
 actions:
   - action: mqtt.publish
     data:
-      topic: awtrix_6f0891c/notify
+      topic: awtrix/cmd/notify
       payload: >-
         {% set who = states('sensor.auto_litter_last_used_by') %}
         {% if who in ['', 'unknown', 'unavailable', 'none'] %}
@@ -18,5 +18,5 @@ actions:
         {% else %}
           {% set text = who ~ ' used litter' %}
         {% endif %}
-        {"text": "{{ text }}", "icon": "12199", "color": "#8B5A2B", "duration": 10}
+        {"text": "{{ text }}", "icon": "12199", "textColor": "#8B5A2B", "durationMs": 10000}
 mode: single

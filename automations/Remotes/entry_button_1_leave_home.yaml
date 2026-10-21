@@ -54,13 +54,14 @@ actions:
       - action: button.press
         target:
           entity_id: button.pc_shutdown
-  - alias: Notify if any window is open
+  - alias: Compute open windows
     variables:
       open_windows: >-
         {{ window_sensors
            | select('is_state', 'on')
            | map('state_attr', 'friendly_name')
            | list }}
+  - alias: Notify if any window is open
     if:
       - condition: template
         value_template: "{{ open_windows | length > 0 }}"

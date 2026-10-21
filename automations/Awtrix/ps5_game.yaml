@@ -24,13 +24,13 @@ actions:
         sequence:
           - action: mqtt.publish
             data:
-              topic: awtrix_6f0891c/custom/ps5_game
+              topic: awtrix/cmd/apps/pushed/ps5_game
               payload: >-
                 {"text": "{{ state_attr('media_player.playstation_5', 'media_title') }}",
-                 "icon": "a5588"}
+                 "icon": "5588"}
     default:
       - action: mqtt.publish
         data:
-          topic: awtrix_6f0891c/custom/ps5_game
-          payload: ""
+          topic: awtrix/cmd/apps/pushed/ps5_game
+          payload: "{}"
 mode: single
