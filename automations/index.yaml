@@ -62,7 +62,7 @@
 - !include Awtrix/brightness_time.yaml
 - !include Notifications/test.yaml
 - !include Notifications/window_open.yaml
-- !include Notifications/french_window_closed.yaml
+- !include Notifications/window_closed.yaml
 - !include Notifications/water_leak.yaml
 - !include Notifications/ams_humidity_alert.yaml
 - !include Notifications/bambulab_print_done.yaml

@@ -2,7 +2,8 @@ id: '1744600000001'
 alias: Remotes - Entry - Button 1 - Leave Home
 description: >
   Single/double/hold press = turn off all lights + Awtrix + shutdown PC if on.
-  Sends a notification if the living room french window is open.
+  Sends a notification listing any window still open (mapping in
+  mappings/windows/sensor_ids.yaml).
 triggers:
   - trigger: state
     entity_id: event.entry_remote_button_1
@@ -15,6 +16,8 @@ conditions:
     value_template: >-
       {{ trigger.to_state.state not in ['unavailable', 'unknown', 'none']
          and (now() - (trigger.to_state.state | as_datetime)) < timedelta(seconds=5) }}
+variables:
+  window_sensors: !include ../../mappings/windows/sensor_ids.yaml
 actions:
   - alias: Turn off all lights
     action: light.turn_off
@@ -51,14 +54,24 @@ actions:
       - action: button.press
         target:
           entity_id: button.pc_shutdown
-  - alias: Notify if french window is open
+  - alias: Notify if any window is open
+    variables:
+      open_windows: >-
+        {{ window_sensors
+           | select('is_state', 'on')
+           | map('state_attr', 'friendly_name')
+           | list }}
     if:
-      - condition: state
-        entity_id: binary_sensor.living_room_french_window
-        state: "on"
+      - condition: template
+        value_template: "{{ open_windows | length > 0 }}"
     then:
       - action: notify.phone
         data:
           title: "Window open"
-          message: "The living room french window is open."
+          message: >-
+            {%- if open_windows | length == 1 -%}
+            {{ open_windows[0] }} is open.
+            {%- else -%}
+            {{ open_windows | length }} windows are open: {{ open_windows | join(', ') }}.
+            {%- endif -%}
 mode: single
