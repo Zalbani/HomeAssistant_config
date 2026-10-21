@@ -1,4 +1,4 @@
-id: '1779568000040'
+id: '1779568000050'
 alias: Notifications - Scale Measurement
 description: Sends a phone notification with the weight when a new scale measurement is taken.
 triggers:

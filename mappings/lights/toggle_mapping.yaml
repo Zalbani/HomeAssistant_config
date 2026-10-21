@@ -6,6 +6,7 @@
 office: &office
   entities:
     - light.office_ceiling_lamp_bulb
+    - light.office_table_lamp_bulb
 living_room: &living_room
   entities:
     - light.living_room_ceiling_lamp_bulb

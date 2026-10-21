@@ -3,11 +3,11 @@ alias: Sensors - Window to cover control
 description: >-
   Raises the cover when a window opens (if currently closed).
   Closes it back when the window shuts during nighttime (if configured).
-  Mapping in mappings/sensors/window_cover_mapping.yaml.
+  Mapping in mappings/windows/by_sensor.yaml.
 triggers:
   - alias: Window opened
     trigger: state
-    entity_id: !include ../../mappings/sensors/window_sensors.yaml
+    entity_id: !include ../../mappings/windows/sensor_ids.yaml
     not_from:
       - unavailable
       - unknown
@@ -15,15 +15,15 @@ triggers:
     id: opening
   - alias: Window closed
     trigger: state
-    entity_id: !include ../../mappings/sensors/window_sensors.yaml
+    entity_id: !include ../../mappings/windows/sensor_ids.yaml
     not_from:
       - unavailable
       - unknown
     to: 'off'
     id: closing
 variables:
-  window_cover_mapping: !include ../../mappings/sensors/window_cover_mapping.yaml
-  cover_config: "{{ window_cover_mapping[trigger.entity_id] }}"
+  windows: !include ../../mappings/windows/by_sensor.yaml
+  cover_config: "{{ windows[trigger.entity_id] }}"
   cover_entity: "{{ cover_config.cover }}"
   open_position: "{{ cover_config.open_position | default(70) }}"
   close_at_night: "{{ cover_config.get('close_at_night', false) }}"

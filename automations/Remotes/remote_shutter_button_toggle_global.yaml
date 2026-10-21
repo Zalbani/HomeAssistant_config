@@ -27,15 +27,15 @@ actions:
             value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_2' }}"
         sequence:
           - variables:
-              covers_to_open: >-
+              covers_with_open_window: >-
                 {% set ns = namespace(entities=[]) %}
-                {% for cover in all_covers %}
-                  {% set sensor = cover_window_sensors.get(cover) %}
-                  {% if not sensor or not is_state(sensor, 'on') %}
-                    {% set ns.entities = ns.entities + [cover] %}
+                {% for sid, w in windows.items() %}
+                  {% if is_state(sid, 'on') %}
+                    {% set ns.entities = ns.entities + [w.cover] %}
                   {% endif %}
                 {% endfor %}
                 {{ ns.entities }}
+              covers_to_open: "{{ all_covers | reject('in', covers_with_open_window) | list }}"
           - if:
               - condition: template
                 value_template: "{{ covers_to_open | length > 0 }}"
@@ -91,4 +91,4 @@ actions:
 mode: single
 variables:
   mapping: !include ../../mappings/shutters/mapping.yaml
-  cover_window_sensors: !include ../../mappings/shutters/cover_window_sensors.yaml
+  windows: !include ../../mappings/windows/by_sensor.yaml

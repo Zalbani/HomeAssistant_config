@@ -1,0 +1,19 @@
+# Lights whose off-state matters for sleep-mode detection.
+# Used by automations/Lights/sleep_mode_detection_on.yaml
+#
+# Scope: main living-area lights only (living room, office, bedroom).
+# Kitchen / bathroom / restroom / entry / balcony are intentionally excluded —
+# a brief bathroom light at night should not keep resetting the 30 min timer.
+#
+# Living room
+- light.living_room_ceiling_lamp_bulb
+- light.living_room_streetlight_bulb
+- light.living_room_mushroom_lamp_bulb
+- switch.living_room_outlet_switch
+- switch.living_room_wall_outlet_switch_2
+# Office
+- light.office_ceiling_lamp_bulb
+- light.office_table_lamp_bulb
+# Bedroom
+- light.bedroom_ceiling_lamp_bulb
+- light.bedroom_bed_led_strip

@@ -1,0 +1,8 @@
+# Flat list of all window binary_sensors.
+# Required because HA trigger entity_id does not accept a template — must stay
+# in sync with the keys in by_sensor.yaml.
+#
+- binary_sensor.living_room_french_window
+- binary_sensor.office_window_sensor_door
+- binary_sensor.bedroom_window_sensor_door
+- binary_sensor.kitchen_window_sensor_door

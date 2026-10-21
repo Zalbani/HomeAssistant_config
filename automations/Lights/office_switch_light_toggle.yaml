@@ -1,0 +1,37 @@
+id: '1771400000007'
+alias: Light Sync - Office switch toggle
+description: >-
+  Office wall switch (Shelly bypass) toggles both the ceiling bulb and the
+  table lamp together. Mirrors remote button 3 behavior from toggle_mapping.
+triggers:
+  - alias: Office ceiling lamp switch toggled
+    trigger: state
+    entity_id: switch.office_ceiling_lamp_switch
+    not_from:
+      - unavailable
+      - unknown
+actions:
+  - choose:
+      - alias: "Ceiling is ON: turn both off"
+        conditions:
+          - condition: state
+            entity_id: light.office_ceiling_lamp_bulb
+            state: "on"
+        sequence:
+          - action: light.turn_off
+            target:
+              entity_id:
+                - light.office_ceiling_lamp_bulb
+                - light.office_table_lamp_bulb
+      - alias: "Ceiling is OFF: turn both on"
+        conditions:
+          - condition: state
+            entity_id: light.office_ceiling_lamp_bulb
+            state: "off"
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id:
+                - light.office_ceiling_lamp_bulb
+                - light.office_table_lamp_bulb
+mode: restart

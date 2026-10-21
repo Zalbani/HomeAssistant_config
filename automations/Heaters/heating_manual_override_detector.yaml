@@ -28,7 +28,7 @@ conditions:
     value_template: "{{ states('input_select.heating_profile') not in ['off', 'boost'] }}"
 variables:
   profiles: !include ../../mappings/heaters/profiles.yaml
-  window_valve_mapping: !include ../../mappings/heaters/window_valve_mapping.yaml
+  windows: !include ../../mappings/windows/by_sensor.yaml
   room: "{{ profiles.thermostat_to_room.get(trigger.entity_id, '') }}"
   profile: "{{ states('input_select.heating_profile') }}"
   expected_temp: "{{ profiles.temperatures[profile].get(room, 0) | float(0) if room else 0 }}"
@@ -42,7 +42,7 @@ actions:
         condition: template
         value_template: >
           {% set ns = namespace(sensor=none) %}
-          {% for sensor_id, cfg in window_valve_mapping.items() %}
+          {% for sensor_id, cfg in windows.items() %}
             {% if cfg is mapping and cfg.get('room') == room %}
               {% set ns.sensor = sensor_id %}
             {% endif %}

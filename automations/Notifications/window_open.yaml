@@ -4,7 +4,7 @@ description: >-
   Sends a notification if a window has been left open for more than 30 minutes.
 triggers:
   - trigger: state
-    entity_id: !include ../../mappings/sensors/window_sensors.yaml
+    entity_id: !include ../../mappings/windows/sensor_ids.yaml
     to: 'on'
     for: "00:30:00"
 actions:

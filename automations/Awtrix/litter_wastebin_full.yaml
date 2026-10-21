@@ -7,7 +7,7 @@ triggers:
   - trigger: state
     entity_id: binary_sensor.auto_litter_wastebin_filled
     to: 'on'
-    for: "1m"
+    for: "00:01:00"
 actions:
   - action: mqtt.publish
     data:

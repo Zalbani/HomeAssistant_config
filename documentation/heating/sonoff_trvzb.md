@@ -36,7 +36,7 @@
 ## Features Used in HA
 
 - **External temperature sensor**: each valve receives the room thermometer reading via the `heat_sync` automation
-- **Open window detection**: native valve feature + HA automation (`window_valve_mapping.yaml`)
+- **Open window detection**: native valve feature + HA automation (`mappings/windows/by_sensor.yaml`)
 - **Hardware min/max limits**: pushed by automation `climate_hardware_range_limiter_sync`
 
 ---

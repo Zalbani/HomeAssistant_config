@@ -45,7 +45,10 @@ _HomeAssistant_Config/
 │   └── timer.yaml           # Timers: heating_boost
 ├── mappings/
 │   ├── helpers.yaml      # Central index of all helper entity IDs (importable via !include)
-│   ├── heaters/          # Profiles, thermostats, valves, window sensors
+│   ├── windows/          # Single source of truth per window (room, cover, valve, flags)
+│   │   ├── by_sensor.yaml  # Dict keyed by binary_sensor with all attributes
+│   │   └── sensor_ids.yaml # Flat list of sensor IDs (needed by HA triggers)
+│   ├── heaters/          # Profiles, thermostats, valves
 │   ├── lights/           # Light/switch mappings (remote toggles, bypass switches)
 │   └── shutters/         # Remote → shutter entities mapping
 ├── templates/            # Template sensors/binary_sensors (auto-merged via !include_dir_merge_list)
@@ -160,7 +163,7 @@ Configured via UI (Settings → Devices & Services), not YAML.
 | Instance | Lights | Min/Max brightness | Min/Max color temp |
 |----------|--------|--------------------|--------------------|
 | Bedroom | `light.bedroom_ceiling_lamp_bulb`, `light.bedroom_bed_led_strip` | 1% / 80% | 2000K / 4000K |
-| Office | `light.office_ceiling_lamp_bulb` | 10% / 100% | 2000K / 5500K |
+| Office | `light.office_ceiling_lamp_bulb`, `light.office_table_lamp_bulb` | 10% / 100% | 2000K / 5500K |
 | Living Room | `light.living_room_ceiling_lamp_bulb`, `light.living_room_streetlight_bulb`, `light.living_room_mushroom_lamp_bulb` | 1% / 100% | 2000K / 5500K |
 | Entry | `light.entry_ceiling_lamp_flat_led` | 10% / 100% | 2000K / 5500K |
 
@@ -295,6 +298,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 |--------|-------------|
 | `switch.office_ceiling_lamp_switch` | Ceiling lamp switch (SONOFF, Shelly bypass in fixture) |
 | `light.office_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) — always powered, controlled via bypass automation |
+| `light.office_table_lamp_bulb` | Table lamp (smart, color temp) — toggled together with the ceiling by the wall switch (`office_switch_light_toggle`) and by remote button 3 (listed alongside the ceiling in `toggle_mapping.yaml`); brightness / color temp driven by Adaptive Lighting |
 | `switch.office_3d_printer_outlet` | 3D printer outlet (Schneider Wiser smart plug with energy monitoring) |
 | `sensor.office_3d_printer_outlet_instantaneous_demand` | 3D printer outlet — instantaneous power (W) |
 | `sensor.office_3d_printer_outlet_summation_delivered` | 3D printer outlet — cumulative energy (kWh) |
@@ -451,6 +455,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | Entity type              | MDI icon                      |
 |--------------------------|-------------------------------|
 | Ceiling lamp (all rooms) | `mdi:ceiling-light-outline`   |
+| Table lamp (office)      | `mdi:desk-lamp`               |
 | Streetlight (living room)| `mdi:floor-lamp-torchiere`    |
 | Mushroom lamp (living room) | `mdi:mushroom-outline`     |
 | Donut lamp (living room) | `mdi:circle-double`           |

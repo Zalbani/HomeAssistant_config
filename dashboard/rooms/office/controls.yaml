@@ -11,6 +11,13 @@ cards:
     show_brightness_control: true
     collapsible_controls: false
 
+  - type: custom:mushroom-light-card
+    entity: light.office_table_lamp_bulb
+    name: Table lamp
+    icon: mdi:desk-lamp
+    show_brightness_control: true
+    collapsible_controls: false
+
   - type: custom:bubble-card
     card_type: separator
     name: Covers

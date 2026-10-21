@@ -1,0 +1,54 @@
+# Single source of truth for all window sensors and their configuration.
+# Used by:
+#   - automations/Sensors/window_cover_control.yaml
+#   - automations/Heaters/window_open_valve_off.yaml          (entries without `valve` are ignored)
+#   - automations/Heaters/climate_range_limiter_global.yaml   (reverse lookup room -> sensor)
+#   - automations/Heaters/heating_manual_override_detector.yaml
+#   - automations/Shutters/close_global.yaml
+#   - automations/Shutters/sun_protection_west_facade.yaml
+#   - automations/Remotes/remote_shutter_button_toggle_global.yaml
+#   - automations/Notifications/window_open.yaml              (sensors only, via sensor_ids.yaml)
+#
+# Attributes per window:
+#   room:                  room id (used to look up thermostat / manual override)
+#   cover:                 associated cover entity
+#   valve:                 radiator switch (optional — omit for windows without TRV, e.g. kitchen)
+#   open_position:         cover position (%) to set when window opens
+#   close_at_night:        if true, close cover fully when window closes after sunset
+#   close_during_west_sun: if true, lower cover and apply daylight tilt when the
+#                          west facade is in direct sunlight (and when the window
+#                          closes while west sun is active)
+#
+# When adding a new window, also add its sensor to sensor_ids.yaml — HA trigger
+# entity_id requires a literal list and does not accept a template.
+
+"binary_sensor.living_room_french_window":
+  room: living_room
+  cover: cover.living_room_sunshade
+  valve: switch.living_room_thermostatic_valve_switch
+  open_position: 70
+  close_at_night: true
+  close_during_west_sun: true
+
+"binary_sensor.office_window_sensor_door":
+  room: office
+  cover: cover.office_sunshade
+  valve: switch.office_thermostatic_valve_switch
+  open_position: 70
+  close_at_night: true
+  close_during_west_sun: true
+
+"binary_sensor.bedroom_window_sensor_door":
+  room: bedroom
+  cover: cover.bedroom_sunshade
+  valve: switch.bedroom_thermostatic_valve_switch
+  open_position: 70
+  close_at_night: true
+  close_during_west_sun: true
+
+"binary_sensor.kitchen_window_sensor_door":
+  room: kitchen
+  cover: cover.kitchen_shutter
+  open_position: 70
+  close_at_night: true
+  close_during_west_sun: false

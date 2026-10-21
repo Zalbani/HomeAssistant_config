@@ -18,6 +18,12 @@ variables:
           action: toggle
         hold_action:
           action: more-info
+      - entity: light.office_table_lamp_bulb
+        icon: mdi:desk-lamp
+        tap_action:
+          action: toggle
+        hold_action:
+          action: more-info
       - entity: cover.office_sunshade
         icon: mdi:blinds
       - entity: climate.office_thermostatic_valve_thermostat

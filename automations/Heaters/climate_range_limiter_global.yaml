@@ -14,14 +14,14 @@ variables:
   max_limit: "{{ states('input_number.heating_global_max') | float(23) }}"
   requested_temp: "{{ trigger.to_state.attributes.temperature | float }}"
   profiles: !include ../../mappings/heaters/profiles.yaml
-  window_valve_mapping: !include ../../mappings/heaters/window_valve_mapping.yaml
+  windows: !include ../../mappings/windows/by_sensor.yaml
   window_recently_changed: >
     {% set room = profiles.thermostat_to_room.get(trigger.entity_id, none) %}
     {% if room is none %}
       {{ false }}
     {% else %}
       {% set ns = namespace(sensor=none) %}
-      {% for sensor_id, cfg in window_valve_mapping.items() %}
+      {% for sensor_id, cfg in windows.items() %}
         {% if cfg is mapping and cfg.get('room') == room %}
           {% set ns.sensor = sensor_id %}
         {% endif %}

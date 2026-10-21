@@ -1,19 +1,15 @@
 id: '1772300000001'
 alias: Sleep Mode - Detection ON
 description: >-
-  Turns on sleep mode helper when all lights have been off for 30 minutes,
-  all shutters are closed and person is home.
+  Turns on sleep mode helper when all sleep-relevant lights have been off for
+  30 minutes, all shutters are closed and person is home.
+  Light list in mappings/lights/sleep_relevant_lights.yaml.
+trigger_variables:
+  sleep_lights: !include ../../mappings/lights/sleep_relevant_lights.yaml
 triggers:
   - trigger: template
     value_template: >-
-      {{ states('light.living_room_ceiling_lamp_bulb') != 'on'
-         and states('light.living_room_streetlight_bulb') != 'on'
-         and states('light.living_room_mushroom_lamp_bulb') != 'on'
-         and states('switch.living_room_outlet_switch') != 'on'
-         and states('switch.living_room_wall_outlet_switch_2') != 'on'
-         and states('light.office_ceiling_lamp_bulb') != 'on'
-         and states('light.bedroom_ceiling_lamp_bulb') != 'on'
-         and states('light.bedroom_bed_led_strip') != 'on' }}
+      {{ expand(sleep_lights) | selectattr('state', 'eq', 'on') | list | count == 0 }}
     for: "00:30:00"
 conditions:
   - condition: state

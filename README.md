@@ -39,10 +39,11 @@ _HomeAssistant_Config/
 │   └── timer.yaml
 ├── mappings/                   # Data-driven mappings by domain
 │   ├── helpers.yaml            # Central index of all helper entity IDs
-│   ├── heaters/                # Profiles, thermostats, valves, windows
-│   ├── shutters/               # Covers, triggers, window sensors
+│   ├── windows/                # Single source of truth per window (room, cover, valve, flags)
+│   ├── heaters/                # Profiles, thermostats, valves
+│   ├── shutters/               # Covers & remote triggers
 │   ├── lights/                 # Toggle, scroll wheel & bypass mappings
-│   ├── sensors/                # Water leak & window sensors
+│   ├── sensors/                # Water leak sensors
 │   ├── awtrix/                 # Weather icon mappings
 │   ├── matter_thread/          # Matter/Thread device list
 │   └── vacuum/                 # Per-room vacuum selection booleans
@@ -95,9 +96,16 @@ The heating system is driven by a **profile** (`input_select.heating_profile`) r
 | `sensors.yaml` | Temperature sensor → valve association. |
 | `thermostats.yaml` | List of climate entities. |
 | `valves.yaml` | List of valve switch entities. |
-| `window_valve_mapping.yaml` | Window sensor → valve mapping. |
-| `window_sensors.yaml` | List of window sensors. |
 | `manual_overrides.yaml` | List of per-room manual override booleans. |
+
+#### Window mappings (`mappings/windows/`)
+
+Single source of truth for all windows (consumed by both heater and shutter automations).
+
+| File | Content |
+|------|---------|
+| `by_sensor.yaml` | Dict keyed by `binary_sensor.*_window*` with `room`, `cover`, optional `valve`, `open_position`, `close_at_night`, `close_during_west_sun`. |
+| `sensor_ids.yaml` | Flat list of the window sensor IDs (needed because HA trigger `entity_id` does not accept a template). |
 
 ---
 
@@ -118,7 +126,6 @@ The heating system is driven by a **profile** (`input_select.heating_profile`) r
 | File | Content |
 |------|---------|
 | `mapping.yaml` | Remote button → cover groups (per room). |
-| `cover_window_sensors.yaml` | Cover → window sensor mapping (exclude from auto-close). |
 | `toggle_triggers.yaml` | Button 6 toggle trigger entities. |
 | `hold_triggers.yaml` | Button 6 hold trigger entities. |
 | `scroll_wheel_triggers.yaml` | Buttons 4 & 5 trigger entities. |
@@ -134,6 +141,7 @@ The heating system is driven by a **profile** (`input_select.heating_profile`) r
 | **Bedroom switch – Light toggle** | Switch toggles ceiling lamp + LED strip. On bulb off: LED strip turns off after 60 s. |
 | **Balcony lamp – French window** | Turns on when French window opens after sunset in winter (Nov–Mar); turns off when window closes. |
 | **Streetlight ↔ Mushroom sync** | Syncs the mushroom lamp on/off with the streetlight outlet switch. |
+| **Office switch – Light toggle** | Office wall switch toggles both the ceiling bulb and the table lamp together. Remote button 3 already toggles both via `toggle_mapping.yaml`. AL drives brightness/temp via the shared Office instance. |
 | **Sleep mode detection ON** | All lights off for 30 min + all shutters closed + person home → sleep mode ON. |
 | **Sleep mode detection OFF (backoff)** | Bedroom sunshade opens manually while sleep mode is ON → sleep mode OFF. |
 | **Sleep mode apply** | ON → activates sleep mode on all Adaptive Lighting instances + turns off Awtrix. OFF → deactivates AL sleep + turns on Awtrix. |
@@ -160,7 +168,7 @@ Sleep mode: `input_boolean.sleep_mode` — detected automatically, toggleable fr
 | `scroll_wheel_triggers.yaml` | Buttons 1 & 2 trigger entities. |
 | `switch_bypass_mapping.yaml` | Bypass switch → smart bulb mapping. |
 | `switch_bypass_triggers.yaml` | Bypass switch trigger entities. |
-| `all_lights.yaml` | Complete list of light entities (used by Awtrix power-off). |
+| `sleep_relevant_lights.yaml` | Main living-area light entities whose off-state drives `sleep_mode_detection_on` (kitchen/bathroom/restroom/entry/balcony excluded on purpose). |
 
 ---
 

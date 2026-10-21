@@ -3,9 +3,11 @@ alias: Shutters - West Facade Sun Protection
 description: >-
   Lowers bedroom/office/living-room sunshades fully and applies a 50% daylight
   tilt when the west facade is in direct sunlight (binary_sensor.west_facade_sun_exposure
-  ON), and raises them back to 100% when shade returns. Skips living-room
-  sunshade if the french window is open (re-armed via window_cover_control when
-  it closes again). Skips closing entirely if wind protection is active.
+  ON), and raises them back to 100% when shade returns. Skips any sunshade
+  whose room window is open (re-armed via window_cover_control when it closes
+  again). Skips closing entirely if wind protection is active.
+  Window-to-cover mapping in mappings/windows/by_sensor.yaml
+  (filter: close_during_west_sun=true).
 triggers:
   - alias: West facade enters direct sun
     trigger: state
@@ -19,6 +21,8 @@ triggers:
     from: "on"
     to: "off"
     id: open
+variables:
+  windows: !include ../../mappings/windows/by_sensor.yaml
 actions:
   - choose:
       - conditions:
@@ -33,9 +37,13 @@ actions:
         sequence:
           - variables:
               covers_to_close: >-
-                {% set base = ['cover.bedroom_sunshade', 'cover.office_sunshade'] %}
-                {{ base if is_state('binary_sensor.living_room_french_window', 'on')
-                   else base + ['cover.living_room_sunshade'] }}
+                {% set ns = namespace(entities=[]) %}
+                {% for sensor, w in windows.items() %}
+                  {% if w.close_during_west_sun and not is_state(sensor, 'on') %}
+                    {% set ns.entities = ns.entities + [w.cover] %}
+                  {% endif %}
+                {% endfor %}
+                {{ ns.entities }}
           - alias: Lower sunshades fully
             action: cover.set_cover_position
             data:
@@ -54,12 +62,18 @@ actions:
             entity_id: binary_sensor.west_facade_sun_exposure
             state: "off"
         sequence:
+          - variables:
+              covers_to_reset: >-
+                {% set ns = namespace(entities=[]) %}
+                {% for sensor, w in windows.items() %}
+                  {% if w.close_during_west_sun %}
+                    {% set ns.entities = ns.entities + [w.cover] %}
+                  {% endif %}
+                {% endfor %}
+                {{ ns.entities }}
           - action: cover.set_cover_position
             data:
               position: 100
             target:
-              entity_id:
-                - cover.bedroom_sunshade
-                - cover.office_sunshade
-                - cover.living_room_sunshade
+              entity_id: "{{ covers_to_reset }}"
 mode: single

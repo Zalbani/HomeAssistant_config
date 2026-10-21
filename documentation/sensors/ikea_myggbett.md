@@ -27,7 +27,7 @@
 | Automation | Behavior |
 |------------|----------|
 | French window sensor | Raises `cover.living_room_sunshade` to 70 % when window opens (if closed); lowers it when window closes at night |
-| Window open → valve off | Turns off the thermostatic valve when window opens; restores setpoint when closed (`window_valve_mapping.yaml`) |
+| Window open → valve off | Turns off the thermostatic valve when window opens; restores setpoint when closed (`mappings/windows/by_sensor.yaml`) |
 | Close – Global | Excludes covers from auto-close when their associated window sensor is open |
 
 ---
