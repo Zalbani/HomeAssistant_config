@@ -51,6 +51,17 @@ cards:
 
   - type: custom:bubble-card
     card_type: separator
+    name: Window
+    icon: mdi:door-sliding-open
+
+  - type: custom:mushroom-entity-card
+    entity: binary_sensor.office_window_sensor_door
+    name: Window
+    icon: mdi:door-sliding-open
+    fill_container: true
+
+  - type: custom:bubble-card
+    card_type: separator
     name: Devices
     icon: mdi:desktop-tower
 

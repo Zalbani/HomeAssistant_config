@@ -31,7 +31,7 @@ header:
       - !include ../chips/roborock_water.yaml
       - !include ../chips/battery.yaml
       - !include ../chips/wind.yaml
-      - !include ../chips/window_living_room.yaml
+      - !include ../chips/windows_open.yaml
       - !include ../chips/seerr_pending.yaml
       - !include ../chips/sleep_mode.yaml
       - !include ../chips/guest_mode.yaml

@@ -1,0 +1,34 @@
+type: conditional
+conditions:
+  - condition: or
+    conditions:
+      - condition: state
+        entity: binary_sensor.living_room_french_window
+        state: "on"
+      - condition: state
+        entity: binary_sensor.kitchen_window_sensor_door
+        state: "on"
+      - condition: state
+        entity: binary_sensor.office_window_sensor_door
+        state: "on"
+      - condition: state
+        entity: binary_sensor.bedroom_window_sensor_door
+        state: "on"
+chip:
+  type: template
+  icon: mdi:window-open-variant
+  icon_color: orange
+  content: >-
+    {% set names = {
+      'binary_sensor.living_room_french_window': 'Living room',
+      'binary_sensor.kitchen_window_sensor_door': 'Kitchen',
+      'binary_sensor.office_window_sensor_door': 'Office',
+      'binary_sensor.bedroom_window_sensor_door': 'Bedroom'
+    } %}
+    {% set ns = namespace(open=[]) %}
+    {% for eid, name in names.items() %}
+      {% if is_state(eid, 'on') %}
+        {% set ns.open = ns.open + [name] %}
+      {% endif %}
+    {% endfor %}
+    {% if ns.open | count == 1 %}{{ ns.open[0] }}{% else %}{{ ns.open | count }} windows{% endif %}
