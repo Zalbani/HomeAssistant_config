@@ -29,12 +29,6 @@ variables:
         hold_action:
           action: more-info
           entity: light.living_room_streetlight_bulb
-      - entity: light.living_room_mushroom_lamp_bulb
-        icon: mdi:mushroom-outline
-        tap_action:
-          action: toggle
-        hold_action:
-          action: more-info
       - entity: switch.living_room_wall_outlet_switch_2
         icon: mdi:circle-double
         variables:

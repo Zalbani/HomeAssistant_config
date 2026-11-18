@@ -3,7 +3,7 @@ alias: Awtrix - Brightness Dim - Media Active
 description: >-
   Dims the Awtrix matrix to minimum brightness when the TV media becomes active
   (PS5, Plex, YouTube, or Twitch on the TV). Only applies when the matrix is
-  currently on, so sleep mode / away state is preserved.
+  currently on, so it does not fight the standby dim.
 triggers:
   - alias: TV media becomes active
     trigger: state

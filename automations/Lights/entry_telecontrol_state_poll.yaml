@@ -1,0 +1,20 @@
+id: '1795000000001'
+alias: Lights - Entry - Télérupteur State Poll
+description: >-
+  Re-reads the OnOff attribute of the NodOn télérupteur (ZHA) every minute.
+  Physical OFF presses on the wall switch are often not reported over Zigbee,
+  leaving light.entry_telecontrol_switch stuck on "on" in HA while the light is
+  actually off. homeassistant.update_entity forces a Zigbee attribute read so
+  the dashboard resyncs within a minute.
+triggers:
+  - trigger: time_pattern
+    minutes: "/1"
+conditions:
+  - alias: Device reachable
+    condition: template
+    value_template: "{{ states('light.entry_telecontrol_switch') in ['on', 'off'] }}"
+actions:
+  - action: homeassistant.update_entity
+    target:
+      entity_id: light.entry_telecontrol_switch
+mode: single

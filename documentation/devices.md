@@ -57,7 +57,6 @@
 |------|-----------|-------|----------|--------|----------|
 | Living Room — ceiling | `light.living_room_ceiling_lamp_bulb` | _(to be filled)_ | Zigbee | _(E27/GU10)_ | Color temperature |
 | Living Room — streetlight | `light.living_room_streetlight_bulb` | _(to be filled)_ | Zigbee | _(E27/GU10)_ | Color temperature |
-| Living Room — mushroom | `light.living_room_mushroom_lamp_bulb` | _(to be filled)_ | Zigbee | _(E27/GU10)_ | Color temperature |
 | Office — ceiling | `light.office_ceiling_lamp_bulb` | _(to be filled)_ | Zigbee | _(E27/GU10)_ | Color temperature |
 | Bedroom — ceiling | `light.bedroom_ceiling_lamp_bulb` | _(to be filled)_ | Zigbee | _(E27/GU10)_ | Color temperature |
 | Bedroom — LED strip | `light.bedroom_bed_led_strip` | _(to be filled)_ | Zigbee | — | _(color / white)_ |

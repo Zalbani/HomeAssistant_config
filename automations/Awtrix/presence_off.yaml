@@ -1,7 +1,8 @@
 id: '1774836000005'
-alias: Awtrix - Power Off - Away
+alias: Awtrix - Dim - Away
 description: >-
-  Turns off the Awtrix matrix when leaving the apartment.
+  Dims the Awtrix matrix to standby (1%) when leaving the apartment
+  (never turns it off: it cannot be turned back on remotely).
   Skipped if guest mode is active.
 triggers:
   - trigger: state
@@ -13,7 +14,5 @@ conditions:
     entity_id: input_boolean.guest_mode
     state: "off"
 actions:
-  - action: light.turn_off
-    target:
-      entity_id: light.clock_awtrix_matrix
+  - action: script.awtrix_dim
 mode: single

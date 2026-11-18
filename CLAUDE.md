@@ -164,7 +164,7 @@ Configured via UI (Settings → Devices & Services), not YAML.
 |----------|--------|--------------------|--------------------|
 | Bedroom | `light.bedroom_ceiling_lamp_bulb`, `light.bedroom_bed_led_strip` | 1% / 80% | 2000K / 4000K |
 | Office | `light.office_ceiling_lamp_bulb`, `light.office_table_lamp_bulb` | 10% / 100% | 2000K / 5500K |
-| Living Room | `light.living_room_ceiling_lamp_bulb`, `light.living_room_streetlight_bulb`, `light.living_room_mushroom_lamp_bulb` | 1% / 100% | 2000K / 5500K |
+| Living Room | `light.living_room_ceiling_lamp_bulb`, `light.living_room_streetlight_bulb` | 1% / 100% | 2000K / 5500K |
 | Entry | `light.entry_ceiling_lamp_flat_led` | 10% / 100% | 2000K / 5500K |
 
 Common settings on all instances: `initial_transition: 3s`, `take_over_control: true`, `adapt_only_on_bare_turn_on: true`, `sunrise_offset: +3600s`, `sunset_offset: -3600s`
@@ -176,7 +176,7 @@ Bedroom sleep settings: `sleep_brightness: 1%`, `sleep_color_temp: 1000K`
 Single source of truth: `input_boolean.sleep_mode` (defined in `helpers/input_boolean.yaml`)
 
 **Detection ON** (`automations/Lights/sleep_mode_detection_on.yaml`):
-All lights off for 30 min + all shutters closed + person home → `input_boolean.sleep_mode` ON
+Only between 22:00 and 06:00 (time condition + extra 22:00 trigger for lights already off): all lights off for 30 min + all shutters closed + person home → `input_boolean.sleep_mode` ON
 
 **Detection OFF — Primary** (`automations/Shutters/wake_up_time_bedroom.yaml`, `wake_up_phone_global.yaml`):
 Wake-up automations turn off `input_boolean.sleep_mode` directly.
@@ -186,8 +186,8 @@ Bedroom sunshade opens manually while sleep mode is still ON → `input_boolean.
 
 **Apply** (`automations/Lights/sleep_mode_apply.yaml`):
 Reacts to `input_boolean.sleep_mode` state change:
-- ON → activates sleep mode on all 3 AL instances + turns off Awtrix
-- OFF → deactivates sleep mode on all 3 AL instances + turns on Awtrix (`script.awtrix_apply_time_brightness`)
+- ON → activates sleep mode on all 3 AL instances + dims Awtrix to 1% (`script.awtrix_dim`)
+- OFF → deactivates sleep mode on all 3 AL instances + restores Awtrix brightness (`script.awtrix_apply_time_brightness`)
 
 **Dashboard**: chip `dashboard/chips/sleep_mode.yaml` (visible on home page when active), toggle button in `maintenance/misc.yaml`
 
@@ -281,7 +281,6 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | `light.living_room_ceiling_lamp_bulb` | Ceiling lamp bulb (smart, color temp) — always powered, controlled via bypass automation |
 | `switch.living_room_outlet_switch` | Outlet switch (floor lamp) |
 | `light.living_room_streetlight_bulb` | Streetlight bulb (smart, color temp) |
-| `light.living_room_mushroom_lamp_bulb` | Mushroom lamp (smart, color temp) |
 | `switch.living_room_wall_outlet_switch_2` | Wall outlet switch — IKEA donut lamp |
 | `cover.living_room_shutter` | Window shutter |
 | `cover.living_room_sunshade` | Sunshade |
@@ -446,7 +445,7 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 ### Awtrix Clock
 - MQTT prefix: `awtrix_6f0891c`
 - Notification topic: `awtrix_6f0891c/notify`
-- Power control: `POST http://192.168.1.25/api/power` with `{"power": true/false}` or MQTT topic `awtrix_6f0891c/power`
+- **Never turn `light.clock_awtrix_matrix` off from automations** — once off it cannot be turned back on remotely. Use `script.awtrix_dim` (1%) for sleep/away instead.
 - Payload format: `{"text": "...", "icon": "<id>", "color": "#RRGGBB", "duration": <seconds>}`
 - Custom app topic: `awtrix_6f0891c/custom/<app_name>`
 
@@ -457,7 +456,6 @@ Triggers are defined in `*_triggers.yaml` files in the same folder.
 | Ceiling lamp (all rooms) | `mdi:ceiling-light-outline`   |
 | Table lamp (office)      | `mdi:desk-lamp`               |
 | Streetlight (living room)| `mdi:floor-lamp-torchiere`    |
-| Mushroom lamp (living room) | `mdi:mushroom-outline`     |
 | Donut lamp (living room) | `mdi:circle-double`           |
 | Balcony outside lamp     | `mdi:coach-lamp-variant`      |
 | Under cabinet (kitchen)  | `mdi:dome-light`              |

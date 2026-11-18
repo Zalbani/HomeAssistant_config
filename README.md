@@ -140,11 +140,11 @@ Single source of truth for all windows (consumed by both heater and shutter auto
 | **Switch bypass resync on start** | Resyncs bulb states to bypass switch states on HA restart. |
 | **Bedroom switch – Light toggle** | Switch toggles ceiling lamp + LED strip. On bulb off: LED strip turns off after 60 s. |
 | **Balcony lamp – French window** | Turns on when French window opens after sunset in winter (Nov–Mar); turns off when window closes. |
-| **Streetlight ↔ Mushroom sync** | Syncs the mushroom lamp on/off with the streetlight outlet switch. |
+| **Streetlight ↔ Donut sync** | Syncs the donut lamp on/off with the streetlight outlet switch. |
 | **Office switch – Light toggle** | Office wall switch toggles both the ceiling bulb and the table lamp together. Remote button 3 already toggles both via `toggle_mapping.yaml`. AL drives brightness/temp via the shared Office instance. |
-| **Sleep mode detection ON** | All lights off for 30 min + all shutters closed + person home → sleep mode ON. |
+| **Sleep mode detection ON** | Between 22:00 and 06:00: all lights off for 30 min + all shutters closed + person home → sleep mode ON. |
 | **Sleep mode detection OFF (backoff)** | Bedroom sunshade opens manually while sleep mode is ON → sleep mode OFF. |
-| **Sleep mode apply** | ON → activates sleep mode on all Adaptive Lighting instances + turns off Awtrix. OFF → deactivates AL sleep + turns on Awtrix. |
+| **Sleep mode apply** | ON → activates sleep mode on all Adaptive Lighting instances + dims Awtrix to 1 %. OFF → deactivates AL sleep + restores Awtrix brightness. |
 
 #### Adaptive Lighting
 
@@ -154,7 +154,7 @@ Integration: `custom_components/adaptive_lighting`. Configured via UI (not YAML)
 |----------|--------|------------|------------|
 | Bedroom | Ceiling bulb + LED strip | 1–80 % | 2000–4000 K |
 | Office | Ceiling bulb | 10–100 % | 2000–5500 K |
-| Living Room | Ceiling + streetlight + mushroom bulbs | 1–100 % | 2000–5500 K |
+| Living Room | Ceiling + streetlight bulbs | 1–100 % | 2000–5500 K |
 
 Sleep mode: `input_boolean.sleep_mode` — detected automatically, toggleable from the maintenance dashboard.
 
@@ -183,7 +183,7 @@ Sleep mode: `input_boolean.sleep_mode` — detected automatically, toggleable fr
 | **Buttons 4 & 5 – Shutter scroll wheel (Global)** | Adjust position (12.5 % per press). |
 | **Button 9 – Computer toggle (Office)** | Double press = toggle PC on/off (Wake-on-LAN or shutdown). |
 | **Button 9 – 3D Printer outlet toggle (Office)** | Hold = toggle printer outlet on/off. Safeguard: refuses to power off while a print is running/paused/preparing. |
-| **Entry – Button 1 – Leave Home** | Single/double/hold = turn off all lights + Awtrix + shutdown PC. Notifies if french window is open. |
+| **Entry – Button 1 – Leave Home** | Single/double/hold = turn off all lights + dim Awtrix + shutdown PC. Notifies if french window is open. |
 | **Entry – Button 2 – Vacuum** | Single = vac bathroom; double = vac & mop bathroom; hold = vac & mop entire home. |
 
 ---
@@ -216,14 +216,17 @@ All notifications send to `notify.phone`.
 
 The Awtrix clock (`light.clock_awtrix_matrix`) displays contextual apps and auto-adjusts brightness throughout the day.
 
+> ⚠️ Automations never turn the matrix off — once off it cannot be turned back on remotely. Sleep / away use `script.awtrix_dim` (1 %) instead.
+
 | Automation | Role |
 |------------|------|
 | **Power On – Home** | Turns on Awtrix when arriving home or on HA restart if home. |
-| **Power Off – Lights Out** | Turns off Awtrix after sunset when all lights have been off for 30 min. |
-| **Power Off – Media Active** | Turns off Awtrix matrix when TV media becomes active (PS5, Plex, YouTube, Twitch). |
-| **Power – Guest Mode** | Turns on when guest mode enables; turns off when guest mode disables and owner is away. |
+| **Dim – Away** | Dims Awtrix to 1 % when leaving (skipped in guest mode). |
+| **Brightness Dim – Media Active** | Dims Awtrix to 5 % when TV media becomes active (PS5, Plex, YouTube, Twitch). |
+| **Power On – Guest Mode** | Restores brightness when guest mode enables. |
+| **Power On – Center Button** | Restores brightness when the center button is pressed while off or dimmed. |
 | **Power On – Sunrise** | Turns on Awtrix at sunrise. |
-| **Brightness – Time of Day** | Adjusts brightness in steps based on sun progress (8 % night → up to 90 % midday). |
+| **Brightness – Time of Day** | Adjusts brightness in steps based on sun progress (8 % night → up to 90 % midday). Skipped in sleep mode, when away, or while media is active. |
 | **Outdoor Weather** | Shows outdoor temperature with dynamic weather icon + day/night progress bar. Refreshes every 10 min. |
 | **Living Room Temperature** | Shows living room temperature permanently. Refreshes every 5 min. |
 | **Spotify** | Shows current track + playback progress bar when playing or paused. |

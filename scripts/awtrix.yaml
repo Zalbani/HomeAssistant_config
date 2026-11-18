@@ -26,3 +26,16 @@ awtrix_apply_time_brightness:
       data:
         brightness_pct: "{{ brightness | int }}"
   mode: single
+
+awtrix_dim:
+  alias: Awtrix - Dim to Standby
+  description: >-
+    Dims the Awtrix matrix to 1% instead of turning it off. The matrix must never
+    be turned off by automations: once off it cannot be woken up remotely.
+  sequence:
+    - action: light.turn_on
+      target:
+        entity_id: light.clock_awtrix_matrix
+      data:
+        brightness_pct: 1
+  mode: single

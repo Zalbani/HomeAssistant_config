@@ -2,8 +2,7 @@ id: '1774836000008'
 alias: Awtrix - Power On - Guest Mode
 description: >-
   Turns on the Awtrix when guest mode is enabled, or on HA start if guest mode
-  is already on. Does not turn Awtrix off — that is handled by presence_off and
-  power_off_lights_out.
+  is already on. Never turns Awtrix off — away/sleep only dim it (script.awtrix_dim).
 triggers:
   - alias: Guest mode turned on
     trigger: state

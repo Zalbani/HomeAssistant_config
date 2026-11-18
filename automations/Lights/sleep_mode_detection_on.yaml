@@ -2,7 +2,10 @@ id: '1772300000001'
 alias: Sleep Mode - Detection ON
 description: >-
   Turns on sleep mode helper when all sleep-relevant lights have been off for
-  30 minutes, all shutters are closed and person is home.
+  30 minutes, all shutters are closed and person is home — only between
+  22:00 and 06:00 (prevents false positives in early evening when shutters are
+  already closed). The 22:00 trigger catches lights that were already off
+  for 30+ minutes before the window opened.
   Light list in mappings/lights/sleep_relevant_lights.yaml.
 trigger_variables:
   sleep_lights: !include ../../mappings/lights/sleep_relevant_lights.yaml
@@ -11,7 +14,21 @@ triggers:
     value_template: >-
       {{ expand(sleep_lights) | selectattr('state', 'eq', 'on') | list | count == 0 }}
     for: "00:30:00"
+  - alias: Night window opens
+    trigger: time
+    at: "22:00:00"
 conditions:
+  - alias: Night window (22:00–06:00)
+    condition: time
+    after: "22:00:00"
+    before: "06:00:00"
+  - alias: All sleep-relevant lights off for at least 30 minutes
+    condition: template
+    value_template: >-
+      {% set lights = expand(sleep_lights) %}
+      {{ lights | selectattr('state', 'eq', 'on') | list | count == 0
+         and lights | selectattr('last_changed', 'gt', now() - timedelta(minutes=30))
+                    | list | count == 0 }}
   - condition: state
     entity_id: person.alban_pierson
     state: home

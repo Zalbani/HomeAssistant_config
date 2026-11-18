@@ -1,7 +1,7 @@
 id: '1744600000001'
 alias: Remotes - Entry - Button 1 - Leave Home
 description: >
-  Single/double/hold press = turn off all lights + Awtrix + shutdown PC if on.
+  Single/double/hold press = turn off all lights + dim Awtrix + shutdown PC if on.
   Sends a notification listing any window still open (mapping in
   mappings/windows/sensor_ids.yaml).
 triggers:
@@ -26,7 +26,6 @@ actions:
         - light.entry_telecontrol_switch
         - light.living_room_ceiling_lamp_bulb
         - light.living_room_streetlight_bulb
-        - light.living_room_mushroom_lamp_bulb
         - light.office_ceiling_lamp_bulb
         - light.bedroom_ceiling_lamp_bulb
         - light.bedroom_bed_led_strip
@@ -41,10 +40,8 @@ actions:
         - switch.bathroom_mirror_switch
         - switch.restroom_ceiling_lamp_switch
         - switch.balcony_outside_lamp
-  - alias: Turn off Awtrix
-    action: light.turn_off
-    target:
-      entity_id: light.clock_awtrix_matrix
+  - alias: Dim Awtrix to standby (never turn it off)
+    action: script.awtrix_dim
   - alias: Shutdown PC if on
     if:
       - condition: state

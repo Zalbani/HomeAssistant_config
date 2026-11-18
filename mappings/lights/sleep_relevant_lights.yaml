@@ -8,7 +8,6 @@
 # Living room
 - light.living_room_ceiling_lamp_bulb
 - light.living_room_streetlight_bulb
-- light.living_room_mushroom_lamp_bulb
 - switch.living_room_outlet_switch
 - switch.living_room_wall_outlet_switch_2
 # Office

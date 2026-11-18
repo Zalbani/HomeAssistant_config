@@ -1,7 +1,8 @@
 id: '1772300000003'
 alias: Sleep Mode - Apply
 description: >-
-  Reacts to input_boolean.sleep_mode changes and applies to all AL instances and Awtrix.
+  Reacts to input_boolean.sleep_mode changes and applies to all AL instances and Awtrix
+  (ON dims Awtrix to standby, OFF restores time-of-day brightness).
 triggers:
   - trigger: state
     entity_id: input_boolean.sleep_mode
@@ -19,9 +20,7 @@ actions:
                 - switch.bedroom_adaptative_lights_adaptive_lighting_sleep_mode_bedroom
                 - switch.living_room_adaptative_lightning_adaptive_lighting_sleep_mode_living_room
                 - switch.adaptive_lighting_office_adaptative_lights_adaptive_lighting_sleep_mode_office_adaptative_lights
-          - action: light.turn_off
-            target:
-              entity_id: light.clock_awtrix_matrix
+          - action: script.awtrix_dim
       - alias: Sleep mode OFF
         conditions:
           - condition: state

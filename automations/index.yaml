@@ -23,13 +23,14 @@
 - !include Lights/switch_light_bypass_global.yaml
 - !include Lights/switch_bypass_resync_on_start.yaml
 - !include Lights/balcony_light_french_window.yaml
-- !include Lights/streetlight_mushroom_sync.yaml
+- !include Lights/streetlight_donut_sync.yaml
 - !include Lights/office_switch_light_toggle.yaml
 - !include Lights/sleep_mode_detection_on.yaml
 - !include Lights/sleep_mode_detection_off.yaml
 - !include Lights/sleep_mode_apply.yaml
 - !include Lights/adaptive_lighting_guest_mode.yaml
 - !include Lights/entry_flat_led_adaptive_lighting_reapply.yaml
+- !include Lights/entry_telecontrol_state_poll.yaml
 - !include Remotes/remote_light_toggle_global.yaml
 - !include Remotes/remote_shutter_scroll_wheel_global.yaml
 - !include Remotes/remote_shutter_button_toggle_global.yaml
